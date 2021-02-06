@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TrabalhoPit2</string>
+    <string name="esqueceu_senha">Esqueceu a senha?</string>
+    <string name="logar">Logar</string>
+    <string name="senha">Senha</string>
+    <string name="loginouemail">Login ou e-mail</string>
 </resources>

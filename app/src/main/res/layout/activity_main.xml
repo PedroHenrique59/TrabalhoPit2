@@ -6,13 +6,79 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroundlogin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_layer_gradient"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="-244dp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_text_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="216dp"
+        android:height="50dp"
+        android:background="@drawable/bg_edit_text_senha"
+        android:hint="@string/loginouemail"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView2"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_text_senha"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:height="50dp"
+        android:background="@drawable/bg_edit_text_senha"
+        android:hint="@string/senha"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_usuario"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_logar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_button_logar"
+        android:text="@string/logar"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_senha"
+        tools:layout_editor_absoluteX="-15dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_esqueceu_senha"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="32dp"
+        android:text="@string/esqueceu_senha"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_logar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
