@@ -3,5 +3,11 @@
     <string name="esqueceu_senha">Esqueceu a senha?</string>
     <string name="logar">Logar</string>
     <string name="senha">Senha</string>
-    <string name="loginouemail">Login ou e-mail</string>
+    <string name="loginEmail">E-mail</string>
+    <string name="registrar">Não possui uma conta? Cadastre-se</string>
+    <string name="nomeusuario">Nome</string>
+    <string name="emailusuario">E-mail</string>
+    <string name="senhausuario">Senha</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="tituloapp">Fornadagora</string>
 </resources>

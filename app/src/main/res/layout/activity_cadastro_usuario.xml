@@ -8,37 +8,30 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/backgroundlogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/backgroundlogin" />
 
     <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_layer_gradient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_login"
+        android:id="@+id/edit_text_cadastro_nome"
         android:layout_width="0dp"
-        android:layout_height="57dp"
+        android:layout_height="50dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
-        android:hint="@string/loginEmail"
+        android:hint="@string/nomeusuario"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:paddingStart="18dp"
@@ -50,9 +43,9 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_titulo" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_login_senha"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:id="@+id/edit_text_cadastro_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="16dp"
@@ -60,7 +53,29 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
-        android:hint="@string/senha"
+        android:hint="@string/emailusuario"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_nome" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_text_cadastro_senha"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:height="50dp"
+        android:background="@drawable/bg_edit_text_senha"
+        android:hint="@string/senhausuario"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:paddingStart="18dp"
@@ -68,88 +83,52 @@
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_login" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_email" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_logar"
-        android:layout_width="0dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:id="@+id/btn_cadastrar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/bg_button_logar"
-        android:text="@string/logar"
+        android:text="@string/cadastrar"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_login_senha" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_esqueceu_senha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/esqueceu_senha"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_registrar" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_registrar"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="abrirCadastro"
-        android:text="@string/registrar"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logar" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_senha" />
 
     <ProgressBar
-        android:id="@+id/progressLogin"
+        android:id="@+id/progressCadastro"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_esqueceu_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar" />
 
     <TextView
         android:id="@+id/txt_titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:fontFamily="sans-serif-black"
-        android:text="@string/tituloapp"
+        android:text="Fornadagora"
         android:textColor="#FFFFFF"
         android:textSize="48sp"
         android:typeface="normal"
@@ -158,5 +137,3 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

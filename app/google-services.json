@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "624548577507",
+    "project_id": "fornadagora",
+    "storage_bucket": "fornadagora.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624548577507:android:7f01b440d81c3d263085d6",
+        "android_client_info": {
+          "package_name": "com.fornadagora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624548577507-11qojh4kijd3sbmqq9bcpvh944vt0lvc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fornadagora",
+            "certificate_hash": "058b71f314b33d4e967283b637b5d053972d6aa9"
+          }
+        },
+        {
+          "client_id": "624548577507-t7f9s8vovlp4lmiptdnbfjeog6ouknk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2aOPUlCeKllwHM_E2bmXk1b2nCqWEYrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624548577507-t7f9s8vovlp4lmiptdnbfjeog6ouknk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
