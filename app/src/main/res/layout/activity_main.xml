@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_login"
+        android:id="@+id/edit_text_recuperar_email"
         android:layout_width="0dp"
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
@@ -69,10 +69,10 @@
         android:textColorHint="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_login" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_recuperar_email" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_logar"
+        android:id="@+id/btnRecuperarSenha"
         android:layout_width="0dp"
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
@@ -99,6 +99,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:onClick="abrirRecuperarSenha"
         android:text="@string/esqueceu_senha"
         android:textAlignment="center"
         android:textColor="@android:color/white"
@@ -123,7 +124,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logar" />
+        app:layout_constraintTop_toBottomOf="@+id/btnRecuperarSenha" />
 
     <ProgressBar
         android:id="@+id/progressLogin"
@@ -135,6 +136,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_esqueceu_senha" />

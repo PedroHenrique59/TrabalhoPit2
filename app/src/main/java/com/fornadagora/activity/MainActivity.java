@@ -72,11 +72,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void abrirRecuperarSenha(View view){
+        Intent i = new Intent(MainActivity.this, RecuperarSenhaActivity.class);
+        startActivity(i);
+    }
+
     public void inicializarComponentes(){
-        campoEmail = findViewById(R.id.edit_text_login);
+        campoEmail = findViewById(R.id.edit_text_recuperar_email);
         campoSenha = findViewById(R.id.edit_text_login_senha);
         progressBar = findViewById(R.id.progressLogin);
-        botaoLogar = findViewById(R.id.btn_logar);
+        botaoLogar = findViewById(R.id.btnRecuperarSenha);
     }
 
     public void verificarUsuarioLogado(){
