@@ -63,13 +63,13 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             cadastrar(usuario);
 
                         }else{
-                            Toast.makeText(CadastroUsuarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT);
+                            Toast.makeText(CadastroUsuarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Toast.makeText(CadastroUsuarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT);
+                        Toast.makeText(CadastroUsuarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT);
+                    Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
