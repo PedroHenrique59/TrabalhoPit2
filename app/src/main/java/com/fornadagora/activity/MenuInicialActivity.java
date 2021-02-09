@@ -12,7 +12,13 @@ import android.view.MenuItem;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 
 public class MenuInicialActivity extends AppCompatActivity {
 

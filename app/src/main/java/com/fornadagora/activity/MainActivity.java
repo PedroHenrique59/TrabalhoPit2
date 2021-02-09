@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,12 +13,20 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fornadagora.R;
+import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private Usuario usuario;
+    private Usuario usuarioRecuperado;
+
+    private boolean ehAdministrador = false;
 
     private FirebaseAuth autenticacao;
 
@@ -55,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         usuario.setSenha(textoSenha);
 
                         validarLogin(usuario);
+
 
                     }else{
                         Toast.makeText(MainActivity.this, "Preencha o campo senha", Toast.LENGTH_SHORT).show();
@@ -104,13 +117,48 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     progressBar.setVisibility(View.GONE);
-                    startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
-                    finish();
+
+                    recuperarUsuario();
+
                 }else{
                     Toast.makeText(MainActivity.this,"E-mail ou senha incorretos",Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }
         });
+    }
+
+    public void recuperarUsuario(){
+        usuarioRecuperado = new Usuario();
+
+        String emailUsuario = autenticacao.getCurrentUser().getEmail();
+        String idUsuario = Base64Custom.codificarBase64(emailUsuario);
+
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(idUsuario);
+
+        usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Usuario usuarioRecuperado = snapshot.getValue(Usuario.class);
+                validarPerfilUsuario(usuarioRecuperado);
+                if(ehAdministrador){
+                    startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public boolean validarPerfilUsuario(Usuario usuario){
+        if(usuario.getTipoPerfil().equals("Administrador")){
+            ehAdministrador = true;
+        }
+        return ehAdministrador;
     }
 }

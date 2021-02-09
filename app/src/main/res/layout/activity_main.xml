@@ -152,7 +152,7 @@
         android:layout_marginRight="32dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/tituloapp"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/holo_orange_dark"
         android:textSize="48sp"
         android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"

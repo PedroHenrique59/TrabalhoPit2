@@ -1,21 +1,27 @@
 package com.fornadagora.model;
 
+import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+
 public class Usuario {
 
-    private String id;
+    private String idUsuario;
     private String nome;
     private String email;
     private String senha;
+    private String tipoPerfil;
 
     public Usuario() {
     }
 
-    public String getId() {
-        return id;
+    @Exclude
+    public String getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNome() {
@@ -34,11 +40,25 @@ public class Usuario {
         this.email = email;
     }
 
+    @Exclude
     public String getSenha() {
         return senha;
     }
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(String tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public void salvar(){
+        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
+        referencia.child("usuarios").child(this.idUsuario).setValue(this);
     }
 }

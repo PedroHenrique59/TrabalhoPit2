@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fornadagora.R;
+import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
@@ -34,6 +37,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     private Usuario usuario;
 
     private FirebaseAuth autenticacao;
+    private DatabaseReference usuarios;
+
+    private static String tipoPerfil = "Usuario";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             usuario.setNome(textoNome);
                             usuario.setEmail(textoEmail);
                             usuario.setSenha(textoSenha);
-
+                            usuario.setTipoPerfil(tipoPerfil);
                             cadastrar(usuario);
 
                         }else{
@@ -85,9 +91,11 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressCadastro);
     }
 
-    public void cadastrar(Usuario usuario){
+    public void cadastrar(final Usuario usuario){
 
         progressBar.setVisibility(View.VISIBLE);
+
+        usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         autenticacao.createUserWithEmailAndPassword(
@@ -98,8 +106,11 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             progressBar.setVisibility(View.GONE);
-
                             Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso" , Toast.LENGTH_SHORT).show();
+
+                            String idUsuario = Base64Custom.codificarBase64(usuario.getEmail());
+                            usuario.setIdUsuario(idUsuario);
+                            usuario.salvar();
 
                             startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
                             finish();
