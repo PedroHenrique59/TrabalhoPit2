@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
-import com.fornadagora.model.Usuario;
+import com.fornadagora.model.Funcionario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 
-public class CadastroUsuarioActivity extends AppCompatActivity {
+public class CadastroFuncionarioActivity extends AppCompatActivity {
 
     private EditText campoNome;
     private EditText campoEmail;
@@ -35,21 +34,22 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     private Button botaoCadastrar;
     private ProgressBar progressBar;
 
-    private Usuario usuario;
+    private Funcionario funcionario;
 
     private FirebaseAuth autenticacao;
-    private DatabaseReference usuarios;
+    private DatabaseReference funcionarios;
 
-    private static String tipoPerfil = "Usuario";
+    private static String tipoPerfil = "Funcionario";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cadastro_usuario);
+        setContentView(R.layout.activity_cadastro_funcionario);
 
         inicializarComponentes();
 
         progressBar.setVisibility(View.GONE);
+
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,29 +62,29 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 if(!textoNome.isEmpty()){
                     if(!textoEmail.isEmpty()){
                         if(!textoSenha.isEmpty()){
-                        if(!textoConfirmarSenha.isEmpty()){
-                            if(textoConfirmarSenha.equals(textoSenha)){
-                                usuario = new Usuario();
-                                usuario.setNome(textoNome);
-                                usuario.setEmail(textoEmail);
-                                usuario.setSenha(textoSenha);
-                                usuario.setTipoPerfil(tipoPerfil);
-                                cadastrar(usuario);
+                            if(!textoConfirmarSenha.isEmpty()){
+                                if(textoConfirmarSenha.equals(textoSenha)){
+                                    funcionario = new Funcionario();
+                                    funcionario.setNome(textoNome);
+                                    funcionario.setEmail(textoEmail);
+                                    funcionario.setSenha(textoSenha);
+                                    funcionario.setTipoPerfil(tipoPerfil);
+                                    cadastrar(funcionario);
+                                }else{
+                                    Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
+                                    campoConfirmarSenha.setText("");
+                                }
                             }else{
-                                Toast.makeText(CadastroUsuarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
-                                campoConfirmarSenha.setText("");
+                                Toast.makeText(CadastroFuncionarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
                             }
                         }else{
-                            Toast.makeText(CadastroUsuarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
-                        }
-                        }else{
-                            Toast.makeText(CadastroUsuarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Toast.makeText(CadastroUsuarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -92,39 +92,37 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     public void inicializarComponentes(){
 
-        campoNome = findViewById(R.id.edit_text_cadastro_nome);
-        campoEmail = findViewById(R.id.edit_text_cadastro_email);
-        campoSenha = findViewById(R.id.edit_text_cadastro_senha);
-        campoConfirmarSenha = findViewById(R.id.edit_text_senha_confirmar);
+        campoNome = findViewById(R.id.edit_text_cadastro_fun_nome);
+        campoEmail = findViewById(R.id.edit_text_cadastro_fun_email);
+        campoSenha = findViewById(R.id.edit_text_cadastro_fun_senha);
+        campoConfirmarSenha = findViewById(R.id.edit_text_senha_fun_confirmar);
 
-        botaoCadastrar = findViewById(R.id.btn_cadastrar);
-        progressBar = findViewById(R.id.progressCadastro);
-
-        campoNome.requestFocus();
+        botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
+        progressBar = findViewById(R.id.progressCadastroFun);
     }
 
-    public void cadastrar(final Usuario usuario){
+    public void cadastrar(final Funcionario funcionario){
 
         progressBar.setVisibility(View.VISIBLE);
 
-        usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
+        funcionarios = ConfiguracaoFirebase.getFirebase().child("funcionarios");
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         autenticacao.createUserWithEmailAndPassword(
-                usuario.getEmail(), usuario.getSenha()
+                funcionario.getEmail(), funcionario.getSenha()
         ).addOnCompleteListener(
                 this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso" , Toast.LENGTH_SHORT).show();
 
-                            String idUsuario = Base64Custom.codificarBase64(usuario.getEmail());
-                            usuario.setIdUsuario(idUsuario);
-                            usuario.salvar();
+                            String idFuncionario = Base64Custom.codificarBase64(funcionario.getEmail());
+                            funcionario.setIdFuncionario(idFuncionario);
+                            funcionario.salvar();
 
-                            startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
                             finish();
 
                         }else{
@@ -134,16 +132,16 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             try{
                                 throw task.getException();
                             }catch (FirebaseAuthWeakPasswordException e){
-                             erroExcecao = "Digite uma senha mais forte!";
+                                erroExcecao = "Digite uma senha mais forte!";
                             }catch(FirebaseAuthInvalidCredentialsException e){
                                 erroExcecao = "Favor digitar um e-mail válido";
                             }catch (FirebaseAuthUserCollisionException e){
                                 erroExcecao = "Esta conta já foi cadastrada";
                             }catch (Exception e){
-                                erroExcecao = "ao cadastrar usuário: " + e.getMessage();
+                                erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
                                 e.printStackTrace();
                             }
-                            Toast.makeText(CadastroUsuarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

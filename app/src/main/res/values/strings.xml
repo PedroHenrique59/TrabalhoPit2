@@ -5,10 +5,12 @@
     <string name="senha">Senha</string>
     <string name="loginEmail">E-mail</string>
     <string name="registrar">Não possui uma conta? Cadastre-se</string>
-    <string name="nomeusuario">Nome</string>
-    <string name="emailusuario">E-mail</string>
-    <string name="senhausuario">Senha</string>
+    <string name="nome">Nome</string>
+    <string name="email">E-mail</string>
     <string name="cadastrar">Cadastrar</string>
     <string name="tituloapp">Fornadagora</string>
     <string name="recuperarsenha">Recuperar senha</string>
+    <string name="cadastrarfuncionario">Cadastrar Funcionário</string>
+    <string name="cadastrarUsuario">Cadastrar Usuário</string>
+    <string name="senhaconfirmar">Confirmar senha</string>
 </resources>

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
     private Usuario usuario;
     private Usuario usuarioRecuperado;
+    private Funcionario funcionario;
+    private Funcionario funcionarioRecuperado;
 
-    private boolean ehAdministrador = false;
+    private boolean ehAdministrador;
 
     private FirebaseAuth autenticacao;
 
@@ -47,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        verificarUsuarioLogado();
         inicializarComponentes();
-
         progressBar.setVisibility(View.GONE);
 
         botaoLogar.setOnClickListener(new View.OnClickListener() {
@@ -66,8 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         usuario.setEmail(textoEmail);
                         usuario.setSenha(textoSenha);
 
-                        validarLogin(usuario);
+                        funcionario = new Funcionario();
+                        funcionario.setEmail(textoEmail);
+                        funcionario.setSenha(textoSenha);
 
+                        validarLogin(usuario,funcionario);
 
                     }else{
                         Toast.makeText(MainActivity.this, "Preencha o campo senha", Toast.LENGTH_SHORT).show();
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        verificarUsuarioLogado();
     }
 
     public void abrirCadastro(View view){
@@ -100,16 +105,51 @@ public class MainActivity extends AppCompatActivity {
     public void verificarUsuarioLogado(){
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         if(autenticacao.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
-            finish();
+
+            String email = autenticacao.getCurrentUser().getEmail();
+            String id = Base64Custom.codificarBase64(email);
+
+            DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+
+            DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
+            final DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
+
+            usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    usuarioRecuperado = snapshot.getValue(Usuario.class);
+                    if(usuarioRecuperado != null){
+                        validarPerfilUsuario(usuarioRecuperado);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            funcionarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    funcionarioRecuperado = snapshot.getValue(Funcionario.class);
+                    if(funcionarioRecuperado != null){
+                        validarPerfilFuncionario(funcionarioRecuperado);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 
-    public void validarLogin(Usuario usuario){
+    public void validarLogin(Usuario usuario, Funcionario funcionario){
         progressBar.setVisibility(View.VISIBLE);
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-
         autenticacao.signInWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -117,9 +157,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     progressBar.setVisibility(View.GONE);
-
-                    recuperarUsuario();
-
+                    recuperarTipoDeUsuarioLogado();
                 }else{
                     Toast.makeText(MainActivity.this,"E-mail ou senha incorretos",Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
@@ -128,23 +166,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void recuperarUsuario(){
+    public void recuperarTipoDeUsuarioLogado(){
         usuarioRecuperado = new Usuario();
+        funcionarioRecuperado = new Funcionario();
 
-        String emailUsuario = autenticacao.getCurrentUser().getEmail();
-        String idUsuario = Base64Custom.codificarBase64(emailUsuario);
+        String email = autenticacao.getCurrentUser().getEmail();
+        String id = Base64Custom.codificarBase64(email);
 
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
-        DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(idUsuario);
+        DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
+        DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
 
         usuarioRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Usuario usuarioRecuperado = snapshot.getValue(Usuario.class);
-                validarPerfilUsuario(usuarioRecuperado);
-                if(ehAdministrador){
-                    startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
-                    finish();
+                if(usuarioRecuperado != null){
+                    validarPerfilUsuario(usuarioRecuperado);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        funcionarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Funcionario funcionarioRecuperado = snapshot.getValue(Funcionario.class);
+                if(funcionarioRecuperado != null){
+                    validarPerfilFuncionario(funcionarioRecuperado);
                 }
             }
 
@@ -158,7 +211,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean validarPerfilUsuario(Usuario usuario){
         if(usuario.getTipoPerfil().equals("Administrador")){
             ehAdministrador = true;
+            startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
+            finish();
+        }else{
+            ehAdministrador = false;
+            startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
+            finish();
         }
         return ehAdministrador;
+    }
+
+    public void validarPerfilFuncionario(Funcionario funcionario){
+        if(funcionario.getTipoPerfil().equals("Funcionario")){
+            startActivity(new Intent(getApplicationContext(), MenuInicialFuncActivity.class));
+            finish();
+        }
     }
 }
