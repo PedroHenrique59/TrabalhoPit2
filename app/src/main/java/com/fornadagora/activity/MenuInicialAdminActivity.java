@@ -36,6 +36,11 @@ public class MenuInicialAdminActivity extends AppCompatActivity {
         finish();
     }
 
+    public void abrirTelaBuscarPadaria(View view){
+        startActivity(new Intent(getApplicationContext(), BuscarPadariaActivity.class));
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

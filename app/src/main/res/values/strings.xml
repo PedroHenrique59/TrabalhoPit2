@@ -13,4 +13,5 @@
     <string name="cadastrarfuncionario">Cadastrar Funcionário</string>
     <string name="cadastrarUsuario">Cadastrar Usuário</string>
     <string name="senhaconfirmar">Confirmar senha</string>
+    <string name="titulotelabuscarpadaria">Map</string>
 </resources>
