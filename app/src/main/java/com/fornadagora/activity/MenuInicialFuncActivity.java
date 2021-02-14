@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -58,5 +59,9 @@ public class MenuInicialFuncActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void abrirTelaAdicionarProdutoPadaria(View view){
+        startActivity(new Intent(getApplicationContext(), CadastroFuncionarioActivity.class));
     }
 }

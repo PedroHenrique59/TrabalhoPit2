@@ -33,12 +33,10 @@ public class MenuInicialAdminActivity extends AppCompatActivity {
 
     public void abrirTelaCadastroFuncionario(View view){
         startActivity(new Intent(getApplicationContext(), CadastroFuncionarioActivity.class));
-        finish();
     }
 
     public void abrirTelaBuscarPadaria(View view){
         startActivity(new Intent(getApplicationContext(), BuscarPadariaActivity.class));
-        finish();
     }
 
     @Override

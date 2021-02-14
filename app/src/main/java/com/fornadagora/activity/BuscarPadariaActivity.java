@@ -4,7 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -12,6 +17,7 @@ import com.firebase.geofire.GeoLocation;
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.LocalMapa;
+import com.fornadagora.model.Padaria;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,8 +39,14 @@ import java.util.List;
 public class BuscarPadariaActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private DatabaseReference referencia;
+
+    private DatabaseReference referenciaLocal;
+    private DatabaseReference referenciaPadaria;
+
     private LocalMapa local;
+    private Padaria padaria;
+
+    private Dialog dialog;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -45,20 +57,20 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        referencia = ConfiguracaoFirebase.getFirebase().child("locais");
+        referenciaLocal = ConfiguracaoFirebase.getFirebase().child("padarias");
 
-        referencia.addValueEventListener(new ValueEventListener() {
+        referenciaLocal.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                    for(DataSnapshot teste : snapshot.getChildren()){
-                       LocalMapa testeLocal = teste.getValue(LocalMapa.class);
-                       double latitude = Double.parseDouble(testeLocal.getLatitude());
-                       double longitude = Double.parseDouble(testeLocal.getLongitude());
+                       Padaria padaria = teste.getValue(Padaria.class);
+                       double latitude = Double.parseDouble(padaria.getLocal().getLatitude());
+                       double longitude = Double.parseDouble(padaria.getLocal().getLongitude());
                        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                               .title("Local")
-                               .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone))
-                               .snippet("Descrição"));
+                                   .title(padaria.getNome())
+                                   .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
+
                    }
                 }
             }
@@ -68,6 +80,8 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
 
             }
         });
+
+        referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
     }
 
     /**
@@ -83,15 +97,11 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng padaria = new LatLng(-19.893156213517234, -43.93205951184109);
+        LatLng latitudeLongitude = new LatLng(-19.893156213517234, -43.93205951184109);
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
-                mMap.addMarker(new MarkerOptions().position(latLng)
-                        .title("Local")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone))
-                        .snippet("Descrição"));
 
                 final double lat = latLng.latitude;
                 final double longe = latLng.longitude;
@@ -100,13 +110,51 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
                 String longitude = Double.toString(longe);
 
                 local = new LocalMapa(latitude, longitude);
-                referencia.push().setValue(local);
+                padaria = new Padaria(local);
+
+                abrirDialog(local, padaria);
             }
         });
 
-        mMap.addMarker(new MarkerOptions().position(padaria)
+        mMap.addMarker(new MarkerOptions().position(latitudeLongitude)
                 .title("Padaria FornoDouro")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(padaria, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latitudeLongitude, 15));
+
+    }
+
+    public void abrirDialog(final LocalMapa local, final Padaria padaria){
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialogmapa);
+        dialog.setTitle("Dialog teste");
+
+        Double latitude = Double.parseDouble(local.getLatitude());
+        Double longitude = Double.parseDouble(local.getLongitude());
+
+        final LatLng latLng = new LatLng(latitude, longitude);
+        final EditText editTextNomePadaria = dialog.findViewById(R.id.editTextNomePadaria);
+
+        Button botaoSalvar = dialog.findViewById(R.id.dialogBotaoSalvar);
+
+        botaoSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(editTextNomePadaria.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Favor preencher o nome da padaria", Toast.LENGTH_SHORT).show();
+                }else{
+                    String nomePadaria = editTextNomePadaria.getText().toString();
+                    padaria.setNome(nomePadaria);
+                    referenciaPadaria.push().setValue(padaria);
+
+                    mMap.addMarker(new MarkerOptions().position(latLng)
+                            .title(nomePadaria)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
+
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
     }
 }

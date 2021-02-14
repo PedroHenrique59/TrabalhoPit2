@@ -14,4 +14,6 @@
     <string name="cadastrarUsuario">Cadastrar Usuário</string>
     <string name="senhaconfirmar">Confirmar senha</string>
     <string name="titulotelabuscarpadaria">Map</string>
+    <string name="nomepadaria">Nome da padaria</string>
+    <string name="salvar">salvar</string>
 </resources>
