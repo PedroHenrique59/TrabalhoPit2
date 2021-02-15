@@ -62,6 +62,6 @@ public class MenuInicialFuncActivity extends AppCompatActivity {
     }
 
     public void abrirTelaAdicionarProdutoPadaria(View view){
-        startActivity(new Intent(getApplicationContext(), CadastroFuncionarioActivity.class));
+        startActivity(new Intent(getApplicationContext(), AdicionarProdutoPadariaActivity.class));
     }
 }

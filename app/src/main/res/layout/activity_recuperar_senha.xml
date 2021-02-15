@@ -56,6 +56,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
+        android:drawableStart="@drawable/ic_email_24dp"
         android:drawableLeft="@drawable/ic_email_24dp"
         android:hint="@string/loginEmail"
         android:imeOptions="actionDone"
