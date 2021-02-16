@@ -16,9 +16,11 @@
     <string name="titulotelabuscarpadaria">Map</string>
     <string name="nomepadaria">Nome da padaria</string>
     <string name="salvar">salvar</string>
-    <string name="padaria">Padaria</string>
-    <string name="produtos">Produtos</string>
+    <string name="escolhapadaria">Escolha a padaria:</string>
+    <string name="escolhaproduto">Escolha o(s) produto(s)</string>
     <string name="paodequeijo">Pão de Queijo</string>
     <string name="coxinha">Coxinha</string>
     <string name="tituloadicionarproduto">Adicionar Produto(s)</string>
+    <string name="buscarpadaria">Buscar Padarias</string>
+    <string name="title_activity_ver_padarias_mapa">Map</string>
 </resources>

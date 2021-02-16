@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -64,5 +65,9 @@ public class MenuInicialActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void abrirTelaVerPadaria(View view){
+        startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
     }
 }
