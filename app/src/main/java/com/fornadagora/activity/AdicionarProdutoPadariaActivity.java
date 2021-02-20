@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -72,7 +71,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     public void inicializarComponentes(){
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
-        spinner = findViewById(R.id.spinnerPadarias);
+        spinner = findViewById(R.id.spinnerNomePadaria);
 
         checkBoxPaoQueijo = findViewById(R.id.checkBoxPaoQueijo);
         checkBoxCoxinha = findViewById(R.id.checkBoxCoxinha);

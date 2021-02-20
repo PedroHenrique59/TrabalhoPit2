@@ -15,9 +15,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
 
     <View
         android:id="@+id/view"
@@ -42,6 +44,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bakery_icone" />
+
+    <ImageButton
+        android:id="@+id/imageButtonEnviarNotificacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="176dp"
+        android:onClick="enviarNotificacao"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonAddPadaria"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_email_24dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

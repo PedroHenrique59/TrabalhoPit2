@@ -23,4 +23,7 @@
     <string name="tituloadicionarproduto">Adicionar Produto(s)</string>
     <string name="buscarpadaria">Buscar Padarias</string>
     <string name="title_activity_ver_padarias_mapa">Map</string>
+    <string name="titulotelacadastraralerta">Cadastrar Alerta</string>
+    <string name="nomealerta">Nome do alerta</string>
+    <string name="nomeproduto">Nome do produto</string>
 </resources>

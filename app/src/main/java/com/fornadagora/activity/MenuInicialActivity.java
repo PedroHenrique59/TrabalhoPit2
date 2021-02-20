@@ -70,4 +70,8 @@ public class MenuInicialActivity extends AppCompatActivity {
     public void abrirTelaVerPadaria(View view){
         startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
     }
+
+    public void abrirTelaCadastrarAlerta(View view){
+        startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
+    }
 }
