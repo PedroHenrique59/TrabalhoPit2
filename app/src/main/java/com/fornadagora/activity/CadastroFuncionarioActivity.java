@@ -8,9 +8,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.fornadagora.R;
@@ -38,6 +41,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CadastroFuncionarioActivity extends AppCompatActivity {
 
     private EditText campoNome;
@@ -48,10 +54,16 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private Button botaoCadastrar;
     private ProgressBar progressBar;
 
+    private Spinner spinner;
+    private ArrayAdapter arrayAdapterPadaria;
+    private List<String> listaNomePadaria = new ArrayList<>();
+    private List<Padaria> listaPadarias = new ArrayList<>();
+
     private Funcionario funcionario;
 
     private FirebaseAuth autenticacao;
-    private DatabaseReference funcionarios;
+    private DatabaseReference referenciaFuncionarios;
+    private DatabaseReference referenciaPadarias;
 
     private static String tipoPerfil = "Funcionario";
 
@@ -61,32 +73,44 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_funcionario);
 
         inicializarComponentes();
+        carregarSpinnerPadarias();
 
         progressBar.setVisibility(View.GONE);
 
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String textoNome = campoNome.getText().toString();
                 String textoEmail = campoEmail.getText().toString();
                 String textoSenha = campoSenha.getText().toString();
                 String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
+                String nomePadaria = spinner.getSelectedItem().toString();
 
                 if(!textoNome.isEmpty()){
                     if(!textoEmail.isEmpty()){
                         if(!textoSenha.isEmpty()){
                             if(!textoConfirmarSenha.isEmpty()){
+                                if(!nomePadaria.isEmpty()){
                                 if(textoConfirmarSenha.equals(textoSenha)){
                                     funcionario = new Funcionario();
                                     funcionario.setNome(textoNome);
                                     funcionario.setEmail(textoEmail);
                                     funcionario.setSenha(textoSenha);
                                     funcionario.setTipoPerfil(tipoPerfil);
+                                    if(!listaPadarias.isEmpty()){
+                                        for(Padaria padaria : listaPadarias){
+                                            if(nomePadaria.equals(padaria.getNome())){
+                                                funcionario.setPadaria(padaria);
+                                            }
+                                        }
+                                    }
                                     cadastrar(funcionario);
                                 }else{
                                     Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
                                     campoConfirmarSenha.setText("");
+                                }
+                                }else{
+                                    Toast.makeText(CadastroFuncionarioActivity.this, "Escolha uma padaria", Toast.LENGTH_SHORT).show();
                                 }
                             }else{
                                 Toast.makeText(CadastroFuncionarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
@@ -113,13 +137,15 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
         progressBar = findViewById(R.id.progressCadastroFun);
+        spinner = findViewById(R.id.spinnerPadariaFuncionario);
+        arrayAdapterPadaria = new ArrayAdapter (this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
     }
 
     public void cadastrar(final Funcionario funcionario){
 
         progressBar.setVisibility(View.VISIBLE);
 
-        funcionarios = ConfiguracaoFirebase.getFirebase().child("funcionarios");
+        referenciaFuncionarios = ConfiguracaoFirebase.getFirebase().child("funcionarios");
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         autenticacao.createUserWithEmailAndPassword(
@@ -160,5 +186,26 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    public void carregarSpinnerPadarias(){
+        referenciaPadarias = ConfiguracaoFirebase.getFirebase().child("padarias");
+        referenciaPadarias.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapShotPadaria : snapshot.getChildren()){
+                        Padaria padaria = snapShotPadaria.getValue(Padaria.class);
+                        listaPadarias.add(padaria);
+                        listaNomePadaria.add(padaria.getNome());
+                    }
+                    spinner.setAdapter(arrayAdapterPadaria);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

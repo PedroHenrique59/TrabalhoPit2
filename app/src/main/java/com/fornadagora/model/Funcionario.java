@@ -11,8 +11,7 @@ public class Funcionario {
     private String email;
     private String senha;
     private String tipoPerfil;
-
-    //Quais atributos a mais?
+    private Padaria padaria;
 
     public Funcionario(){
 
@@ -58,6 +57,14 @@ public class Funcionario {
 
     public void setTipoPerfil(String tipoPerfil) {
         this.tipoPerfil = tipoPerfil;
+    }
+
+    public Padaria getPadaria() {
+        return padaria;
+    }
+
+    public void setPadaria(Padaria padaria) {
+        this.padaria = padaria;
     }
 
     public void salvar(){

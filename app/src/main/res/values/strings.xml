@@ -26,4 +26,5 @@
     <string name="titulotelacadastraralerta">Cadastrar Alerta</string>
     <string name="nomealerta">Nome do alerta</string>
     <string name="nomeproduto">Nome do produto</string>
+    <string name="padaria">Padaria</string>
 </resources>

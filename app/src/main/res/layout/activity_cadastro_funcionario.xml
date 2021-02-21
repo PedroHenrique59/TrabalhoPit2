@@ -31,6 +31,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
+        android:drawableStart="@drawable/ic_pessoa_24dp"
         android:drawableLeft="@drawable/ic_pessoa_24dp"
         android:hint="@string/nome"
         android:imeOptions="actionDone"
@@ -54,6 +55,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
+        android:drawableStart="@drawable/ic_email_24dp"
         android:drawableLeft="@drawable/ic_email_24dp"
         android:hint="@string/email"
         android:imeOptions="actionDone"
@@ -66,6 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_nome" />
 
+
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_text_cadastro_fun_senha"
         android:layout_width="match_parent"
@@ -77,6 +80,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
+        android:drawableStart="@drawable/ic_lock_24dp"
         android:drawableLeft="@drawable/ic_lock_24dp"
         android:hint="@string/senha"
         android:imeOptions="actionDone"
@@ -88,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_email" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPadariaFuncionario" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_text_senha_fun_confirmar"
@@ -101,6 +105,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
+        android:drawableStart="@drawable/ic_lock_24dp"
         android:drawableLeft="@drawable/ic_lock_24dp"
         android:hint="@string/senhaconfirmar"
         android:imeOptions="actionDone"
@@ -140,7 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-black"
-        android:text="Fornadagora"
+        android:text="@string/tituloapp"
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="48sp"
         android:typeface="normal"
@@ -177,6 +182,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar_fun" />
+
+    <Spinner
+        android:id="@+id/spinnerPadariaFuncionario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/common_google_signin_btn_text_light_normal_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
