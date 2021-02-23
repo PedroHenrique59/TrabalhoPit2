@@ -175,16 +175,16 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Você já salvou um alerta para esse produto nesta padaria", Toast.LENGTH_SHORT).show();
                             }
                     }
+                    }
                 }else{
-                    Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
                 }
             }else{
-                Toast.makeText(this, "Favor escolher uma padaria", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor informar o produto", Toast.LENGTH_SHORT).show();
             }
         }else{
-            Toast.makeText(this, "Favor preencher o nome do alerta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor informar o nome do alerta", Toast.LENGTH_SHORT).show();
         }
-    }
     }
 
     public void validarAlertaSalvo(){
