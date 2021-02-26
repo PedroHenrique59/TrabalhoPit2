@@ -27,4 +27,6 @@
     <string name="nomealerta">Nome do alerta</string>
     <string name="nomeproduto">Nome do produto</string>
     <string name="padaria">Padaria</string>
+    <string name="veralertasalvo">Ver alerta(s) salvo(s)</string>
+    <string name="botaoeditar">Ver alerta(s) salvo(s)</string>
 </resources>
