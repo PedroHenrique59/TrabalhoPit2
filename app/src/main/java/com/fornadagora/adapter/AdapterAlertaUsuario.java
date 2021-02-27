@@ -92,7 +92,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                     String id = Base64Custom.codificarBase64(email);
 
                     referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
-                    referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+                    referenciaAlerta.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
@@ -124,6 +124,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
                 dataSnap.getRef().removeValue();
+                Toast.makeText(context, "Alerta excluido com sucesso", Toast.LENGTH_SHORT).show();
             }
         });
 
