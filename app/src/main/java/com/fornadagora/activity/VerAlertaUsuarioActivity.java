@@ -82,6 +82,5 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         recyclerViewAlerta.setHasFixedSize(true);
         recyclerViewAlerta.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerViewAlerta.setAdapter(adapter);
-
     }
 }
