@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.fornadagora.R;
+import com.fornadagora.RecyclerItemClickListener;
 import com.fornadagora.adapter.AdapterAlertaUsuario;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -79,5 +82,6 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         recyclerViewAlerta.setHasFixedSize(true);
         recyclerViewAlerta.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerViewAlerta.setAdapter(adapter);
+
     }
 }

@@ -20,6 +20,13 @@
             android:textSize="18sp" />
 
         <ImageView
+            android:id="@+id/imageViewExcluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/ic_excluir" />
+
+        <ImageView
             android:id="@+id/imageViewEditar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
