@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "624548577507",
+    "firebase_url": "https://fornadagora-default-rtdb.firebaseio.com",
     "project_id": "fornadagora",
     "storage_bucket": "fornadagora.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.fornadagora",
             "certificate_hash": "058b71f314b33d4e967283b637b5d053972d6aa9"
+          }
+        },
+        {
+          "client_id": "624548577507-d698po9909uml473io2dm3373rm2pnm7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fornadagora",
+            "certificate_hash": "1247e7c1a8216ac3d6c4cb80892115e8de25632d"
           }
         },
         {

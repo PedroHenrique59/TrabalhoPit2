@@ -11,6 +11,7 @@ public class Usuario {
     private String email;
     private String senha;
     private String tipoPerfil;
+    private String token;
 
     public Usuario() {
     }
@@ -55,6 +56,14 @@ public class Usuario {
 
     public void setTipoPerfil(String tipoPerfil) {
         this.tipoPerfil = tipoPerfil;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void salvar(){
