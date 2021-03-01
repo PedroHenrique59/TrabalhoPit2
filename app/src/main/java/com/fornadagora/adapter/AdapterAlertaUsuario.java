@@ -45,8 +45,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
         View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_alerta_usuario, parent, false);
+        context = parent.getContext();
         return new MyViewHolder(itemLista);
     }
 
@@ -92,7 +92,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                     String id = Base64Custom.codificarBase64(email);
 
                     referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
-                    referenciaAlerta.addValueEventListener(new ValueEventListener() {
+                    referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
