@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="176dp"
-        android:onClick="enviarNotificacao"
+        android:onClick="abrirTelaAlertarUsuario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButtonAddPadaria"
         app:layout_constraintTop_toTopOf="parent"

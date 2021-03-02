@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".activity.AlertarUsuarioActivity"></activity>
 
         <service
             android:name=".FirebaseService"
@@ -29,7 +29,6 @@
         </service>
 
         <activity android:name=".activity.VerAlertaUsuarioActivity" />
-        <activity android:name=".activity.NotificacaoClickActivity" />
         <activity
             android:name=".activity.CadastrarAlertaActivity"
             android:screenOrientation="portrait" />
@@ -73,7 +72,7 @@
         <activity
             android:name=".activity.CadastroUsuarioActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity2"></activity>
+        <activity android:name=".MainActivity2" />
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">

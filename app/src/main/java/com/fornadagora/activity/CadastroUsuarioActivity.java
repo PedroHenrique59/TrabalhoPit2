@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
@@ -42,12 +43,15 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     private static String tipoPerfil = "Usuario";
 
+    private String tokenUsuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_usuario);
 
         inicializarComponentes();
+        recuperarToken();
 
         progressBar.setVisibility(View.GONE);
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +73,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                                 usuario.setEmail(textoEmail);
                                 usuario.setSenha(textoSenha);
                                 usuario.setTipoPerfil(tipoPerfil);
+                                usuario.setToken(tokenUsuario);
                                 cadastrar(usuario);
                             }else{
                                 Toast.makeText(CadastroUsuarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
@@ -148,5 +153,14 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    public void recuperarToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                tokenUsuario = task.getResult();
+            }
+        });
     }
 }

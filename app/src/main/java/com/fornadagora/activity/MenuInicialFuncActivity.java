@@ -79,40 +79,7 @@ public class MenuInicialFuncActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), AdicionarProdutoPadariaActivity.class));
     }
 
-    public void enviarNotificacao(View view){
-
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        PendingIntent p = PendingIntent.getActivity(this, 0, new Intent(this, NotificacaoClickActivity.class), 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "idCanal");
-        builder.setTicker("Ticker Texto");
-        builder.setContentTitle("Titulo");
-        builder.setContentText("Descrição");
-        builder.setSmallIcon(R.drawable.ic_email_24dp);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.bakery_icone));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            String channelId = "Your_channel_id";
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
-            nm.createNotificationChannel(channel);
-            builder.setChannelId(channelId);
-        }
-
-        Notification n = builder.build();
-        n.vibrate = new long[]{150,300,150,600};
-        nm.notify(R.drawable.ic_email_24dp, n);
-
-        try{
-            Uri som = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone toque = RingtoneManager.getRingtone(this, som);
-            toque.play();
-
-        }catch (Exception e){
-
-        }
+    public void abrirTelaAlertarUsuario(View view){
+        startActivity(new Intent(getApplicationContext(), AlertarUsuarioActivity.class));
     }
 }
