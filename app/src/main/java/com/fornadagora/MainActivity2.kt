@@ -44,6 +44,20 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    fun chamarNotificacao(titulo : String, mensagem : String, tokenUsuario : String){
+        val title = titulo;
+        val message = mensagem;
+        val recipientToken = tokenUsuario;
+        if(title.isNotEmpty() && message.isNotEmpty() && recipientToken.isNotEmpty()) {
+            PushNotification(
+                    NotificationData(title, message),
+                    recipientToken
+            ).also {
+                sendNotification(it)
+            }
+        }
+    }
+
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = RetrofitInstance.api.postNotification(notification)

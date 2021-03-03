@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.fornadagora.MainActivity2;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -178,7 +179,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarAlertasUsuario(Usuario usuario){
+    public void buscarAlertasUsuario(final Usuario usuario){
 
         final String nomePadaria  = spinnerPadariaAlerta.getSelectedItem().toString();
         final String nomeProduto = spinnerProdutoAlerta.getSelectedItem().toString();
@@ -191,6 +192,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
+                    listaAlertas.clear();
                     for(DataSnapshot snapAlerta : snapshot.getChildren()){
                         Alerta alerta = snapAlerta.getValue(Alerta.class);
                         listaAlertas.add(alerta);
@@ -199,7 +201,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                      for(Alerta alerta : listaAlertas){
                          if(alerta.getPadaria().getNome().equals(nomePadaria)){
                              if(alerta.getProduto().getNome().equals(nomeProduto)){
-                                 alertarUsuario();
+                                 alertarUsuario("Titulo teste", "Mensagem teste", usuario.getToken());
                              }
                          }
                      }
@@ -214,7 +216,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void alertarUsuario(){
-
+    public void alertarUsuario(String titulo, String mensagem, String tokenUsu){
+        MainActivity2 main2 = new MainActivity2();
+        main2.chamarNotificacao(titulo, mensagem, tokenUsu);
     }
 }
