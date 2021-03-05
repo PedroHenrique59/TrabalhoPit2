@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.fornadagora.MainActivity2;
+import com.fornadagora.NotificacaoUsuario;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -201,7 +200,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                      for(Alerta alerta : listaAlertas){
                          if(alerta.getPadaria().getNome().equals(nomePadaria)){
                              if(alerta.getProduto().getNome().equals(nomeProduto)){
-                                 alertarUsuario("Titulo teste", "Mensagem teste", usuario.getToken());
+                                 alertarUsuario(alerta.getPadaria().getNome(), "Acabou de sair do forno " + alerta.getProduto().getNome(), usuario.getToken());
                              }
                          }
                      }
@@ -217,7 +216,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void alertarUsuario(String titulo, String mensagem, String tokenUsu){
-        MainActivity2 main2 = new MainActivity2();
-        main2.chamarNotificacao(titulo, mensagem, tokenUsu);
+        NotificacaoUsuario notUsu = new NotificacaoUsuario();
+        notUsu.chamarNotificacao(titulo, mensagem, tokenUsu);
     }
 }

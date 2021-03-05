@@ -72,7 +72,7 @@
         <activity
             android:name=".activity.CadastroUsuarioActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity2" />
+        <activity android:name=".NotificacaoUsuario" />
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
