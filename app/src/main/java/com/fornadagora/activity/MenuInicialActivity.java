@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.fornadagora.MainActivity2Kt;
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,6 +74,6 @@ public class MenuInicialActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), VerAlertaUsuarioActivity.class));
     }
     public void abrirTelaNotificacao(View view){
-        startActivity(new Intent(getApplicationContext(), com.fornadagora.EnviarNotificacao.class));
+        startActivity(new Intent(getApplicationContext(), com.fornadagora.MainActivity2.class));
     }
 }

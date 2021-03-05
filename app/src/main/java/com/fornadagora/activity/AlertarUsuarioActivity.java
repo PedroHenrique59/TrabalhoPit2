@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.fornadagora.EnviarNotificacao;
+import com.fornadagora.MainActivity2;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -201,7 +201,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                      for(Alerta alerta : listaAlertas){
                          if(alerta.getPadaria().getNome().equals(nomePadaria)){
                              if(alerta.getProduto().getNome().equals(nomeProduto)){
-                                 alertarUsuario(alerta.getPadaria().getNome(), "O produto " + alerta.getProduto().getNome() + " acabou de sair", usuario.getToken());
+                                 alertarUsuario("Titulo teste", "Mensagem teste", usuario.getToken());
                              }
                          }
                      }
@@ -217,7 +217,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void alertarUsuario(String titulo, String mensagem, String tokenUsu){
-        EnviarNotificacao envNot = new EnviarNotificacao();
-        envNot.chamarNotificacao(titulo, mensagem, tokenUsu);
+        MainActivity2 main2 = new MainActivity2();
+        main2.chamarNotificacao(titulo, mensagem, tokenUsu);
     }
 }
