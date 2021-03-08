@@ -211,11 +211,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean validarPerfilUsuario(Usuario usuario){
         if(usuario.getTipoPerfil().equals("Administrador")){
             ehAdministrador = true;
-            startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
+            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
             finish();
         }else{
             ehAdministrador = false;
-            startActivity(new Intent(getApplicationContext(), MenuInicialActivity.class));
+            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
             finish();
         }
         return ehAdministrador;

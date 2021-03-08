@@ -17,7 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.VerDadosUsuarioActivity"></activity>
+        <activity
+            android:name=".activity.MenuLateralActivity"
+            android:label="@string/title_activity_menu_lateral"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".activity.VerDadosUsuarioActivity" />
         <activity android:name=".activity.AlertarUsuarioActivity" />
 
         <service
@@ -82,6 +88,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <meta-data
