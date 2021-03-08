@@ -72,7 +72,8 @@ public class MenuInicialActivity extends AppCompatActivity {
     public void abrirTelaVerAlertas(View view){
         startActivity(new Intent(getApplicationContext(), VerAlertaUsuarioActivity.class));
     }
-    public void abrirTelaNotificacao(View view){
-        startActivity(new Intent(getApplicationContext(), com.fornadagora.NotificacaoUsuario.class));
+
+    public void abrirTelaVerDadosUsuario(View view){
+        startActivity(new Intent(getApplicationContext(), VerDadosUsuarioActivity.class));
     }
 }
