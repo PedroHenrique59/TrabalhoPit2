@@ -1,6 +1,8 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
@@ -27,13 +29,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MenuLateralActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+
     private Usuario usuario;
+
     private TextView txtnomeUsu;
     private TextView txtemailUsu;
 
@@ -56,6 +57,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -65,10 +67,17 @@ public class MenuLateralActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        txtnomeUsu = findViewById(R.id.txtnomeUsu);
-        txtemailUsu = findViewById(R.id.txtemailUsu);
+
+        View headerView = navigationView.getHeaderView(0);
+
+        inicializarComponentes(headerView);
         listarDadosUsuario();
+    }
+
+    public void inicializarComponentes(View headerView) {
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        txtnomeUsu = headerView.findViewById(R.id.txtnomeUsuHeader);
+        txtemailUsu = headerView.findViewById(R.id.txtemailUsuHeader);
     }
 
     @Override
@@ -79,10 +88,29 @@ public class MenuLateralActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_deslogar :
+                deslogarUsuario();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private void deslogarUsuario(){
+        try{
+            autenticacao.signOut();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void listarDadosUsuario(){
@@ -96,14 +124,11 @@ public class MenuLateralActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-
                         usuario = snapshot.getValue(Usuario.class);
                         if(usuario != null){
                             txtnomeUsu.setText(usuario.getNome());
                             txtemailUsu.setText(usuario.getEmail());
                         }
-
-
                     }
                 }
 
@@ -114,8 +139,4 @@ public class MenuLateralActivity extends AppCompatActivity {
             });
         }
     }
-
-
-
-
 }

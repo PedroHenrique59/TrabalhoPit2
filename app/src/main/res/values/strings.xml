@@ -29,6 +29,7 @@
     <string name="padaria">Padaria</string>
     <string name="veralertasalvo">Ver alerta(s) salvo(s)</string>
     <string name="botaoeditar">Ver alerta(s) salvo(s)</string>
+    <string name="deslogarusuario">Sair</string>
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
