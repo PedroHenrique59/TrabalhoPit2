@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MenuLateralActivity"
-            android:label="@string/title_activity_menu_lateral"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

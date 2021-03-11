@@ -69,6 +69,24 @@ public class MenuLateralActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         View headerView = navigationView.getHeaderView(0);
+        navigationView.getMenu().getItem(0).setChecked(false);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId() == R.id.nav_home)
+                {
+                    Intent i = new Intent(MenuLateralActivity.this, VerAlertaUsuarioActivity.class);
+                    startActivity(i);
+                }
+                if(item.getItemId() == R.id.nav_gallery){
+                    Intent i = new Intent(MenuLateralActivity.this, VerDadosUsuarioActivity.class);
+                    startActivity(i);
+                }
+                return true;
+            }
+        });
+
+
 
         inicializarComponentes(headerView);
         listarDadosUsuario();
@@ -138,5 +156,12 @@ public class MenuLateralActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+    public void abrirTelaVerPadaria(View view){
+        startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
+    }
+
+    public void abrirTelaCadastrarAlerta(View view){
+        startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
     }
 }
