@@ -45,17 +45,15 @@ public class VerDadosUsuarioActivity extends AppCompatActivity {
         listarDadosUsuario();
     }
 
-    public void listarDadosUsuario(){
-        if(autenticacao.getCurrentUser() != null){
-            String email = autenticacao.getCurrentUser().getEmail();
-            String id = Base64Custom.codificarBase64(email);
-
+    public void listarDadosUsuario() {
+        if (autenticacao.getCurrentUser() != null) {
+            String id = autenticacao.getCurrentUser().getUid();
             referenciaUsuario = ConfiguracaoFirebase.getFirebase();
             referenciaUsuario = referenciaUsuario.child("usuarios").child(id);
             referenciaUsuario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         listaUsuario.clear();
                         Usuario usuario = snapshot.getValue(Usuario.class);
                         listaUsuario.add(usuario);
@@ -71,7 +69,7 @@ public class VerDadosUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    public void configuraRecyclerView(){
+    public void configuraRecyclerView() {
         adapter = new AdapterDadosUsuario(listaUsuario);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewUsuario.setLayoutManager(layoutManager);

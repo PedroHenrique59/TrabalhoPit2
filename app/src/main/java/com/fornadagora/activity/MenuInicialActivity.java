@@ -43,8 +43,8 @@ public class MenuInicialActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.menu_sair :
+        switch (item.getItemId()) {
+            case R.id.menu_sair:
                 deslogarUsuario();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
@@ -53,27 +53,27 @@ public class MenuInicialActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deslogarUsuario(){
-        try{
+    private void deslogarUsuario() {
+        try {
             autenticacao.signOut();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void abrirTelaVerPadaria(View view){
+    public void abrirTelaVerPadaria(View view) {
         startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
     }
 
-    public void abrirTelaCadastrarAlerta(View view){
+    public void abrirTelaCadastrarAlerta(View view) {
         startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
     }
 
-    public void abrirTelaVerAlertas(View view){
+    public void abrirTelaVerAlertas(View view) {
         startActivity(new Intent(getApplicationContext(), VerAlertaUsuarioActivity.class));
     }
 
-    public void abrirTelaVerDadosUsuario(View view){
+    public void abrirTelaVerDadosUsuario(View view) {
         startActivity(new Intent(getApplicationContext(), VerDadosUsuarioActivity.class));
     }
 }

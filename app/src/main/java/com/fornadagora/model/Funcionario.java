@@ -17,7 +17,6 @@ public class Funcionario {
 
     }
 
-    @Exclude
     public String getIdFuncionario() {
         return idFuncionario;
     }

@@ -42,8 +42,8 @@ public class VerPadariasMapaActivity extends FragmentActivity implements OnMapRe
         referenciaPadaria.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot teste : snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot teste : snapshot.getChildren()) {
                         Padaria padaria = teste.getValue(Padaria.class);
                         double latitude = Double.parseDouble(padaria.getLocal().getLatitude());
                         double longitude = Double.parseDouble(padaria.getLocal().getLongitude());

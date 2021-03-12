@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 String textoEmail = campoEmail.getText().toString();
                 String textoSenha = campoSenha.getText().toString();
 
-                if(!textoEmail.isEmpty()){
-                    if(!textoSenha.isEmpty()){
+                if (!textoEmail.isEmpty()) {
+                    if (!textoSenha.isEmpty()) {
 
                         usuario = new Usuario();
                         usuario.setEmail(textoEmail);
@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
                         funcionario.setEmail(textoEmail);
                         funcionario.setSenha(textoSenha);
 
-                        validarLogin(usuario,funcionario);
+                        validarLogin(usuario, funcionario);
 
-                    }else{
+                    } else {
                         Toast.makeText(MainActivity.this, "Preencha o campo senha", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "Preencha o campo e-mail", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -85,29 +85,28 @@ public class MainActivity extends AppCompatActivity {
         verificarUsuarioLogado();
     }
 
-    public void abrirCadastro(View view){
+    public void abrirCadastro(View view) {
         Intent i = new Intent(MainActivity.this, CadastroUsuarioActivity.class);
         startActivity(i);
     }
 
-    public void abrirRecuperarSenha(View view){
+    public void abrirRecuperarSenha(View view) {
         Intent i = new Intent(MainActivity.this, RecuperarSenhaActivity.class);
         startActivity(i);
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
         campoEmail = findViewById(R.id.edit_text_recuperar_email);
         campoSenha = findViewById(R.id.edit_text_login_senha);
         progressBar = findViewById(R.id.progressLogin);
         botaoLogar = findViewById(R.id.btnRecuperarSenha);
     }
 
-    public void verificarUsuarioLogado(){
+    public void verificarUsuarioLogado() {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        if(autenticacao.getCurrentUser() != null){
+        if (autenticacao.getCurrentUser() != null) {
 
-            String email = autenticacao.getCurrentUser().getEmail();
-            String id = Base64Custom.codificarBase64(email);
+            String id = autenticacao.getCurrentUser().getUid();
 
             DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
 
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     usuarioRecuperado = snapshot.getValue(Usuario.class);
-                    if(usuarioRecuperado != null){
+                    if (usuarioRecuperado != null) {
                         validarPerfilUsuario(usuarioRecuperado);
                     }
                 }
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     funcionarioRecuperado = snapshot.getValue(Funcionario.class);
-                    if(funcionarioRecuperado != null){
+                    if (funcionarioRecuperado != null) {
                         validarPerfilFuncionario(funcionarioRecuperado);
                     }
                 }
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void validarLogin(Usuario usuario, Funcionario funcionario){
+    public void validarLogin(Usuario usuario, Funcionario funcionario) {
         progressBar.setVisibility(View.VISIBLE);
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -155,25 +154,25 @@ public class MainActivity extends AppCompatActivity {
         ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     progressBar.setVisibility(View.GONE);
                     recuperarTipoDeUsuarioLogado();
-                }else{
-                    Toast.makeText(MainActivity.this,"E-mail ou senha incorretos",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "E-mail ou senha incorretos", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    public void recuperarTipoDeUsuarioLogado(){
+    public void recuperarTipoDeUsuarioLogado() {
         usuarioRecuperado = new Usuario();
         funcionarioRecuperado = new Funcionario();
 
-        String email = autenticacao.getCurrentUser().getEmail();
-        String id = Base64Custom.codificarBase64(email);
+        String id = autenticacao.getCurrentUser().getUid();
 
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+
         DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
         DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
 
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Usuario usuarioRecuperado = snapshot.getValue(Usuario.class);
-                if(usuarioRecuperado != null){
+                if (usuarioRecuperado != null) {
                     validarPerfilUsuario(usuarioRecuperado);
                 }
             }
@@ -196,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Funcionario funcionarioRecuperado = snapshot.getValue(Funcionario.class);
-                if(funcionarioRecuperado != null){
+                if (funcionarioRecuperado != null) {
                     validarPerfilFuncionario(funcionarioRecuperado);
                 }
             }
@@ -208,12 +207,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public boolean validarPerfilUsuario(Usuario usuario){
-        if(usuario.getTipoPerfil().equals("Administrador")){
+    public boolean validarPerfilUsuario(Usuario usuario) {
+        if (usuario.getTipoPerfil().equals("Administrador")) {
             ehAdministrador = true;
-            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
+            startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
             finish();
-        }else{
+        } else {
             ehAdministrador = false;
             startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
             finish();
@@ -221,8 +220,8 @@ public class MainActivity extends AppCompatActivity {
         return ehAdministrador;
     }
 
-    public void validarPerfilFuncionario(Funcionario funcionario){
-        if(funcionario.getTipoPerfil().equals("Funcionario")){
+    public void validarPerfilFuncionario(Funcionario funcionario) {
+        if (funcionario.getTipoPerfil().equals("Funcionario")) {
             startActivity(new Intent(getApplicationContext(), MenuInicialFuncActivity.class));
             finish();
         }

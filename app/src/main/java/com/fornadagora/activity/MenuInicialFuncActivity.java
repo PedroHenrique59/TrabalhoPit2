@@ -57,8 +57,8 @@ public class MenuInicialFuncActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.menu_sair :
+        switch (item.getItemId()) {
+            case R.id.menu_sair:
                 deslogarUsuario();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
@@ -67,19 +67,19 @@ public class MenuInicialFuncActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deslogarUsuario(){
-        try{
+    private void deslogarUsuario() {
+        try {
             autenticacao.signOut();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void abrirTelaAdicionarProdutoPadaria(View view){
+    public void abrirTelaAdicionarProdutoPadaria(View view) {
         startActivity(new Intent(getApplicationContext(), AdicionarProdutoPadariaActivity.class));
     }
 
-    public void abrirTelaAlertarUsuario(View view){
+    public void abrirTelaAlertarUsuario(View view) {
         startActivity(new Intent(getApplicationContext(), AlertarUsuarioActivity.class));
     }
 }

@@ -31,11 +31,11 @@ public class MenuInicialAdminActivity extends AppCompatActivity {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     }
 
-    public void abrirTelaCadastroFuncionario(View view){
+    public void abrirTelaCadastroFuncionario(View view) {
         startActivity(new Intent(getApplicationContext(), CadastroFuncionarioActivity.class));
     }
 
-    public void abrirTelaBuscarPadaria(View view){
+    public void abrirTelaBuscarPadaria(View view) {
         startActivity(new Intent(getApplicationContext(), BuscarPadariaActivity.class));
     }
 
@@ -51,8 +51,8 @@ public class MenuInicialAdminActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.menu_sair :
+        switch (item.getItemId()) {
+            case R.id.menu_sair:
                 deslogarUsuario();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
@@ -61,10 +61,10 @@ public class MenuInicialAdminActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deslogarUsuario(){
-        try{
+    private void deslogarUsuario() {
+        try {
             autenticacao.signOut();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -47,19 +47,21 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         listarAlertas();
     }
 
-    public void listarAlertas(){
-        if(autenticacao.getCurrentUser() != null){
-            String email = autenticacao.getCurrentUser().getEmail();
-            String id = Base64Custom.codificarBase64(email);
+    public void listarAlertas() {
+        if (autenticacao.getCurrentUser() != null) {
+
+            String id = autenticacao.getCurrentUser().getUid();
 
             referenciaAlerta = ConfiguracaoFirebase.getFirebase();
+
             referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
+
             referenciaAlerta.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         listaAlertas.clear();
-                        for(DataSnapshot snapAlerta : snapshot.getChildren()){
+                        for (DataSnapshot snapAlerta : snapshot.getChildren()) {
                             Alerta alerta = snapAlerta.getValue(Alerta.class);
                             listaAlertas.add(alerta);
                         }
@@ -75,7 +77,7 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    public void configuraRecyclerView(){
+    public void configuraRecyclerView() {
         adapter = new AdapterAlertaUsuario(listaAlertas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewAlerta.setLayoutManager(layoutManager);

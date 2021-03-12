@@ -73,19 +73,17 @@ public class MenuLateralActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.getItemId() == R.id.nav_home)
-                {
+                if (item.getItemId() == R.id.nav_home) {
                     Intent i = new Intent(MenuLateralActivity.this, VerAlertaUsuarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_gallery){
+                if (item.getItemId() == R.id.nav_gallery) {
                     Intent i = new Intent(MenuLateralActivity.this, VerDadosUsuarioActivity.class);
                     startActivity(i);
                 }
                 return true;
             }
         });
-
 
 
         inicializarComponentes(headerView);
@@ -107,8 +105,8 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_deslogar :
+        switch (item.getItemId()) {
+            case R.id.action_deslogar:
                 deslogarUsuario();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
@@ -123,16 +121,16 @@ public class MenuLateralActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void deslogarUsuario(){
-        try{
+    private void deslogarUsuario() {
+        try {
             autenticacao.signOut();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void listarDadosUsuario(){
-        if(autenticacao.getCurrentUser() != null){
+    public void listarDadosUsuario() {
+        if (autenticacao.getCurrentUser() != null) {
             String email = autenticacao.getCurrentUser().getEmail();
             String id = Base64Custom.codificarBase64(email);
 
@@ -141,9 +139,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             referenciaUsuario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
-                        if(usuario != null){
+                        if (usuario != null) {
                             txtnomeUsu.setText(usuario.getNome());
                             txtemailUsu.setText(usuario.getEmail());
                         }
@@ -157,11 +155,12 @@ public class MenuLateralActivity extends AppCompatActivity {
             });
         }
     }
-    public void abrirTelaVerPadaria(View view){
+
+    public void abrirTelaVerPadaria(View view) {
         startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
     }
 
-    public void abrirTelaCadastrarAlerta(View view){
+    public void abrirTelaCadastrarAlerta(View view) {
         startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
     }
 }

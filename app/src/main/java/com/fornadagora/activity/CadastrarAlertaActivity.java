@@ -64,23 +64,23 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         validarAlertaSalvo();
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         editTextNomeAlerta = findViewById(R.id.editTextNomeAlerta);
         spinnerPadaria = findViewById(R.id.spinnerNomePadaria);
         spinnerProduto = findViewById(R.id.spinnerProdutoPadaria);
-        arrayAdapterPadaria = new ArrayAdapter (this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
-        arrayAdapterProduto = new ArrayAdapter (this, android.R.layout.simple_spinner_dropdown_item, listaNomeProduto);
+        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
+        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeProduto);
     }
 
-    public void listarNomePadaria(){
+    public void listarNomePadaria() {
         referenciaPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot padariaSnap : snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot padariaSnap : snapshot.getChildren()) {
                         Padaria padaria = padariaSnap.getValue(Padaria.class);
-                        if(!padaria.getListaProdutos().isEmpty()){
+                        if (!padaria.getListaProdutos().isEmpty()) {
                             listaNomePadaria.add(padaria.getNome());
                             listaPadarias.add(padaria);
                         }
@@ -88,6 +88,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     spinnerPadaria.setAdapter(arrayAdapterPadaria);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -95,17 +96,17 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         });
     }
 
-    public void listenerSpinnerNomePadaria(){
+    public void listenerSpinnerNomePadaria() {
         spinnerPadaria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(!listaPadarias.isEmpty()){
+                if (!listaPadarias.isEmpty()) {
                     listaNomeProduto.clear();
                     listaProdutos.clear();
-                    for(Padaria padaria : listaPadarias){
+                    for (Padaria padaria : listaPadarias) {
                         String nomePadaria = spinnerPadaria.getSelectedItem().toString();
-                        if(padaria.getNome().equals(nomePadaria)){
-                            for(Produto produto : padaria.getListaProdutos()){
+                        if (padaria.getNome().equals(nomePadaria)) {
+                            for (Produto produto : padaria.getListaProdutos()) {
                                 listaNomeProduto.add(produto.getNome());
                                 listaProdutos.add(produto);
                             }
@@ -114,6 +115,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     spinnerProduto.setAdapter(arrayAdapterProduto);
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -121,23 +123,23 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         });
     }
 
-    public void salvarAlerta(View view){
+    public void salvarAlerta(View view) {
 
-        if(!editTextNomeAlerta.getText().toString().isEmpty()){
-            if(!spinnerPadaria.getSelectedItem().toString().isEmpty()){
-                if(!spinnerProduto.getSelectedItem().toString().isEmpty()){
+        if (!editTextNomeAlerta.getText().toString().isEmpty()) {
+            if (!spinnerPadaria.getSelectedItem().toString().isEmpty()) {
+                if (!spinnerProduto.getSelectedItem().toString().isEmpty()) {
 
                     String nomeAlerta = editTextNomeAlerta.getText().toString();
                     String nomePadaria = spinnerPadaria.getSelectedItem().toString();
                     String nomeProduto = spinnerProduto.getSelectedItem().toString();
 
-                    if(!listaPadarias.isEmpty()){
-                        for(Padaria padaria : listaPadarias){
-                            if(padaria.getNome().equals(nomePadaria)){
+                    if (!listaPadarias.isEmpty()) {
+                        for (Padaria padaria : listaPadarias) {
+                            if (padaria.getNome().equals(nomePadaria)) {
                                 padariaObj = new Padaria();
                                 padariaObj = padaria;
-                                for(Produto produto : listaProdutos){
-                                    if(produto.getNome().equals(nomeProduto)){
+                                for (Produto produto : listaProdutos) {
+                                    if (produto.getNome().equals(nomeProduto)) {
                                         produtoObj = new Produto();
                                         produtoObj = produto;
                                     }
@@ -145,11 +147,11 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             }
                         }
 
-                        if(!listaAlertas.isEmpty()){
-                            for(Alerta alerta : listaAlertas){
-                                if(nomePadaria.equals(alerta.getPadaria().getNome())){
-                                    if(nomeProduto.equals(alerta.getProduto().getNome())){
-                                        Toast.makeText(this, "Você já salvou um alerta para esse produto nesta padaria",Toast.LENGTH_SHORT).show();
+                        if (!listaAlertas.isEmpty()) {
+                            for (Alerta alerta : listaAlertas) {
+                                if (nomePadaria.equals(alerta.getPadaria().getNome())) {
+                                    if (nomeProduto.equals(alerta.getProduto().getNome())) {
+                                        Toast.makeText(this, "Você já salvou um alerta para esse produto nesta padaria", Toast.LENGTH_SHORT).show();
                                         produtoObj = null;
                                         break;
                                     }
@@ -157,49 +159,40 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             }
                         }
 
-                        if(padariaObj != null){
-                            if(produtoObj != null){
-                                if(autenticacao.getCurrentUser() != null){
-                                    Alerta alerta = new Alerta(nomeAlerta,padariaObj,produtoObj);
-                                    Usuario usuario = new Usuario();
-
-                                    String email = autenticacao.getCurrentUser().getEmail();
-                                    String id = Base64Custom.codificarBase64(email);
-
-                                    usuario.setIdUsuario(id);
-                                    alerta.setUsuario(usuario);
-                                    alerta.salvar();
+                        if (padariaObj != null) {
+                            if (produtoObj != null) {
+                                if (autenticacao.getCurrentUser() != null) {
+                                    montarAlerta(nomeAlerta);
                                     Toast.makeText(this, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
                                 }
-                            }else{
+                            } else {
                                 Toast.makeText(this, "Você já salvou um alerta para esse produto nesta padaria", Toast.LENGTH_SHORT).show();
                             }
+                        }
                     }
-                    }
-                }else{
+                } else {
                     Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 Toast.makeText(this, "Favor informar o produto", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(this, "Favor informar o nome do alerta", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void validarAlertaSalvo(){
-        if(autenticacao.getCurrentUser() != null){
-            String email = autenticacao.getCurrentUser().getEmail();
-            String id = Base64Custom.codificarBase64(email);
+    public void validarAlertaSalvo() {
+        if (autenticacao.getCurrentUser() != null) {
+            String id = autenticacao.getCurrentUser().getUid();
 
             referenciaAlerta = ConfiguracaoFirebase.getFirebase();
             referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
             referenciaAlerta.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         listaAlertas.clear();
-                        for(DataSnapshot snapAlerta : snapshot.getChildren()){
+                        for (DataSnapshot snapAlerta : snapshot.getChildren()) {
                             Alerta alerta = snapAlerta.getValue(Alerta.class);
                             listaAlertas.add(alerta);
                         }
@@ -212,6 +205,17 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void montarAlerta(String nomeAlerta) {
+        Alerta alerta = new Alerta(nomeAlerta, padariaObj, produtoObj);
+        Usuario usuario = new Usuario();
+
+        String id = autenticacao.getCurrentUser().getUid();
+
+        usuario.setIdUsuario(id);
+        usuario.setAlerta(alerta);
+        usuario.salvarAlerta();
     }
 }
 

@@ -12,11 +12,11 @@ public class Usuario {
     private String senha;
     private String tipoPerfil;
     private String token;
+    private Alerta alerta;
 
     public Usuario() {
     }
 
-    @Exclude
     public String getIdUsuario() {
         return idUsuario;
     }
@@ -66,8 +66,21 @@ public class Usuario {
         this.token = token;
     }
 
+    public Alerta getAlerta() {
+        return alerta;
+    }
+
+    public void setAlerta(Alerta alerta) {
+        this.alerta = alerta;
+    }
+
     public void salvar(){
         DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
         referencia.child("usuarios").child(this.idUsuario).setValue(this);
+    }
+
+    public void salvarAlerta(){
+        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
+        referencia.child("usuarios").child(this.getIdUsuario()).child("alerta").push().setValue(alerta);
     }
 }

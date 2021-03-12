@@ -80,55 +80,12 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String textoNome = campoNome.getText().toString();
-                String textoEmail = campoEmail.getText().toString();
-                String textoSenha = campoSenha.getText().toString();
-                String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
-                String nomePadaria = spinner.getSelectedItem().toString();
-
-                if(!textoNome.isEmpty()){
-                    if(!textoEmail.isEmpty()){
-                        if(!textoSenha.isEmpty()){
-                            if(!textoConfirmarSenha.isEmpty()){
-                                if(!nomePadaria.isEmpty()){
-                                if(textoConfirmarSenha.equals(textoSenha)){
-                                    funcionario = new Funcionario();
-                                    funcionario.setNome(textoNome);
-                                    funcionario.setEmail(textoEmail);
-                                    funcionario.setSenha(textoSenha);
-                                    funcionario.setTipoPerfil(tipoPerfil);
-                                    if(!listaPadarias.isEmpty()){
-                                        for(Padaria padaria : listaPadarias){
-                                            if(nomePadaria.equals(padaria.getNome())){
-                                                funcionario.setPadaria(padaria);
-                                            }
-                                        }
-                                    }
-                                    cadastrar(funcionario);
-                                }else{
-                                    Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
-                                    campoConfirmarSenha.setText("");
-                                }
-                                }else{
-                                    Toast.makeText(CadastroFuncionarioActivity.this, "Escolha uma padaria", Toast.LENGTH_SHORT).show();
-                                }
-                            }else{
-                                Toast.makeText(CadastroFuncionarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
-                            }
-                        }else{
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
-                }
+                validarAntesSalvar();
             }
         });
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
 
         campoNome = findViewById(R.id.edit_text_cadastro_fun_nome);
         campoEmail = findViewById(R.id.edit_text_cadastro_fun_email);
@@ -138,10 +95,10 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
         progressBar = findViewById(R.id.progressCadastroFun);
         spinner = findViewById(R.id.spinnerPadariaFuncionario);
-        arrayAdapterPadaria = new ArrayAdapter (this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
+        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
     }
 
-    public void cadastrar(final Funcionario funcionario){
+    public void salvarFuncionario(final Funcionario funcionario) {
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -154,30 +111,30 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                 this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_SHORT).show();
 
-                            String idFuncionario = Base64Custom.codificarBase64(funcionario.getEmail());
+                            String idFuncionario = autenticacao.getCurrentUser().getUid();
                             funcionario.setIdFuncionario(idFuncionario);
                             funcionario.salvar();
 
                             startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
                             finish();
 
-                        }else{
+                        } else {
                             progressBar.setVisibility(View.GONE);
 
                             String erroExcecao = "";
-                            try{
+                            try {
                                 throw task.getException();
-                            }catch (FirebaseAuthWeakPasswordException e){
+                            } catch (FirebaseAuthWeakPasswordException e) {
                                 erroExcecao = "Digite uma senha mais forte!";
-                            }catch(FirebaseAuthInvalidCredentialsException e){
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
                                 erroExcecao = "Favor digitar um e-mail válido";
-                            }catch (FirebaseAuthUserCollisionException e){
+                            } catch (FirebaseAuthUserCollisionException e) {
                                 erroExcecao = "Esta conta já foi cadastrada";
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
                                 e.printStackTrace();
                             }
@@ -188,13 +145,13 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         );
     }
 
-    public void carregarSpinnerPadarias(){
+    public void carregarSpinnerPadarias() {
         referenciaPadarias = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaPadarias.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapShotPadaria : snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapShotPadaria : snapshot.getChildren()) {
                         Padaria padaria = snapShotPadaria.getValue(Padaria.class);
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
@@ -202,10 +159,59 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     spinner.setAdapter(arrayAdapterPadaria);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+    }
+
+    public void validarAntesSalvar() {
+
+        String textoNome = campoNome.getText().toString();
+        String textoEmail = campoEmail.getText().toString();
+        String textoSenha = campoSenha.getText().toString();
+        String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
+        String nomePadaria = spinner.getSelectedItem().toString();
+
+        if (!textoNome.isEmpty()) {
+            if (!textoEmail.isEmpty()) {
+                if (!textoSenha.isEmpty()) {
+                    if (!textoConfirmarSenha.isEmpty()) {
+                        if (!nomePadaria.isEmpty()) {
+                            if (textoConfirmarSenha.equals(textoSenha)) {
+                                funcionario = new Funcionario();
+                                funcionario.setNome(textoNome);
+                                funcionario.setEmail(textoEmail);
+                                funcionario.setSenha(textoSenha);
+                                funcionario.setTipoPerfil(tipoPerfil);
+                                if (!listaPadarias.isEmpty()) {
+                                    for (Padaria padaria : listaPadarias) {
+                                        if (nomePadaria.equals(padaria.getNome())) {
+                                            funcionario.setPadaria(padaria);
+                                        }
+                                    }
+                                }
+                                salvarFuncionario(funcionario);
+                            } else {
+                                Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
+                                campoConfirmarSenha.setText("");
+                            }
+                        } else {
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Escolha uma padaria", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(CadastroFuncionarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(CadastroFuncionarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

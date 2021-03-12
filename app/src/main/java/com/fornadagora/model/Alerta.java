@@ -8,7 +8,6 @@ public class Alerta {
     private String nome;
     private Padaria padaria;
     private Produto produto;
-    private Usuario usuario;
 
     public Alerta(){
 
@@ -44,16 +43,4 @@ public class Alerta {
         this.produto = produto;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public void salvar(){
-        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
-        referencia.child("usuarios").child(usuario.getIdUsuario()).child("alerta").push().setValue(this);
-    }
 }

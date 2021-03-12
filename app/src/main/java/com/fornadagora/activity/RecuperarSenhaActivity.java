@@ -28,27 +28,27 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
         inicializarComponentes();
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
         campoEmail = findViewById(R.id.edit_text_recuperar_email);
     }
 
-    public void enviarEmailRecuperarSenha(View view){
+    public void enviarEmailRecuperarSenha(View view) {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
-        if(!campoEmail.getText().toString().isEmpty()){
+        if (!campoEmail.getText().toString().isEmpty()) {
             autenticacao.sendPasswordResetEmail(campoEmail.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 campoEmail.setText("");
-                                Toast.makeText(RecuperarSenhaActivity.this,"E-mail enviado com sucesso",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(RecuperarSenhaActivity.this,"Falha ao enviar o e-mail",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-        }else{
+        } else {
             Toast.makeText(RecuperarSenhaActivity.this, "Preencha o e-mail", Toast.LENGTH_SHORT).show();
         }
     }

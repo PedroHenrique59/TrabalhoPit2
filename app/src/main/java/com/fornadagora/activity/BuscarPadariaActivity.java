@@ -62,16 +62,16 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
         referenciaLocal.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                   for(DataSnapshot teste : snapshot.getChildren()){
-                       Padaria padaria = teste.getValue(Padaria.class);
-                       double latitude = Double.parseDouble(padaria.getLocal().getLatitude());
-                       double longitude = Double.parseDouble(padaria.getLocal().getLongitude());
-                       mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                                   .title(padaria.getNome())
-                                   .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
+                if (snapshot.exists()) {
+                    for (DataSnapshot teste : snapshot.getChildren()) {
+                        Padaria padaria = teste.getValue(Padaria.class);
+                        double latitude = Double.parseDouble(padaria.getLocal().getLatitude());
+                        double longitude = Double.parseDouble(padaria.getLocal().getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
+                                .title(padaria.getNome())
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
 
-                   }
+                    }
                 }
             }
 
@@ -123,7 +123,7 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
 
     }
 
-    public void abrirDialog(final LocalMapa local, final Padaria padaria){
+    public void abrirDialog(final LocalMapa local, final Padaria padaria) {
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialogmapa);
         dialog.setTitle("Dialog teste");
@@ -139,9 +139,9 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editTextNomePadaria.getText().toString().isEmpty()){
+                if (editTextNomePadaria.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Favor preencher o nome da padaria", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     String nomePadaria = editTextNomePadaria.getText().toString();
                     padaria.setNome(nomePadaria);
                     referenciaPadaria.push().setValue(padaria);
