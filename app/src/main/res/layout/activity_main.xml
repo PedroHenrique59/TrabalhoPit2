@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/backgroundlogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
@@ -62,7 +51,7 @@
         android:layout_marginRight="32dp"
         android:height="50dp"
         android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_email_24dp"
+        android:drawableStart="@drawable/ic_lock_24dp"
         android:drawableLeft="@drawable/ic_lock_24dp"
         android:hint="@string/senha"
         android:imeOptions="actionDone"
@@ -81,7 +70,7 @@
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_button_logar"
@@ -156,7 +145,7 @@
         android:layout_marginRight="32dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/tituloapp"
-        android:textColor="@android:color/holo_orange_dark"
+        android:textColor="@android:color/white"
         android:textSize="48sp"
         android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"

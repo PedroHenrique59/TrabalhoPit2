@@ -131,11 +131,11 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     public void listarDadosUsuario() {
         if (autenticacao.getCurrentUser() != null) {
-            String email = autenticacao.getCurrentUser().getEmail();
-            String id = Base64Custom.codificarBase64(email);
+            String id = autenticacao.getCurrentUser().getUid();
 
             referenciaUsuario = ConfiguracaoFirebase.getFirebase();
             referenciaUsuario = referenciaUsuario.child("usuarios").child(id);
+
             referenciaUsuario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
