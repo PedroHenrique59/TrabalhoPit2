@@ -9,9 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.fornadagora.NotificacaoUsuario;
+import com.fornadagora.notification.NotificacaoUsuario;
 import com.fornadagora.R;
-import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Funcionario;

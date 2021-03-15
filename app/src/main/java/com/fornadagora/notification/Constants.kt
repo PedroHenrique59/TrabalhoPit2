@@ -1,4 +1,4 @@
-package com.fornadagora
+package com.fornadagora.notification
 
 class Constants {
 

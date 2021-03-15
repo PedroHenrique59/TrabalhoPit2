@@ -1,4 +1,4 @@
-package com.fornadagora
+package com.fornadagora.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,7 +12,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.fornadagora.activity.MainActivity
+import com.fornadagora.R
 import com.fornadagora.activity.MenuInicialActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage

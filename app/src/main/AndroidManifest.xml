@@ -27,7 +27,7 @@
         <activity android:name=".activity.AlertarUsuarioActivity" />
 
         <service
-            android:name=".FirebaseService"
+            android:name=".notification.FirebaseService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -79,7 +79,7 @@
         <activity
             android:name=".activity.CadastroUsuarioActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".NotificacaoUsuario" />
+        <activity android:name=".notification.NotificacaoUsuario" />
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">

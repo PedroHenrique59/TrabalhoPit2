@@ -1,7 +1,7 @@
-package com.fornadagora
+package com.fornadagora.notification
 
 
-import com.fornadagora.Constants.Companion.BASE_URL
+import com.fornadagora.notification.Constants.Companion.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
