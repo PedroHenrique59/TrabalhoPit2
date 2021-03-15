@@ -23,18 +23,9 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="83dp"
-        android:layout_height="87dp"
-        android:layout_marginStart="85dp"
-        android:layout_marginLeft="85dp"
-        android:layout_marginTop="160dp"
-        android:contentDescription="@string/buscarpadaria"
-        android:onClick="abrirTelaVerPadaria"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_mapa_padaria_48dp" />
+    <include
+        android:id="@+id/include4"
+        layout="@layout/content_main"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -48,9 +39,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_adicionar_alerta_48dp" />
 
-    <include
-        android:id="@+id/include4"
-        layout="@layout/content_main" />
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="83dp"
+        android:layout_height="87dp"
+        android:layout_marginStart="85dp"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="160dp"
+        android:contentDescription="@string/buscarpadaria"
+        android:onClick="abrirTelaVerPadaria"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_mapa_padaria_48dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
