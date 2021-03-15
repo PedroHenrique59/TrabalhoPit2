@@ -10,7 +10,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/bg_layer_gradient"
+        android:background="#9C1415"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -24,7 +24,6 @@
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:height="50dp"
@@ -40,7 +39,7 @@
         android:textColorHint="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        tools:layout_editor_absoluteY="127dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_text_login_senha"
@@ -135,17 +134,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_esqueceu_senha" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="348dp"
-        android:layout_height="95dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@drawable/twitter_header_photo_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
