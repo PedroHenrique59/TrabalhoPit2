@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrabalhoPit2</string>
+    <string name="app_name">Fornadagora</string>
     <string name="esqueceu_senha">Esqueceu a senha?</string>
     <string name="logar">Logar</string>
     <string name="senha">Senha</string>
@@ -30,6 +30,14 @@
     <string name="veralertasalvo">Ver alerta(s) salvo(s)</string>
     <string name="botaoeditar">Ver alerta(s) salvo(s)</string>
     <string name="deslogarusuario">Sair</string>
+    <string name="ver_alertas">Alertas salvos</string>
+    <string name="editar_dados">Editar dados</string>
+    <string name="sair">Sair</string>
+    <string name="nomedousuario">Informe seu nome</string>
+    <string name="emaildousuario">Informe seu e-mail</string>
+    <string name="senhadousuario">Informe sua senha</string>
+    <string name="confirmarsenhadousuario">Confirme sua senha</string>
+
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -37,11 +45,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-
     <string name="textfield_label">ATesteeeee</string>
-    <string name="ver_alertas">Alertas salvos</string>
-    <string name="editar_dados">Editar dados</string>
-    <string name="sair">Sair</string>
     <string name="menu_slideshow">Slideshow</string>
+
 </resources>
