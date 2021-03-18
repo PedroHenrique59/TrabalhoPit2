@@ -13,11 +13,12 @@ import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RecuperarSenhaActivity extends AppCompatActivity {
 
-    private EditText campoEmail;
+    private TextInputEditText campoEmail;
 
     private FirebaseAuth autenticacao;
 
