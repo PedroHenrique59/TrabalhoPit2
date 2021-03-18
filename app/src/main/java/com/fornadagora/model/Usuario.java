@@ -79,6 +79,12 @@ public class Usuario {
         referencia.child("usuarios").child(this.idUsuario).setValue(this);
     }
 
+    public void atualizarDados(){
+        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
+        referencia.child("usuarios").child(this.idUsuario).child("nome").setValue(this.nome);
+        referencia.child("usuarios").child(this.idUsuario).child("email").setValue(this.email);
+    }
+
     public void salvarAlerta(){
         DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
         referencia.child("usuarios").child(this.getIdUsuario()).child("alerta").push().setValue(alerta);
