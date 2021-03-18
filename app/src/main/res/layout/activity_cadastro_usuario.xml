@@ -108,7 +108,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_email_usu"
         app:startIconContentDescription="@string/senhadousuario"
-        app:startIconDrawable="@drawable/ic_lock_24dp">
+        app:startIconDrawable="@drawable/ic_lock_24dp"
+        app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_cadastro_senha"
@@ -117,7 +118,8 @@
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="173dp" />
+            tools:layout_editor_absoluteY="173dp"
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -137,7 +139,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_senha_usu"
         app:startIconContentDescription="@string/confirmarsenhadousuario"
-        app:startIconDrawable="@drawable/ic_lock_24dp">
+        app:startIconDrawable="@drawable/ic_lock_24dp"
+        app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_senha_confirmar"
@@ -146,7 +149,8 @@
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="173dp" />
+            tools:layout_editor_absoluteY="173dp"
+            android:inputType="textPassword"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,7 +179,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar" />
