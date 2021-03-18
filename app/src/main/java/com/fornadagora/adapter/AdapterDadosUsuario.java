@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.model.Usuario;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -64,7 +65,7 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        EditText nomeUsuario;
+        TextInputEditText nomeUsuario;
         EditText emailUsuario;
         Button botaoSalvar;
 
