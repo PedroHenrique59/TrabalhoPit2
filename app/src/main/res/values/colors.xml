@@ -3,4 +3,6 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF0000</color>
+    <color name="fundoApp">#9C1415</color>
+    
 </resources>
