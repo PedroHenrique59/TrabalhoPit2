@@ -16,6 +16,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -26,10 +27,10 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
-    private EditText campoNome;
-    private EditText campoEmail;
-    private EditText campoSenha;
-    private EditText campoConfirmarSenha;
+    private TextInputEditText campoNome;
+    private TextInputEditText campoEmail;
+    private TextInputEditText campoSenha;
+    private TextInputEditText campoConfirmarSenha;
 
     private Button botaoCadastrar;
     private ProgressBar progressBar;
