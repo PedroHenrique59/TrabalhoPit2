@@ -18,53 +18,67 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_recuperar_email"
-        android:layout_width="0dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="170dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_email_24dp"
-        android:drawableLeft="@drawable/ic_email_24dp"
-        android:hint="@string/loginEmail"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_login_senha"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_email_usu"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_lock_24dp"
-        android:drawableLeft="@drawable/ic_lock_24dp"
+        android:hint="@string/email"
+        app:hintTextColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:startIconContentDescription="@string/emaildousuario"
+        app:startIconDrawable="@drawable/ic_email_24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="30dp"
+            tools:layout_editor_absoluteY="536dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_senha_usu"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:hint="@string/senha"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_recuperar_email" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_email_usu"
+        app:startIconContentDescription="@string/senhadousuario"
+        app:startIconDrawable="@drawable/ic_lock_24dp"
+        app:endIconMode="password_toggle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_login_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="173dp"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRecuperarSenha"
@@ -72,7 +86,7 @@
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_button_logar"
@@ -83,7 +97,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_login_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_senha_usu" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_esqueceu_senha"
@@ -91,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:onClick="abrirRecuperarSenha"
@@ -140,7 +154,7 @@
         android:id="@+id/imageView5"
         android:layout_width="130dp"
         android:layout_height="100dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,6 +173,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

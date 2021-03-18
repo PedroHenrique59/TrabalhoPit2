@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void inicializarComponentes() {
-        campoEmail = findViewById(R.id.edit_text_recuperar_email);
+        campoEmail = findViewById(R.id.edit_text_login_email);
         campoSenha = findViewById(R.id.edit_text_login_senha);
         progressBar = findViewById(R.id.progressLogin);
         botaoLogar = findViewById(R.id.btnRecuperarSenha);
