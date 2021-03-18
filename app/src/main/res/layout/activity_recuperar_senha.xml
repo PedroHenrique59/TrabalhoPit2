@@ -11,73 +11,71 @@
         android:layout_width="411dp"
         android:layout_height="731dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/backgroundlogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/backgroundlogin" />
 
     <View
         android:id="@+id/view"
         android:layout_width="411dp"
         android:layout_height="731dp"
-        android:background="@drawable/bg_layer_gradient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/bg_layer_gradient" />
 
     <TextView
-        android:id="@+id/txt_titulo"
+        android:id="@+id/txt_cadastrar_usuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/tituloapp"
-        android:textColor="@android:color/holo_orange_dark"
-        android:textSize="48sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/recuperarsenha"
+        android:textColor="@android:color/white"
+        android:textSize="38sp"
         android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView2" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_recuperar_email"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_email_recuperar"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="0dp"
-        android:layout_height="57dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_email_24dp"
-        android:drawableLeft="@drawable/ic_email_24dp"
-        android:hint="@string/loginEmail"
-        android:imeOptions="actionDone"
-        android:inputType="textEmailAddress"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        android:hint="@string/email"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titulo" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_cadastrar_usuario"
+        app:startIconContentDescription="@string/emaildousuario"
+        app:startIconDrawable="@drawable/ic_email_24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_recuperar_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cadastrar_usuario"
+            tools:layout_editor_absoluteX="40dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRecuperarSenha"
         android:layout_width="0dp"
         android:layout_height="57dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:background="@drawable/bg_button_logar"
         android:onClick="enviarEmailRecuperarSenha"
         android:text="@string/recuperarsenha"
@@ -87,6 +85,6 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_recuperar_email" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_email_recuperar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
