@@ -94,8 +94,9 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/spinnerPadariaFuncionario"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_nome_padaria_fun"
+        style="@style/Teste"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -103,10 +104,18 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:background="@drawable/common_google_signin_btn_text_light_normal_background"
+        android:hint="Escolha uma padaria"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_email_fun" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_email_fun">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoComletePadariaFun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_senha_fun"
@@ -122,7 +131,7 @@
         app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPadariaFuncionario"
+        app:layout_constraintTop_toBottomOf="@+id/layout_nome_padaria_fun"
         app:startIconContentDescription="@string/senhadofuncionario"
         app:startIconDrawable="@drawable/ic_lock_24dp">
 
@@ -130,11 +139,11 @@
             android:id="@+id/edit_text_cadastro_fun_senha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="173dp"
-            android:inputType="textPassword" />
+            tools:layout_editor_absoluteY="173dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

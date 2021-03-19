@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +42,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private Button botaoCadastrar;
     private ProgressBar progressBar;
 
-    private Spinner spinner;
+    private AutoCompleteTextView autoComplete;
+
     private ArrayAdapter arrayAdapterPadaria;
     private List<String> listaNomePadaria = new ArrayList<>();
     private List<Padaria> listaPadarias = new ArrayList<>();
@@ -61,10 +62,9 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_funcionario);
 
         inicializarComponentes();
-        carregarSpinnerPadarias();
+        carregarListaPadarias();
 
         progressBar.setVisibility(View.GONE);
-
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,8 +82,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
         progressBar = findViewById(R.id.progressCadastroFun);
-        spinner = findViewById(R.id.spinnerPadariaFuncionario);
-        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
+        autoComplete = findViewById(R.id.autoComletePadariaFun);
+        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
     }
 
     public void salvarFuncionario(final Funcionario funcionario) {
@@ -133,7 +133,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         );
     }
 
-    public void carregarSpinnerPadarias() {
+    public void carregarListaPadarias() {
         referenciaPadarias = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaPadarias.addValueEventListener(new ValueEventListener() {
             @Override
@@ -144,7 +144,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
                     }
-                    spinner.setAdapter(arrayAdapterPadaria);
+                    autoComplete.setAdapter(arrayAdapterPadaria);
                 }
             }
 
@@ -161,7 +161,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         String textoEmail = campoEmail.getText().toString();
         String textoSenha = campoSenha.getText().toString();
         String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
-        String nomePadaria = spinner.getSelectedItem().toString();
+        String nomePadaria = autoComplete.getEditableText().toString();
 
         if (!textoNome.isEmpty()) {
             if (!textoEmail.isEmpty()) {

@@ -28,4 +28,9 @@
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
+    <style name="Teste" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="hintTextColor">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
 </resources>
