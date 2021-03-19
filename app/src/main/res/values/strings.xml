@@ -37,6 +37,10 @@
     <string name="emaildousuario">Informe seu e-mail</string>
     <string name="senhadousuario">Informe sua senha</string>
     <string name="confirmarsenhadousuario">Confirme sua senha</string>
+    <string name="nomedofuncionario">Informe seu nome</string>
+    <string name="emaildofuncionario">Informe seu e-mail</string>
+    <string name="senhadofuncionario">Informe sua senha</string>
+    <string name="confirmarsenhadofuncionario">Confirme sua senha</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

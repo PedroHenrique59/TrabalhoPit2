@@ -176,7 +176,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     public void configurarIconeVisualizarSenha(){
         layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
         layout_confirmar_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
-        
+
         layout_senha_usu.setEndIconVisible(true);
         layout_confirmar_senha_usu.setEndIconVisible(true);
 

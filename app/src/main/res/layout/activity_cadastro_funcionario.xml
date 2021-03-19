@@ -20,104 +20,153 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_cadastro_fun_nome"
+    <TextView
+        android:id="@+id/txt_titulo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/cadastrarfuncionario"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_nome_fun"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_pessoa_24dp"
-        android:drawableLeft="@drawable/ic_pessoa_24dp"
         android:hint="@string/nome"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titulo2" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_titulo2"
+        app:startIconContentDescription="@string/nomedofuncionario"
+        app:startIconDrawable="@drawable/ic_pessoa_24dp">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_cadastro_fun_email"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_cadastro_fun_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="121dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_email_fun"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_email_24dp"
-        android:drawableLeft="@drawable/ic_email_24dp"
         android:hint="@string/email"
-        android:imeOptions="actionDone"
-        android:inputType="textEmailAddress"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_nome" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_nome_fun"
+        app:startIconContentDescription="@string/emaildofuncionario"
+        app:startIconDrawable="@drawable/ic_email_24dp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_cadastro_fun_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="173dp" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_cadastro_fun_senha"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinnerPadariaFuncionario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_lock_24dp"
-        android:drawableLeft="@drawable/ic_lock_24dp"
+        android:background="@drawable/common_google_signin_btn_text_light_normal_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_email_fun" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_senha_fun"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:hint="@string/senha"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPadariaFuncionario" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPadariaFuncionario"
+        app:startIconContentDescription="@string/senhadofuncionario"
+        app:startIconDrawable="@drawable/ic_lock_24dp">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_text_senha_fun_confirmar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_cadastro_fun_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="173dp"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_confirmar_senha_fun"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:height="50dp"
-        android:background="@drawable/bg_edit_text_senha"
-        android:drawableStart="@drawable/ic_lock_24dp"
-        android:drawableLeft="@drawable/ic_lock_24dp"
         android:hint="@string/senhaconfirmar"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_senha_fun"
+        app:startIconContentDescription="@string/confirmarsenhadofuncionario"
+        app:startIconDrawable="@drawable/ic_lock_24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_senha_fun_confirmar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="173dp"
+            android:inputType="textPassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cadastrar_fun"
@@ -125,7 +174,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/bg_button_logar"
@@ -137,22 +186,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_senha_fun_confirmar" />
-
-    <TextView
-        android:id="@+id/txt_titulo2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/cadastrarfuncionario"
-        android:textColor="@color/colorPrimary"
-        android:textSize="36sp"
-        android:typeface="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_confirmar_senha_fun" />
 
     <ProgressBar
         android:id="@+id/progressCadastroFun"
@@ -168,20 +202,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar_fun" />
-
-    <Spinner
-        android:id="@+id/spinnerPadariaFuncionario"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:background="@drawable/common_google_signin_btn_text_light_normal_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_cadastro_fun_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
