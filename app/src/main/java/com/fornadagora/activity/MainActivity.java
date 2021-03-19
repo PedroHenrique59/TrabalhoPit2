@@ -4,8 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.TransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +24,7 @@ import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText campoEmail;
     private EditText campoSenha;
     private Button botaoLogar;
+    private TextInputLayout layout_senha_usu;
+
     private ProgressBar progressBar;
 
     private Usuario usuario;
@@ -82,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        configurarIconeVisualizarSenha();
         verificarUsuarioLogado();
     }
 
@@ -100,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         campoSenha = findViewById(R.id.edit_text_login_senha);
         progressBar = findViewById(R.id.progressLogin);
         botaoLogar = findViewById(R.id.btnRecuperarSenha);
+        layout_senha_usu = findViewById(R.id.layout_senha_usu_login);
     }
 
     public void verificarUsuarioLogado() {
@@ -225,5 +234,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), MenuInicialFuncActivity.class));
             finish();
         }
+    }
+
+    public void configurarIconeVisualizarSenha(){
+        layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+        layout_senha_usu.setEndIconVisible(true);
+        layout_senha_usu.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                    campoSenha.setTransformationMethod(null);
+                    layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_24);
+                }else if(campoSenha.getTransformationMethod() == null){
+                    campoSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+                }
+            }
+        });
     }
 }

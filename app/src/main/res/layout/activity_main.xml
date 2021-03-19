@@ -50,7 +50,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_senha_usu"
+        android:id="@+id/layout_senha_usu_login"
         style="@style/Widget.App.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -65,8 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_email_usu"
         app:startIconContentDescription="@string/senhadousuario"
-        app:startIconDrawable="@drawable/ic_lock_24dp"
-        app:endIconMode="password_toggle">
+        app:startIconDrawable="@drawable/ic_lock_24dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_login_senha"
@@ -76,7 +75,7 @@
             android:textColorHint="@color/colorPrimary"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="173dp"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,7 +96,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_senha_usu" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_senha_usu_login" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_esqueceu_senha"

@@ -2,7 +2,6 @@ package com.fornadagora.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.widgets.Snapshot;
 
 import android.os.Bundle;
 import android.provider.ContactsContract;
