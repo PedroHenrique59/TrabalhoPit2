@@ -17,6 +17,13 @@ public class Funcionario {
 
     }
 
+    public Funcionario(String nome, String email, String senha, String tipoPerfil) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.tipoPerfil = tipoPerfil;
+    }
+
     public String getIdFuncionario() {
         return idFuncionario;
     }

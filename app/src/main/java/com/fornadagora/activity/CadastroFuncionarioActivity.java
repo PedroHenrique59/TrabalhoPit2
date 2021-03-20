@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -169,19 +170,19 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     if (!textoConfirmarSenha.isEmpty()) {
                         if (!nomePadaria.isEmpty()) {
                             if (textoConfirmarSenha.equals(textoSenha)) {
-                                funcionario = new Funcionario();
-                                funcionario.setNome(textoNome);
-                                funcionario.setEmail(textoEmail);
-                                funcionario.setSenha(textoSenha);
-                                funcionario.setTipoPerfil(tipoPerfil);
-                                if (!listaPadarias.isEmpty()) {
-                                    for (Padaria padaria : listaPadarias) {
-                                        if (nomePadaria.equals(padaria.getNome())) {
-                                            funcionario.setPadaria(padaria);
+                                if(validarEmail(textoEmail)){
+                                    funcionario = new Funcionario(textoNome, textoEmail, textoSenha, tipoPerfil);
+                                    if (!listaPadarias.isEmpty()) {
+                                        for (Padaria padaria : listaPadarias) {
+                                            if (nomePadaria.equals(padaria.getNome())) {
+                                                funcionario.setPadaria(padaria);
+                                            }
                                         }
                                     }
+                                    salvarFuncionario(funcionario);
+                                }else{
+                                    Toast.makeText(CadastroFuncionarioActivity.this, "Informe um e-mail válido", Toast.LENGTH_SHORT).show();
                                 }
-                                salvarFuncionario(funcionario);
                             } else {
                                 Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
                                 campoConfirmarSenha.setText("");
@@ -202,4 +203,9 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
             Toast.makeText(CadastroFuncionarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public boolean validarEmail(String email){
+        return ValidaEmail.validarEmail(email);
+    }
+
 }
