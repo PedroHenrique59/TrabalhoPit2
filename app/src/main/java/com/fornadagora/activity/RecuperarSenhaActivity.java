@@ -1,13 +1,11 @@
 package com.fornadagora.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ViewUtils;
-
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -50,7 +48,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(RecuperarSenhaActivity.this, "Preencha o e-mail", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RecuperarSenhaActivity.this, "Preencha o campo de e-mail", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -17,6 +17,14 @@ public class Usuario {
     public Usuario() {
     }
 
+    public Usuario(String nome, String email, String senha, String tipoPerfil, String token) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.tipoPerfil = tipoPerfil;
+        this.token = token;
+    }
+
     public String getIdUsuario() {
         return idUsuario;
     }

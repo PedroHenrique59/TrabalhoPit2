@@ -1,19 +1,19 @@
 package com.fornadagora.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,49 +56,15 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         inicializarComponentes();
         recuperarToken();
+        configurarIconeVisualizarSenha();
 
         progressBar.setVisibility(View.GONE);
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String textoNome = campoNome.getText().toString();
-                String textoEmail = campoEmail.getText().toString();
-                String textoSenha = campoSenha.getText().toString();
-                String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
-
-                if (!textoNome.isEmpty()) {
-                    if (!textoEmail.isEmpty()) {
-                        if (!textoSenha.isEmpty()) {
-                            if (!textoConfirmarSenha.isEmpty()) {
-                                if (textoConfirmarSenha.equals(textoSenha)) {
-                                    usuario = new Usuario();
-                                    usuario.setNome(textoNome);
-                                    usuario.setEmail(textoEmail);
-                                    usuario.setSenha(textoSenha);
-                                    usuario.setTipoPerfil(tipoPerfil);
-                                    usuario.setToken(tokenUsuario);
-                                    cadastrar(usuario);
-                                } else {
-                                    Toast.makeText(CadastroUsuarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
-                                    campoConfirmarSenha.setText("");
-                                }
-                            } else {
-                                Toast.makeText(CadastroUsuarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(CadastroUsuarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(CadastroUsuarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
-                }
+                validarCamposAntesCadastrar();
             }
         });
-
-        configurarIconeVisualizarSenha();
     }
 
     public void inicializarComponentes() {
@@ -124,6 +90,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
         autenticacao.createUserWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(
@@ -205,5 +172,45 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean validarEmail(String email){
+       return ValidaEmail.validarEmail(email);
+    }
+
+    public void validarCamposAntesCadastrar(){
+
+        String textoNome = campoNome.getText().toString();
+        String textoEmail = campoEmail.getText().toString();
+        String textoSenha = campoSenha.getText().toString();
+        String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
+
+        if (!textoNome.isEmpty()) {
+            if (!textoEmail.isEmpty()) {
+                if (!textoSenha.isEmpty()) {
+                    if (!textoConfirmarSenha.isEmpty()) {
+                        if (textoConfirmarSenha.equals(textoSenha)) {
+                            if(validarEmail(textoEmail)){
+                                usuario = new Usuario(textoNome, textoEmail, textoSenha, tipoPerfil, tokenUsuario);
+                                cadastrar(usuario);
+                            }else{
+                                Toast.makeText(CadastroUsuarioActivity.this, "Informe um e-mail válido", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(CadastroUsuarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
+                            campoConfirmarSenha.setText("");
+                        }
+                    } else {
+                        Toast.makeText(CadastroUsuarioActivity.this, "Confirme a senha!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(CadastroUsuarioActivity.this, "Preencha a senha!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(CadastroUsuarioActivity.this, "Preencha o e-mail!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

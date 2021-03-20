@@ -1,20 +1,17 @@
 package com.fornadagora.activity;
 
+import android.os.Bundle;
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.widget.LinearLayout;
-
 import com.fornadagora.R;
-import com.fornadagora.adapter.AdapterAlertaUsuario;
 import com.fornadagora.adapter.AdapterDadosUsuario;
-import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
-import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
