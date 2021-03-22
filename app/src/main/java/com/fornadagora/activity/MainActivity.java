@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean validarPerfilUsuario(Usuario usuario) {
-        if (usuario.getTipoPerfil().equals("Administrador")) {
+        if(usuario.getTipoPerfil().equals("Administrador")) {
             ehAdministrador = true;
             startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
             finish();
@@ -223,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void validarPerfilFuncionario(Funcionario funcionario) {
         if (funcionario.getTipoPerfil().equals("Funcionario")) {
-            startActivity(new Intent(getApplicationContext(), MenuInicialFuncActivity.class));
-            finish();
+           abriMenuLateralFuncionario(funcionario);
         }
     }
 
@@ -243,5 +242,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void abriMenuLateralFuncionario(Funcionario funcionario){
+        Intent intent = new Intent(getApplicationContext(), MenuLateralActivity.class);
+        Bundle b = new Bundle();
+        b.putString("parametro", funcionario.getSenha());
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
     }
 }

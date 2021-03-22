@@ -48,7 +48,6 @@ public class Funcionario {
         this.email = email;
     }
 
-    @Exclude
     public String getSenha() {
         return senha;
     }
@@ -76,5 +75,11 @@ public class Funcionario {
     public void salvar(){
         DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
         referencia.child("funcionarios").child(this.idFuncionario).setValue(this);
+    }
+
+    public void atualizarDados(){
+        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
+        referencia.child("funcionarios").child(this.idFuncionario).child("nome").setValue(this.nome);
+        referencia.child("funcionarios").child(this.idFuncionario).child("email").setValue(this.email);
     }
 }

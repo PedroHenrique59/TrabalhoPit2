@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,11 +33,17 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     private Usuario usuario;
 
-    private TextView txtnomeUsu;
-    private TextView txtemailUsu;
+    private Funcionario funcionario;
 
-    private DatabaseReference referenciaUsuario;
+    private TextView txtnome;
+    private TextView txtemail;
+
     private FirebaseAuth autenticacao;
+
+    private DatabaseReference referenciaFuncionario;
+    private DatabaseReference referenciaUsuario;
+
+    private String parametro = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,9 @@ public class MenuLateralActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         View headerView = navigationView.getHeaderView(0);
+
         navigationView.getMenu().getItem(0).setChecked(false);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -70,19 +79,27 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, VerDadosUsuarioActivity.class);
                     startActivity(i);
                 }
+                if(item.getItemId() == R.id.editDadosUsu){
+                    Intent intent = new Intent(MenuLateralActivity.this, VerDadosFuncionarioActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("parametro", parametro);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                    finish();
+                }
                 return true;
             }
         });
 
-
         inicializarComponentes(headerView);
-        listarDadosUsuario();
+        listarDadosPerfilLogado();
+        recuperarParametro();
     }
 
     public void inicializarComponentes(View headerView) {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        txtnomeUsu = headerView.findViewById(R.id.txtnomeUsuHeader);
-        txtemailUsu = headerView.findViewById(R.id.txtemailUsuHeader);
+        txtnome = headerView.findViewById(R.id.txtnomeHeader);
+        txtemail = headerView.findViewById(R.id.txtemailHeader);
     }
 
     @Override
@@ -118,7 +135,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
     }
 
-    public void listarDadosUsuario() {
+    public void listarDadosPerfilLogado() {
         if (autenticacao.getCurrentUser() != null) {
             String id = autenticacao.getCurrentUser().getUid();
 
@@ -131,8 +148,29 @@ public class MenuLateralActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
                         if (usuario != null) {
-                            txtnomeUsu.setText(usuario.getNome());
-                            txtemailUsu.setText(usuario.getEmail());
+                            txtnome.setText(usuario.getNome());
+                            txtemail.setText(usuario.getEmail());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            referenciaFuncionario = ConfiguracaoFirebase.getFirebase();
+            referenciaFuncionario = referenciaFuncionario.child("funcionarios").child(id);
+
+            referenciaFuncionario.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        funcionario = snapshot.getValue(Funcionario.class);
+                        if (funcionario != null) {
+                            txtnome.setText(funcionario.getNome());
+                            txtemail.setText(funcionario.getEmail());
                         }
                     }
                 }
@@ -151,5 +189,12 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     public void abrirTelaCadastrarAlerta(View view) {
         startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
+    }
+
+    public void recuperarParametro(){
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            parametro = b.getString("parametro");
+        }
     }
 }
