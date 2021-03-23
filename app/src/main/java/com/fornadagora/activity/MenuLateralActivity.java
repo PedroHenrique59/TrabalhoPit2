@@ -47,6 +47,8 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     private NavigationView navigationView;
 
+    private boolean ehAdm = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +90,18 @@ public class MenuLateralActivity extends AppCompatActivity {
                     intent.putExtras(b);
                     startActivity(intent);
                 }
+                if (item.getItemId() == R.id.nav_edit_adm_dados_fun) {
+                    Intent i = new Intent(MenuLateralActivity.this, VerAlertaUsuarioActivity.class);
+                    startActivity(i);
+                }
+
                 return true;
             }
         });
 
         inicializarComponentes(headerView);
         listarDadosPerfilLogado();
+
         recuperarParametro();
     }
 
@@ -215,13 +223,36 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem.setVisible(false);
 
         }else if(usuario != null){
-            Menu menu = navigationView.getMenu();
+            if(isEhAdm(usuario)){
+                Menu menu = navigationView.getMenu();
 
-            MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
-            menuItem.setVisible(true);
+                MenuItem menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
+                menuItem.setVisible(true);
 
-            menuItem = menu.findItem(R.id.nav_edit_dados_fun);
-            menuItem.setVisible(false);
+                menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_edit_dados_usu);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_edit_dados_fun);
+                menuItem.setVisible(false);
+            }else{
+                Menu menu = navigationView.getMenu();
+
+                MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
+                menuItem.setVisible(true);
+
+                menuItem = menu.findItem(R.id.nav_edit_dados_fun);
+                menuItem.setVisible(false);
+            }
         }
+    }
+
+    public boolean isEhAdm(Usuario usuario){
+        if(usuario.getTipoPerfil().equals("Administrador")){
+            ehAdm = true;
+        }
+        return ehAdm;
     }
 }

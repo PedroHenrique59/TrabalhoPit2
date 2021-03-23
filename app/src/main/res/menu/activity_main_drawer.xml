@@ -16,6 +16,9 @@
             android:id="@+id/nav_edit_dados_fun"
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados" />
-
+        <item
+            android:id="@+id/nav_edit_adm_dados_fun"
+            android:icon="@drawable/ic_editar_dados"
+            android:title="@string/editar_dados" />
     </group>
 </menu>
