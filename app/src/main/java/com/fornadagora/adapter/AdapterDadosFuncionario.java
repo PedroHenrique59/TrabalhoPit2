@@ -16,6 +16,7 @@ import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
+import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -49,9 +50,11 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
     private Funcionario funcionario;
 
     private boolean emailAlterado = false;
+    private boolean ehAdm = false;
 
     private FirebaseAuth autenticacao;
     private DatabaseReference referenciaPadarias;
+    private DatabaseReference referenciaAdm;
 
     private FirebaseUser user;
 
@@ -82,6 +85,8 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
 
         nomeFun = nomeInformado.getText().toString();
         emailFun = emailInformado.getText().toString();
+
+        verificarPerfilLogado();
     }
 
     @Override
@@ -140,6 +145,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                         user = FirebaseAuth.getInstance().getCurrentUser();
                         reautenticarFuncionario(funcionario);
                     }
+                    atualizarDados();
                 }
             }
         }
@@ -147,9 +153,11 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
 
     public void inicializarComponentes(){
         arrayAdapterPadaria = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
+        referenciaAdm = ConfiguracaoFirebase.getFirebase();
     }
 
     public void carregarListaPadarias() {
+
         referenciaPadarias = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaPadarias.addValueEventListener(new ValueEventListener() {
             @Override
@@ -160,7 +168,11 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
                     }
-                    autoComletePadariaFunEdit.setAdapter(arrayAdapterPadaria);
+                    if(ehAdm){
+                        autoComletePadariaFunEdit.setAdapter(arrayAdapterPadaria);
+                    }else{
+                        autoComletePadariaFunEdit.setAdapter(null);
+                    }
                 }
             }
 
@@ -178,7 +190,6 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 user.updateEmail(emailInformado.getText().toString());
-                Toast.makeText(context, "E-mail alterado com sucesso", Toast.LENGTH_SHORT).show();
                 atualizarDados();
             }
         });
@@ -189,5 +200,46 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         funcionario.setIdFuncionario(id);
         funcionario.setEmail(emailInformado.getText().toString());
         funcionario.atualizarDados();
+        Toast.makeText(context, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+    }
+
+    public void verificarPerfilLogado(){
+        if(funcionario != null){
+            desabilitarComponentes(false);
+        }else{
+            if(autenticacao.getCurrentUser() != null){
+
+                String id = autenticacao.getCurrentUser().getUid();
+                referenciaAdm = referenciaAdm.child("usuarios").child(id);
+
+                referenciaAdm.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            Usuario usuarioAdm = snapshot.getValue(Usuario.class);
+                            if(usuarioAdm != null){
+                                if(usuarioAdm.getTipoPerfil().equals("Administrador")){
+                                    ehAdm = true;
+                                    desabilitarComponentes(ehAdm);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    public void desabilitarComponentes(boolean ehAdm){
+        if(ehAdm){
+            autoComletePadariaFunEdit.setEnabled(true);
+        }else{
+            autoComletePadariaFunEdit.setEnabled(false);
+        }
     }
 }
