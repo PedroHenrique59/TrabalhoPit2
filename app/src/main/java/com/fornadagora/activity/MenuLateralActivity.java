@@ -45,6 +45,8 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     private String parametro = "";
 
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +54,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -71,21 +73,20 @@ public class MenuLateralActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_home) {
+                if (item.getItemId() == R.id.nav_alertas_salvos_usu) {
                     Intent i = new Intent(MenuLateralActivity.this, VerAlertaUsuarioActivity.class);
                     startActivity(i);
                 }
-                if (item.getItemId() == R.id.nav_gallery) {
+                if (item.getItemId() == R.id.nav_edit_dados_usu) {
                     Intent i = new Intent(MenuLateralActivity.this, VerDadosUsuarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.editDadosUsu){
+                if(item.getItemId() == R.id.nav_edit_dados_fun){
                     Intent intent = new Intent(MenuLateralActivity.this, VerDadosFuncionarioActivity.class);
                     Bundle b = new Bundle();
                     b.putString("parametro", parametro);
                     intent.putExtras(b);
                     startActivity(intent);
-                    finish();
                 }
                 return true;
             }
@@ -150,6 +151,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                         if (usuario != null) {
                             txtnome.setText(usuario.getNome());
                             txtemail.setText(usuario.getEmail());
+                            configurarOpcoesNavigationView(navigationView);
                         }
                     }
                 }
@@ -171,6 +173,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                         if (funcionario != null) {
                             txtnome.setText(funcionario.getNome());
                             txtemail.setText(funcionario.getEmail());
+                            configurarOpcoesNavigationView(navigationView);
                         }
                     }
                 }
@@ -195,6 +198,30 @@ public class MenuLateralActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b != null){
             parametro = b.getString("parametro");
+        }
+    }
+
+    public void configurarOpcoesNavigationView(NavigationView navigationView){
+        if(funcionario != null){
+            Menu menu = navigationView.getMenu();
+
+            MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
+            menuItem.setVisible(true);
+
+            menuItem = menu.findItem(R.id.nav_edit_dados_usu);
+            menuItem.setVisible(false);
+
+            menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
+            menuItem.setVisible(false);
+
+        }else if(usuario != null){
+            Menu menu = navigationView.getMenu();
+
+            MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
+            menuItem.setVisible(true);
+
+            menuItem = menu.findItem(R.id.nav_edit_dados_fun);
+            menuItem.setVisible(false);
         }
     }
 }
