@@ -91,10 +91,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.nav_edit_adm_dados_fun) {
-                    Intent i = new Intent(MenuLateralActivity.this, VerAlertaUsuarioActivity.class);
+                    Intent i = new Intent(MenuLateralActivity.this, BuscarFuncionarioActivity.class);
                     startActivity(i);
                 }
-
                 return true;
             }
         });

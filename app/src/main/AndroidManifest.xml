@@ -17,11 +17,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.VerDadosFuncionarioActivity"></activity>
+        <activity android:name=".activity.BuscarFuncionarioActivity"></activity>
+        <activity android:name=".activity.VerDadosFuncionarioActivity" />
         <activity
             android:name=".activity.MenuLateralActivity"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.VerDadosUsuarioActivity" />
         <activity android:name=".activity.AlertarUsuarioActivity" />
 
