@@ -52,5 +52,6 @@
     <string name="action_settings">Settings</string>
     <string name="textfield_label">ATesteeeee</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="excluir">Excluir conta</string>
 
 </resources>

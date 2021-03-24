@@ -1,11 +1,15 @@
 package com.fornadagora.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +24,7 @@ import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +53,8 @@ public class MenuLateralActivity extends AppCompatActivity {
     private NavigationView navigationView;
 
     private boolean ehAdm = false;
+
+    private AlertDialog alerta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.nav_edit_adm_dados_fun) {
                     Intent i = new Intent(MenuLateralActivity.this, BuscarFuncionarioActivity.class);
                     startActivity(i);
+                }
+                if(item.getItemId() == R.id.nav_excluir_usu){
+                    excluirContaUsuario();
                 }
                 return true;
             }
@@ -221,6 +231,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
             menuItem.setVisible(false);
 
+            menuItem = menu.findItem(R.id.nav_excluir_usu);
+            menuItem.setVisible(false);
+
         }else if(usuario != null){
             if(isEhAdm(usuario)){
                 Menu menu = navigationView.getMenu();
@@ -236,6 +249,9 @@ public class MenuLateralActivity extends AppCompatActivity {
 
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_excluir_usu);
+                menuItem.setVisible(true);
             }else{
                 Menu menu = navigationView.getMenu();
 
@@ -244,6 +260,12 @@ public class MenuLateralActivity extends AppCompatActivity {
 
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_excluir_usu);
+                menuItem.setVisible(true);
             }
         }
     }
@@ -253,5 +275,59 @@ public class MenuLateralActivity extends AppCompatActivity {
             ehAdm = true;
         }
         return ehAdm;
+    }
+
+    public void excluirContaUsuario(){
+        if(usuario != null){
+            referenciaUsuario.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        usuario = snapshot.getValue(Usuario.class);
+                        if (usuario != null) {
+                            abrirDialog(snapshot);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    public void abrirDialog(final DataSnapshot dataSnap){
+
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.TemaDialog);
+        materialAlertDialogBuilder.setTitle("Confirmar");
+        materialAlertDialogBuilder.setMessage("Deseja realmente excluir sua conta?");
+
+        materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dataSnap.getRef().removeValue();
+                autenticacao.getCurrentUser().delete();
+                deslogarUsuario();
+                abrirTelaLogin();
+            }
+        });
+
+        materialAlertDialogBuilder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        materialAlertDialogBuilder.create();
+        materialAlertDialogBuilder.show();
+    }
+
+    public void abrirTelaLogin() {
+        Intent i = new Intent(MenuLateralActivity.this, MainActivity.class);
+        startActivity(i);
+        Toast.makeText(getApplicationContext(), "Conta excluída com sucesso", Toast.LENGTH_LONG).show();
     }
 }

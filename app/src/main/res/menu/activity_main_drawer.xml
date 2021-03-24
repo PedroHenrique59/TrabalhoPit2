@@ -20,5 +20,9 @@
             android:id="@+id/nav_edit_adm_dados_fun"
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados" />
+        <item
+            android:id="@+id/nav_excluir_usu"
+            android:icon="@drawable/ic_excluir"
+            android:title="@string/excluir" />
     </group>
 </menu>
