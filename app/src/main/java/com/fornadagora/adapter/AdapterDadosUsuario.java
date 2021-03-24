@@ -13,9 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.ValidaEmail;
+import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -25,12 +32,18 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
 
     private String nomeUser;
     private String emailUser;
+
     private Usuario usuario;
+
     private boolean emailAlterado = false;
 
     private FirebaseAuth autenticacao;
+    private FirebaseUser user;
 
     private Context context;
+
+    private TextInputEditText emailInformado;
+    private TextInputEditText nomeInformado;
 
     public AdapterDadosUsuario(List<Usuario> listaUsuario) {
         this.listaUsuarios = listaUsuario;
@@ -48,11 +61,11 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
     public void onBindViewHolder(@NonNull AdapterDadosUsuario.MyViewHolder holder, int position) {
         usuario = listaUsuarios.get(position);
 
-        holder.nomeUsuario.setText(usuario.getNome());
-        holder.emailUsuario.setText(usuario.getEmail());
+        nomeInformado.setText(usuario.getNome());
+        emailInformado.setText(usuario.getEmail());
 
-        nomeUser = holder.nomeUsuario.getText().toString();
-        emailUser = holder.emailUsuario.getText().toString();
+        nomeUser = nomeInformado.getText().toString();
+        emailUser = emailInformado.getText().toString();
     }
 
     @Override
@@ -62,35 +75,32 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextInputEditText nomeUsuario;
-        EditText emailUsuario;
         Button botaoSalvar;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
-            nomeUsuario = itemView.findViewById(R.id.EditTextNomeUsu);
-            emailUsuario = itemView.findViewById(R.id.EditTextEmailUsu);
+            nomeInformado = itemView.findViewById(R.id.EditTextNomeUsu);
+            emailInformado = itemView.findViewById(R.id.EditTextEmailUsu);
             botaoSalvar = itemView.findViewById(R.id.btn_salvar);
             autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
             botaoSalvar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    atualizarDados(v);
+                    validarCampos(v);
                 }
             });
         }
-        public void atualizarDados(View view) {
-            if (!nomeUsuario.getText().toString().isEmpty()) {
-                if (!emailUsuario.getText().toString().isEmpty()) {
-                    if (nomeUsuario.getText().toString().equals(nomeUser) && emailUsuario.getText().toString().equals(emailUser)) {
+
+        public void validarCampos(View view) {
+            if (!nomeInformado.getText().toString().isEmpty()) {
+                if (!emailInformado.getText().toString().isEmpty()) {
+                    if (nomeInformado.getText().toString().equals(nomeUser) && emailInformado.getText().toString().equals(emailUser)) {
                         emitirMensagem("Nome e email");
                     } else {
-                        if(!usuario.getEmail().equals(emailUsuario.getText().toString())){
+                        if(!usuario.getEmail().equals(emailInformado.getText().toString())){
                             emailAlterado = true;
-                            usuario.setEmail(emailUsuario.getText().toString());
                         }
-                        usuario.setNome(nomeUsuario.getText().toString());
                         salvarDados(usuario);
                     }
                 }
@@ -105,14 +115,42 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
             if(usuario != null){
                 if(autenticacao.getCurrentUser() != null){
                     if(emailAlterado){
-                        FirebaseAuth autenticacaoAtual = ConfiguracaoFirebase.getFirebaseAutenticacao();
-                        autenticacaoAtual.getCurrentUser().updateEmail(usuario.getEmail());
+                        if(validarEmail(emailInformado.getText().toString())){
+                            user = FirebaseAuth.getInstance().getCurrentUser();
+                            reautenticarUsuario(usuario);
+                        }else{
+                            Toast.makeText(context, "Favor informar um e-mail válido", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        atualizarDados();
                     }
-                    String id = autenticacao.getCurrentUser().getUid();
-                    usuario.setIdUsuario(id);
-                    usuario.atualizarDados();
                 }
             }
         }
+    }
+
+    public void reautenticarUsuario(final Usuario usuario){
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(usuario.getEmail(), usuario.getSenha());
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                user.updateEmail(emailInformado.getText().toString());
+                atualizarDados();
+            }
+        });
+    }
+
+    public void atualizarDados(){
+        String id = autenticacao.getCurrentUser().getUid();
+        usuario.setIdUsuario(id);
+        usuario.setNome(nomeInformado.getText().toString());
+        usuario.setEmail(emailInformado.getText().toString());
+        usuario.atualizarDados();
+        Toast.makeText(context, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean validarEmail(String email){
+        return ValidaEmail.validarEmail(email);
     }
 }
