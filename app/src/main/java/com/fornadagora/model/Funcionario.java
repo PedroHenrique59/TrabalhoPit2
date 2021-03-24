@@ -24,6 +24,11 @@ public class Funcionario {
         this.tipoPerfil = tipoPerfil;
     }
 
+    public Funcionario(String nome, String email) {
+        this.nome = nome;
+        this.email = email;
+    }
+
     public String getIdFuncionario() {
         return idFuncionario;
     }
@@ -81,5 +86,12 @@ public class Funcionario {
         DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
         referencia.child("funcionarios").child(this.idFuncionario).child("nome").setValue(this.nome);
         referencia.child("funcionarios").child(this.idFuncionario).child("email").setValue(this.email);
+    }
+
+    public void atualizarDadosPeloAdm(){
+        DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
+        referencia.child("funcionarios").child(this.idFuncionario).child("nome").setValue(this.nome);
+        referencia.child("funcionarios").child(this.idFuncionario).child("email").setValue(this.email);
+        referencia.child("funcionarios").child(this.idFuncionario).child("padaria").setValue(this.padaria);
     }
 }
