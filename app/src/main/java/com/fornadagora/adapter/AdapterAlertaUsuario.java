@@ -17,6 +17,7 @@ import com.fornadagora.R;
 import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,8 +33,9 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     private FirebaseAuth autenticacao;
     private DatabaseReference referenciaAlerta;
 
+    private TextView nomeAlerta;
+
     private Context context;
-    private AlertDialog alerta;
 
     public AdapterAlertaUsuario(List<Alerta> listaAlerta) {
         this.listaAlertas = listaAlerta;
@@ -52,7 +54,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
         Alerta alerta = listaAlertas.get(position);
 
-        holder.nomeAlerta.setText(alerta.getNome());
+        nomeAlerta.setText(alerta.getNome());
         holder.nomePadaria.setText(alerta.getPadaria().getNome());
         holder.nomeProduto.setText(alerta.getProduto().getNome());
     }
@@ -64,7 +66,6 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView nomeAlerta;
         TextView nomePadaria;
         TextView nomeProduto;
         ImageView imageViewExcluir;
@@ -80,58 +81,63 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             imageViewExcluir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String nome = nomeAlerta.getText().toString();
-
-                    autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-                    referenciaAlerta = ConfiguracaoFirebase.getFirebase();
-
-                    String email = autenticacao.getCurrentUser().getEmail();
-                    String id = Base64Custom.codificarBase64(email);
-
-                    referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
-                    referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                for(DataSnapshot snapAlerta : snapshot.getChildren()){
-                                    Alerta alerta = snapAlerta.getValue(Alerta.class);
-                                    if(alerta.getNome().equals(nome)){
-                                        abrirDialog(snapAlerta);
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                    excluirAlerta();
                 }
             });
         }
     }
 
+    public void excluirAlerta(){
+        final String nome = nomeAlerta.getText().toString();
+
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        referenciaAlerta = ConfiguracaoFirebase.getFirebase();
+
+        String id = autenticacao.getCurrentUser().getUid();
+
+        referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
+        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
+                        Alerta alerta = snapAlerta.getValue(Alerta.class);
+                        if(alerta.getNome().equals(nome)){
+                            abrirDialog(snapAlerta);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void abrirDialog(final DataSnapshot dataSnap){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Confirmar");
-        builder.setMessage("Deseja realmente excluir esse alerta?");
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
+        materialAlertDialogBuilder.setTitle("Confirmar");
+        materialAlertDialogBuilder.setMessage("Deseja realmente excluir este alerta?");
 
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
+        materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 dataSnap.getRef().removeValue();
-                Toast.makeText(context, "Alerta excluido com sucesso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                arg0.dismiss();
+        materialAlertDialogBuilder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
 
-        alerta = builder.create();
-        alerta.show();
+        materialAlertDialogBuilder.create();
+        materialAlertDialogBuilder.show();
     }
 }

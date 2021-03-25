@@ -4,46 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/fundoApp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/imageViewAlertaIcone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            app:srcCompat="@drawable/ic_adicionar_alerta_48dp" />
+
         <TextView
             android:id="@+id/textViewNomeAlerta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
             android:text="@string/nomealerta"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
+            />
 
         <ImageView
             android:id="@+id/imageViewExcluir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="1"
             app:srcCompat="@drawable/ic_excluir" />
 
         <ImageView
             android:id="@+id/imageViewEditar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="1"
             app:srcCompat="@drawable/ic_editar" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewNomePadaria"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nomepadaria" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textViewNomeProduto"
-        android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageViewPadaria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            app:srcCompat="@drawable/ic_padaria_loja_24" />
+
+        <TextView
+            android:id="@+id/textViewNomePadaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nomepadaria"
+            android:textColor="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nomeproduto" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageViewProduto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            app:srcCompat="@drawable/ic_produto_alerta_24" />
+
+        <TextView
+            android:id="@+id/textViewNomeProduto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nomeproduto"
+            android:textColor="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>
