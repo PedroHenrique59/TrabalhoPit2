@@ -101,8 +101,8 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, BuscarFuncionarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_excluir_usu){
-                    excluirContaUsuario();
+                if(item.getItemId() == R.id.nav_excluir_conta){
+                    excluirConta();
                 }
                 return true;
             }
@@ -228,11 +228,14 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_edit_dados_usu);
             menuItem.setVisible(false);
 
+            menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
+            menuItem.setVisible(false);
+
             menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
             menuItem.setVisible(false);
 
-            menuItem = menu.findItem(R.id.nav_excluir_usu);
-            menuItem.setVisible(false);
+            menuItem = menu.findItem(R.id.nav_excluir_conta);
+            menuItem.setVisible(true);
 
         }else if(usuario != null){
             if(isEhAdm(usuario)){
@@ -250,7 +253,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
 
-                menuItem = menu.findItem(R.id.nav_excluir_usu);
+                menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
             }else{
                 Menu menu = navigationView.getMenu();
@@ -264,7 +267,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
                 menuItem.setVisible(false);
 
-                menuItem = menu.findItem(R.id.nav_excluir_usu);
+                menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
             }
         }
@@ -277,7 +280,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         return ehAdm;
     }
 
-    public void excluirContaUsuario(){
+    public void excluirConta(){
         if(usuario != null){
             referenciaUsuario.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -285,6 +288,24 @@ public class MenuLateralActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
                         if (usuario != null) {
+                            abrirDialog(snapshot);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        if(funcionario != null){
+            referenciaFuncionario.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        funcionario = snapshot.getValue(Funcionario.class);
+                        if (funcionario != null) {
                             abrirDialog(snapshot);
                         }
                     }
