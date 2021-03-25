@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.model.Usuario;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,10 +35,10 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
 
     private FirebaseAuth autenticacao;
 
-    private Spinner spinnerPadaria;
-    private Spinner spinnerProduto;
+    private AutoCompleteTextView autoCompletePadaria;
+    private AutoCompleteTextView autoCompleteProduto;
 
-    private EditText editTextNomeAlerta;
+    private TextInputEditText editTextNomeAlerta;
 
     private ArrayAdapter arrayAdapterPadaria;
     private ArrayAdapter arrayAdapterProduto;
@@ -57,17 +59,17 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         inicializarComponentes();
         listarNomePadaria();
         listenerSpinnerNomePadaria();
-        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         validarAlertaSalvo();
     }
 
     public void inicializarComponentes() {
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         editTextNomeAlerta = findViewById(R.id.editTextNomeAlerta);
-        spinnerPadaria = findViewById(R.id.spinnerNomePadaria);
-        spinnerProduto = findViewById(R.id.spinnerProdutoPadaria);
-        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
-        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeProduto);
+        autoCompletePadaria = findViewById(R.id.autoComletePadariaAlert);
+        autoCompleteProduto = findViewById(R.id.autoComleteProdutoAlert);
+        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
+        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomeProduto);
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     }
 
     public void listarNomePadaria() {
@@ -82,7 +84,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             listaPadarias.add(padaria);
                         }
                     }
-                    spinnerPadaria.setAdapter(arrayAdapterPadaria);
+                    autoCompletePadaria.setAdapter(arrayAdapterPadaria);
                 }
             }
 
@@ -94,14 +96,14 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void listenerSpinnerNomePadaria() {
-        spinnerPadaria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        autoCompletePadaria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!listaPadarias.isEmpty()) {
                     listaNomeProduto.clear();
                     listaProdutos.clear();
                     for (Padaria padaria : listaPadarias) {
-                        String nomePadaria = spinnerPadaria.getSelectedItem().toString();
+                        String nomePadaria = autoCompletePadaria.getText().toString();
                         if (padaria.getNome().equals(nomePadaria)) {
                             for (Produto produto : padaria.getListaProdutos()) {
                                 listaNomeProduto.add(produto.getNome());
@@ -109,13 +111,8 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    spinnerProduto.setAdapter(arrayAdapterProduto);
+                    autoCompleteProduto.setAdapter(arrayAdapterProduto);
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
     }
@@ -123,12 +120,12 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     public void salvarAlerta(View view) {
 
         if (!editTextNomeAlerta.getText().toString().isEmpty()) {
-            if (!spinnerPadaria.getSelectedItem().toString().isEmpty()) {
-                if (!spinnerProduto.getSelectedItem().toString().isEmpty()) {
+            if (!autoCompletePadaria.getText().toString().isEmpty()) {
+                if (!autoCompleteProduto.getText().toString().isEmpty()) {
 
                     String nomeAlerta = editTextNomeAlerta.getText().toString();
-                    String nomePadaria = spinnerPadaria.getSelectedItem().toString();
-                    String nomeProduto = spinnerProduto.getSelectedItem().toString();
+                    String nomePadaria = autoCompletePadaria.getText().toString();
+                    String nomeProduto = autoCompleteProduto.getText().toString();
 
                     if (!listaPadarias.isEmpty()) {
                         for (Padaria padaria : listaPadarias) {
