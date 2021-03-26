@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.BuscarFuncionarioActivity"></activity>
+        <activity android:name=".activity.EditarAlertaUsuarioActivity"></activity>
+        <activity android:name=".activity.BuscarFuncionarioActivity" />
         <activity android:name=".activity.VerDadosFuncionarioActivity" />
         <activity
             android:name=".activity.MenuLateralActivity"

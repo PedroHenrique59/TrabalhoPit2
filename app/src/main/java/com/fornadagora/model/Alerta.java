@@ -1,9 +1,9 @@
 package com.fornadagora.model;
 
-import com.fornadagora.helper.ConfiguracaoFirebase;
-import com.google.firebase.database.DatabaseReference;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Alerta {
+public class Alerta implements Parcelable {
 
     private String nome;
     private Padaria padaria;
@@ -18,6 +18,24 @@ public class Alerta {
         this.padaria = padaria;
         this.produto = produto;
     }
+
+    protected Alerta(Parcel in) {
+        nome = in.readString();
+        produto = in.readParcelable(Produto.class.getClassLoader());
+        padaria = in.readParcelable(Padaria.class.getClassLoader());
+    }
+
+    public static final Creator<Alerta> CREATOR = new Creator<Alerta>() {
+        @Override
+        public Alerta createFromParcel(Parcel in) {
+            return new Alerta(in);
+        }
+
+        @Override
+        public Alerta[] newArray(int size) {
+            return new Alerta[size];
+        }
+    };
 
     public String getNome() {
         return nome;
@@ -43,4 +61,15 @@ public class Alerta {
         this.produto = produto;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nome);
+        dest.writeParcelable(produto, flags);
+        dest.writeParcelable(padaria, flags);
+    }
 }

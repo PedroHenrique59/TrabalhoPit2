@@ -1,13 +1,14 @@
 package com.fornadagora.model;
 
-import android.widget.ProgressBar;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Padaria {
+public class Padaria implements Parcelable {
 
     private String identificador;
     private String nome;
@@ -17,6 +18,23 @@ public class Padaria {
     public Padaria(){
 
     }
+
+    protected Padaria(Parcel in) {
+        nome = in.readString();
+        listaProdutos = in.createTypedArrayList(Produto.CREATOR);
+    }
+
+    public static final Creator<Padaria> CREATOR = new Creator<Padaria>() {
+        @Override
+        public Padaria createFromParcel(Parcel in) {
+            return new Padaria(in);
+        }
+
+        @Override
+        public Padaria[] newArray(int size) {
+            return new Padaria[size];
+        }
+    };
 
     @Exclude
     public String getIdentificador() {
@@ -49,5 +67,16 @@ public class Padaria {
 
     public List<Produto> getListaProdutos() {
         return listaProdutos;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nome);
+        dest.writeList(listaProdutos);
     }
 }
