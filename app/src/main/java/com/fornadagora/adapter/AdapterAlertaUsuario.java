@@ -1,15 +1,12 @@
 package com.fornadagora.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
 import com.fornadagora.activity.EditarAlertaUsuarioActivity;
-import com.fornadagora.activity.MenuLateralActivity;
-import com.fornadagora.helper.Base64Custom;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
-import com.fornadagora.model.Funcionario;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsuario.MyViewHolder> {
@@ -44,6 +37,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     private TextView nomeAlerta;
 
     private Context context;
+
+    private Alerta alertaSelecionado;
 
     public AdapterAlertaUsuario(List<Alerta> listaAlerta) {
         this.listaAlertas = listaAlerta;
@@ -91,21 +86,33 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             imageViewExcluir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    excluirAlerta();
+                    int posicao = getAdapterPosition();
+                    if(posicao != RecyclerView.NO_POSITION){
+                        if(!listaAlertas.isEmpty()){
+                            alertaSelecionado = listaAlertas.get(posicao);
+                        }
+                    }
+                    excluirAlerta(alertaSelecionado);
                 }
             });
 
             imageViewEditar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editarAlerta();
+                    int posicao = getAdapterPosition();
+                    if(posicao != RecyclerView.NO_POSITION){
+                        if(!listaAlertas.isEmpty()){
+                            alertaSelecionado = listaAlertas.get(posicao);
+                        }
+                    }
+                    editarAlerta(alertaSelecionado);
                 }
             });
         }
     }
 
-    public void excluirAlerta(){
-        final String nome = nomeAlerta.getText().toString();
+    public void excluirAlerta(Alerta alerta){
+        final String nome = alerta.getNome();
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         referenciaAlerta = ConfiguracaoFirebase.getFirebase();
@@ -158,13 +165,13 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         materialAlertDialogBuilder.show();
     }
 
-    public void editarAlerta(){
-        final String nome = nomeAlerta.getText().toString();
+    public void editarAlerta(Alerta alerta){
+        final String nome = alerta.getNome();
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         referenciaAlerta = ConfiguracaoFirebase.getFirebase();
 
-        String id = autenticacao.getCurrentUser().getUid();
+        final String id = autenticacao.getCurrentUser().getUid();
 
         referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
         referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -174,6 +181,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                     for(DataSnapshot snapAlerta : snapshot.getChildren()){
                         Alerta alerta = snapAlerta.getValue(Alerta.class);
                         if(alerta.getNome().equals(nome)){
+                            alerta.setIdAlerta(snapAlerta.getKey());
                             abrirDialogEditar(alerta);
                         }
                     }
@@ -213,7 +221,9 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     public void abrirEditarAlerta(Alerta alerta){
         Intent intent = new Intent(context, EditarAlertaUsuarioActivity.class);
-        intent.putExtra("alertaObj", alerta);
+        Bundle bd = new Bundle();
+        bd.putParcelable("alertaObj", alerta);
+        intent.putExtras(bd);
         context.startActivity(intent);
     }
 }

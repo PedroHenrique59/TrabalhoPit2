@@ -3,8 +3,13 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+
 public class Alerta implements Parcelable {
 
+    private String idAlerta;
     private String nome;
     private Padaria padaria;
     private Produto produto;
@@ -20,6 +25,7 @@ public class Alerta implements Parcelable {
     }
 
     protected Alerta(Parcel in) {
+        idAlerta = in.readString();
         nome = in.readString();
         produto = in.readParcelable(Produto.class.getClassLoader());
         padaria = in.readParcelable(Padaria.class.getClassLoader());
@@ -36,6 +42,15 @@ public class Alerta implements Parcelable {
             return new Alerta[size];
         }
     };
+
+    @Exclude
+    public String getIdAlerta() {
+        return idAlerta;
+    }
+
+    public void setIdAlerta(String idAlerta) {
+        this.idAlerta = idAlerta;
+    }
 
     public String getNome() {
         return nome;
@@ -68,8 +83,15 @@ public class Alerta implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(idAlerta);
         dest.writeString(nome);
         dest.writeParcelable(produto, flags);
         dest.writeParcelable(padaria, flags);
+    }
+
+    public void atualizarDados(Alerta alertaEditado, DatabaseReference referenciaAlertaExistente){
+        referenciaAlertaExistente.child("nome").setValue(alertaEditado.getNome());
+        referenciaAlertaExistente.child("padaria").setValue(alertaEditado.getPadaria());
+        referenciaAlertaExistente.child("produto").setValue(alertaEditado.getProduto());
     }
 }
