@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
 import com.fornadagora.notification.NotificacaoUsuario;
@@ -28,8 +29,8 @@ import java.util.List;
 
 public class AlertarUsuarioActivity extends AppCompatActivity {
 
-    private Spinner spinnerPadariaAlerta;
-    private Spinner spinnerProdutoAlerta;
+    private AutoCompleteTextView autoCompletePadaria;
+    private AutoCompleteTextView autoCompleteProduto;
 
     private FirebaseAuth autenticacao;
 
@@ -63,8 +64,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void inicializarComponentes() {
-        spinnerPadariaAlerta = findViewById(R.id.spinnerPadariaAlerta);
-        spinnerProdutoAlerta = findViewById(R.id.spinnerProdutoAlerta);
+        autoCompletePadaria = findViewById(R.id.autoComletePadaria);
+        autoCompleteProduto = findViewById(R.id.autoComleteProduto);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -111,9 +112,9 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                                     listaPadarias.add(padariaFuncionario);
                                 }
                             }
-                            spinnerPadariaAlerta.setAdapter(arrayAdapterPadaria);
+                            autoCompletePadaria.setAdapter(arrayAdapterPadaria);
                         } else {
-                            spinnerPadariaAlerta.setAdapter(null);
+                            autoCompletePadaria.setAdapter(null);
                         }
                     }
                 }
@@ -127,14 +128,14 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void listenerSpinnerNomePadaria() {
-        spinnerPadariaAlerta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        autoCompletePadaria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!listaPadarias.isEmpty()) {
                     listaNomeProduto.clear();
                     listaProdutos.clear();
                     for (Padaria padaria : listaPadarias) {
-                        String nomePadaria = spinnerPadariaAlerta.getSelectedItem().toString();
+                        String nomePadaria = autoCompletePadaria.getText().toString();
                         if (padaria.getNome().equals(nomePadaria)) {
                             for (Produto produto : padaria.getListaProdutos()) {
                                 listaNomeProduto.add(produto.getNome());
@@ -142,19 +143,13 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    spinnerProdutoAlerta.setAdapter(arrayAdapterProduto);
+                    autoCompleteProduto.setAdapter(arrayAdapterProduto);
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
     }
 
     public void enviarAlerta(View view) {
-
         referenciaUsuario.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,8 +174,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
 
     public void buscarAlertasUsuario(final Usuario usuario) {
 
-        final String nomePadaria = spinnerPadariaAlerta.getSelectedItem().toString();
-        final String nomeProduto = spinnerProdutoAlerta.getSelectedItem().toString();
+        final String nomePadaria = autoCompletePadaria.getText().toString();
+        final String nomeProduto = autoCompleteProduto.getText().toString();
 
         String id = usuario.getIdUsuario();
 
