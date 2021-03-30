@@ -104,6 +104,10 @@ public class MenuLateralActivity extends AppCompatActivity {
                 if(item.getItemId() == R.id.nav_excluir_conta){
                     excluirConta();
                 }
+                if(item.getItemId() == R.id.nav_cadastrar_fun){
+                    Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
+                    startActivity(i);
+                }
                 return true;
             }
         });
@@ -225,6 +229,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
             menuItem.setVisible(true);
 
+            menuItem = menu.findItem(R.id.nav_cadastrar_fun);
+            menuItem.setVisible(false);
+
             menuItem = menu.findItem(R.id.nav_edit_dados_usu);
             menuItem.setVisible(false);
 
@@ -244,6 +251,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
                 menuItem.setVisible(true);
 
+                menuItem = menu.findItem(R.id.nav_cadastrar_fun);
+                menuItem.setVisible(true);
+
                 menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
                 menuItem.setVisible(false);
 
@@ -260,6 +270,9 @@ public class MenuLateralActivity extends AppCompatActivity {
 
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
                 menuItem.setVisible(true);
+
+                menuItem = menu.findItem(R.id.nav_cadastrar_fun);
+                menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);

@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados" />
         <item
+            android:id="@+id/nav_cadastrar_fun"
+            android:icon="@drawable/ic_add_funcionario_24dp"
+            android:title="@string/cadastrarfuncionario" />
+        <item
             android:id="@+id/nav_edit_adm_dados_fun"
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados_funcionario" />
