@@ -44,6 +44,7 @@
     <string name="senhadofuncionario">Informe sua senha</string>
     <string name="confirmarsenhadofuncionario">Confirme sua senha</string>
     <string name="escolhafuncionario">Escolha um funcionario:</string>
+    <string name="enviaralerta">Enviar alerta</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

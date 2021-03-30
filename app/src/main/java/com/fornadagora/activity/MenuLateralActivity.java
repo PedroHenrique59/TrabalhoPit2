@@ -108,6 +108,10 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
                     startActivity(i);
                 }
+                if(item.getItemId() == R.id.nav_enviar_alerta){
+                    Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
+                    startActivity(i);
+                }
                 return true;
             }
         });
@@ -229,6 +233,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
             menuItem.setVisible(true);
 
+            menuItem = menu.findItem(R.id.nav_enviar_alerta);
+            menuItem.setVisible(true);
+
             menuItem = menu.findItem(R.id.nav_cadastrar_fun);
             menuItem.setVisible(false);
 
@@ -263,6 +270,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
 
+                menuItem = menu.findItem(R.id.nav_enviar_alerta);
+                menuItem.setVisible(false);
+
                 menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
             }else{
@@ -278,6 +288,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_enviar_alerta);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_excluir_conta);
