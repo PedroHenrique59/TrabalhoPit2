@@ -112,6 +112,10 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
                     startActivity(i);
                 }
+                if(item.getItemId() == R.id.nav_adicionar_padaria){
+                    Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
+                    startActivity(i);
+                }
                 return true;
             }
         });
@@ -248,6 +252,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
             menuItem.setVisible(false);
 
+            menuItem = menu.findItem(R.id.nav_adicionar_padaria);
+            menuItem.setVisible(false);
+
             menuItem = menu.findItem(R.id.nav_excluir_conta);
             menuItem.setVisible(true);
 
@@ -273,6 +280,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_enviar_alerta);
                 menuItem.setVisible(false);
 
+                menuItem = menu.findItem(R.id.nav_adicionar_padaria);
+                menuItem.setVisible(true);
+
                 menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
             }else{
@@ -291,6 +301,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_enviar_alerta);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_adicionar_padaria);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_excluir_conta);

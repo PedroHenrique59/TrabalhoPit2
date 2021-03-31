@@ -29,6 +29,10 @@
             android:icon="@drawable/ic_notificar_usuario_24"
             android:title="@string/enviaralerta" />
         <item
+            android:id="@+id/nav_adicionar_padaria"
+            android:icon="@drawable/ic_padaria_loja_24"
+            android:title="@string/adicionarpadaria" />
+        <item
             android:id="@+id/nav_excluir_conta"
             android:icon="@drawable/ic_excluir"
             android:title="@string/excluir" />
