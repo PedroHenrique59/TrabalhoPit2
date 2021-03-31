@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -39,6 +40,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     private Button botaoCadastrar;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
 
     private Usuario usuario;
 
@@ -57,6 +59,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         inicializarComponentes();
         recuperarToken();
         configurarIconeVisualizarSenha();
+        configurarToolbar();
 
         progressBar.setVisibility(View.GONE);
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +82,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         botaoCadastrar = findViewById(R.id.btn_cadastrar);
         progressBar = findViewById(R.id.progressCadastro);
+        toolbar = findViewById(R.id.toolbarPrincipal);
 
         campoNome.requestFocus();
     }
@@ -212,5 +216,23 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         } else {
             Toast.makeText(CadastroUsuarioActivity.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Cadastre-se");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirTelaLogin();
+            }
+        });
+    }
+
+    public void abrirTelaLogin(){
+        Intent i = new Intent(CadastroUsuarioActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
