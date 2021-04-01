@@ -1,6 +1,5 @@
 package com.fornadagora.activity;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,10 +7,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentActivity;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Alerta;
 import com.fornadagora.model.LocalMapa;
 import com.fornadagora.model.Padaria;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +39,12 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
     private LocalMapa local;
     private Padaria padaria;
 
-    private Dialog dialog;
+    private AlertDialog dialog;
+
+    private LatLng latLng;
+    private EditText editTextNomePadaria;
+    private Button botaoSalvar;
+    private Button botaoCancelar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -113,38 +121,51 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
 
     }
 
-    public void abrirDialog(final LocalMapa local, final Padaria padaria) {
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialogmapa);
-        dialog.setTitle("Dialog teste");
+    public void abrirDialog(final LocalMapa local, final Padaria padaria){
+
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.TemaDialog);
+        materialAlertDialogBuilder.setView(R.layout.dialogmapa);
+        materialAlertDialogBuilder.create();
+        dialog = materialAlertDialogBuilder.show();
 
         Double latitude = Double.parseDouble(local.getLatitude());
         Double longitude = Double.parseDouble(local.getLongitude());
 
-        final LatLng latLng = new LatLng(latitude, longitude);
-        final EditText editTextNomePadaria = dialog.findViewById(R.id.editTextNomePadaria);
+        latLng = new LatLng(latitude, longitude);
 
-        Button botaoSalvar = dialog.findViewById(R.id.dialogBotaoSalvar);
+        editTextNomePadaria = dialog.findViewById(R.id.editTextNomePadaria);
+        botaoSalvar = dialog.findViewById(R.id.dialogBotaoSalvar);
+        botaoCancelar = dialog.findViewById(R.id.dialogBotaoCancelar);
 
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (editTextNomePadaria.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Favor preencher o nome da padaria", Toast.LENGTH_SHORT).show();
-                } else {
-                    String nomePadaria = editTextNomePadaria.getText().toString();
-                    padaria.setNome(nomePadaria);
-                    referenciaPadaria.push().setValue(padaria);
-
-                    mMap.addMarker(new MarkerOptions().position(latLng)
-                            .title(nomePadaria)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
-
-                    dialog.dismiss();
-                }
+            public void onClick(View v) {
+                salvarPadariaMapa(latLng, editTextNomePadaria);
+                dialog.dismiss();
             }
         });
 
-        dialog.show();
+        botaoCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public void salvarPadariaMapa(LatLng latLng, EditText editNomePadaria){
+        if (editNomePadaria.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Favor preencher o nome da padaria", Toast.LENGTH_SHORT).show();
+        } else {
+            String nomePadaria = editNomePadaria.getText().toString();
+            padaria.setNome(nomePadaria);
+            referenciaPadaria.push().setValue(padaria);
+
+            mMap.addMarker(new MarkerOptions().position(latLng)
+                    .title(nomePadaria)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone)));
+
+            dialog.dismiss();
+        }
     }
 }

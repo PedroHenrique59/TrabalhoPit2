@@ -46,6 +46,7 @@
     <string name="escolhafuncionario">Escolha um funcionario:</string>
     <string name="enviaralerta">Enviar alerta</string>
     <string name="adicionarpadaria">Adicionar padaria</string>
+    <string name="cancelar">Cancelar</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
