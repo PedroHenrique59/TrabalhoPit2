@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.VerDadosFuncionarioActivity">
+    android:layout_height="wrap_content"
+    tools:context=".activity.VerDadosFuncionarioActivity"
+    android:background="@color/cor_recycler">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFuncionario"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="233dp"
-        tools:layout_editor_absoluteY="120dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

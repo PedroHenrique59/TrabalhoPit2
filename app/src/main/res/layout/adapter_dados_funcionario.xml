@@ -21,7 +21,11 @@
 
     <include
         android:id="@+id/include_toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_nome_fun_edit"

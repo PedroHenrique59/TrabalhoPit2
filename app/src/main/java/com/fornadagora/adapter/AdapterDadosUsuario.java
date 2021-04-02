@@ -1,6 +1,7 @@
 package com.fornadagora.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.activity.MenuLateralActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
@@ -44,6 +47,8 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
 
     private TextInputEditText emailInformado;
     private TextInputEditText nomeInformado;
+
+    private Toolbar toolbar;
 
     public AdapterDadosUsuario(List<Usuario> listaUsuario) {
         this.listaUsuarios = listaUsuario;
@@ -82,7 +87,10 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
             nomeInformado = itemView.findViewById(R.id.EditTextNomeUsu);
             emailInformado = itemView.findViewById(R.id.EditTextEmailUsu);
             botaoSalvar = itemView.findViewById(R.id.btn_salvar);
+            toolbar = itemView.findViewById(R.id.toolbarPrincipal);
             autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
+            configurarToolbar();
 
             botaoSalvar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,4 +161,23 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
     public boolean validarEmail(String email){
         return ValidaEmail.validarEmail(email);
     }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Alterar dados");
+        toolbar.setTitleTextColor(context.getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(context, MenuLateralActivity.class);
+        context.startActivity(intent);
+    }
 }
+
+
