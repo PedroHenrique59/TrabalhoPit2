@@ -6,5 +6,7 @@
     <color name="fundoApp">#9C1415</color>
     <color name="mtrl_textinput_default_box_stroke_color">#FFFFFF</color>
     <color name="cor_recycler">#361800</color>
+    <color name="cor_toolbar_principal">#361800</color>
+    <color name="cor_navigation">#8C4912</color>
 
 </resources>
