@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -42,6 +43,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
     private Button botaoCadastrar;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
 
     private AutoCompleteTextView autoComplete;
 
@@ -63,6 +65,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_funcionario);
 
         inicializarComponentes();
+        configurarToolbar();
         carregarListaPadarias();
 
         progressBar.setVisibility(View.GONE);
@@ -83,6 +86,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
         progressBar = findViewById(R.id.progressCadastroFun);
+        toolbar = findViewById(R.id.toolbarPrincipal);
+
         autoComplete = findViewById(R.id.autoComletePadariaFun);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
     }
@@ -208,4 +213,21 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         return ValidaEmail.validarEmail(email);
     }
 
+    public void configurarToolbar(){
+        toolbar.setTitle("Cadastrar um funcionário");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(this, MenuLateralActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
