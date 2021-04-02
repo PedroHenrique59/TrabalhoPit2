@@ -1,6 +1,7 @@
 package com.fornadagora.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.activity.MenuLateralActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
@@ -46,6 +49,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
     private List<Padaria> listaPadarias = new ArrayList<>();
 
     private AutoCompleteTextView autoComletePadariaFunEdit;
+    private Toolbar toolbar;
 
     private Funcionario funcionario;
 
@@ -103,11 +107,13 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
             nomeInformado = itemView.findViewById(R.id.edit_text_fun_nome);
             emailInformado = itemView.findViewById(R.id.edit_text_fun_email);
             autoComletePadariaFunEdit = itemView.findViewById(R.id.autoComletePadariaFunEdit);
+            toolbar = itemView.findViewById(R.id.toolbarPrincipal);
 
             botaoSalvar = itemView.findViewById(R.id.btn_salvar_dados_fun);
             autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
             carregarListaPadarias();
+            configurarToolbar();
 
             botaoSalvar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -241,5 +247,22 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         }else{
             autoComletePadariaFunEdit.setEnabled(false);
         }
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Alterar dados");
+        toolbar.setTitleTextColor(context.getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(context, MenuLateralActivity.class);
+        context.startActivity(intent);
     }
 }

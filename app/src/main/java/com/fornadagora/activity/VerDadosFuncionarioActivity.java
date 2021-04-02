@@ -1,10 +1,13 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,10 +42,14 @@ public class VerDadosFuncionarioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_dados_funcionario);
-        recyclerViewFuncionario = findViewById(R.id.recyclerViewFuncionario);
-        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        inicializarComponentes();
         recuperarParametro();
         listarDadosFuncionario();
+    }
+
+    public void inicializarComponentes(){
+        recyclerViewFuncionario = findViewById(R.id.recyclerViewFuncionario);
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     }
 
     public void listarDadosFuncionario() {
