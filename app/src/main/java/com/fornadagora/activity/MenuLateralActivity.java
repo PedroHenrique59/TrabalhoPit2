@@ -3,11 +3,13 @@ package com.fornadagora.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,12 @@ public class MenuLateralActivity extends AppCompatActivity {
     private TextView txtnome;
     private TextView txtemail;
 
+    private ImageView imagemEsq1;
+    private ImageView imagemEsq2;
+
+    private ImageView imagemDir1;
+    private ImageView imagemDir2;
+
     private FirebaseAuth autenticacao;
 
     private DatabaseReference referenciaFuncionario;
@@ -53,8 +61,8 @@ public class MenuLateralActivity extends AppCompatActivity {
     private NavigationView navigationView;
 
     private boolean ehAdm = false;
-
-    private AlertDialog alerta;
+    private boolean ehUsuario = false;
+    private boolean ehFuncionario = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +130,20 @@ public class MenuLateralActivity extends AppCompatActivity {
 
         inicializarComponentes(headerView);
         listarDadosPerfilLogado();
-
         recuperarParametro();
     }
 
     public void inicializarComponentes(View headerView) {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
         txtnome = headerView.findViewById(R.id.txtnomeHeader);
         txtemail = headerView.findViewById(R.id.txtemailHeader);
+
+        imagemEsq1 = findViewById(R.id.imageViewEsq1);
+        imagemEsq2 = findViewById(R.id.imageViewEsq2);
+
+        imagemDir1 = findViewById(R.id.imageViewDir1);
+        imagemDir2 = findViewById(R.id.imageViewDir2);
     }
 
     @Override
@@ -181,6 +195,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                             txtnome.setText(usuario.getNome());
                             txtemail.setText(usuario.getEmail());
                             configurarOpcoesNavigationView(navigationView);
+                            configuraImagens();
                         }
                     }
                 }
@@ -203,6 +218,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                             txtnome.setText(funcionario.getNome());
                             txtemail.setText(funcionario.getEmail());
                             configurarOpcoesNavigationView(navigationView);
+                            configuraImagens();
                         }
                     }
                 }
@@ -389,5 +405,40 @@ public class MenuLateralActivity extends AppCompatActivity {
         Intent i = new Intent(MenuLateralActivity.this, MainActivity.class);
         startActivity(i);
         Toast.makeText(getApplicationContext(), "Conta excluída com sucesso", Toast.LENGTH_LONG).show();
+    }
+
+    public void configuraImagens(){
+        if(usuario != null){
+            imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
+            imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_48dp);
+            ehUsuario = true;
+            configurarEventosClick();
+        }
+        if(funcionario != null){
+            imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
+            imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_48);
+            ehFuncionario = true;
+            configurarEventosClick();
+        }
+    }
+
+    public void configurarEventosClick(){
+        imagemEsq1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirTelaVerPadaria(v);
+            }
+        });
+        imagemDir1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ehUsuario){
+                    
+                }
+                if(ehFuncionario){
+
+                }
+            }
+        });
     }
 }
