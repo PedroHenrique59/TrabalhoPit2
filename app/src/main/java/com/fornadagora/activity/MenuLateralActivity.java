@@ -116,10 +116,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_enviar_alerta){
-                    Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
-                    startActivity(i);
-                }
                 if(item.getItemId() == R.id.nav_adicionar_padaria){
                     Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
                     startActivity(i);
@@ -253,9 +249,6 @@ public class MenuLateralActivity extends AppCompatActivity {
             MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
             menuItem.setVisible(true);
 
-            menuItem = menu.findItem(R.id.nav_enviar_alerta);
-            menuItem.setVisible(true);
-
             menuItem = menu.findItem(R.id.nav_cadastrar_fun);
             menuItem.setVisible(false);
 
@@ -293,9 +286,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
 
-                menuItem = menu.findItem(R.id.nav_enviar_alerta);
-                menuItem.setVisible(false);
-
                 menuItem = menu.findItem(R.id.nav_adicionar_padaria);
                 menuItem.setVisible(true);
 
@@ -314,9 +304,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
-                menuItem.setVisible(false);
-
-                menuItem = menu.findItem(R.id.nav_enviar_alerta);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_adicionar_padaria);
@@ -433,12 +420,22 @@ public class MenuLateralActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(ehUsuario){
-                    
+                    abrirTelaSalvarAlerta();
                 }
                 if(ehFuncionario){
-
+                    abrirTelaEnviarAlerta();
                 }
             }
         });
+    }
+
+    public void abrirTelaSalvarAlerta(){
+        Intent i = new Intent(MenuLateralActivity.this, CadastrarAlertaActivity.class);
+        startActivity(i);
+    }
+
+    public void abrirTelaEnviarAlerta(){
+        Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
+        startActivity(i);
     }
 }

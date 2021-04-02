@@ -2,7 +2,9 @@ package com.fornadagora.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +34,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompletePadaria;
     private AutoCompleteTextView autoCompleteProduto;
 
+    private Toolbar toolbar;
+
     private FirebaseAuth autenticacao;
 
     private DatabaseReference referenciaFuncionario;
@@ -58,6 +62,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alertar_usuario);
 
         inicializarComponentes();
+        configurarToolbar();
         validarFuncionario();
         carregarSpinnerPadaria();
         listenerSpinnerNomePadaria();
@@ -66,6 +71,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     public void inicializarComponentes() {
         autoCompletePadaria = findViewById(R.id.autoComletePadaria);
         autoCompleteProduto = findViewById(R.id.autoComleteProduto);
+        toolbar = findViewById(R.id.toolbarPrincipal);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -211,5 +217,23 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     public void alertarUsuario(String titulo, String mensagem, String tokenUsu) {
         NotificacaoUsuario notUsu = new NotificacaoUsuario();
         notUsu.chamarNotificacao(titulo, mensagem, tokenUsu);
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Enviar alerta");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent i = new Intent(AlertarUsuarioActivity.this, MenuLateralActivity.class);
+        startActivity(i);
+        finish();
     }
 }

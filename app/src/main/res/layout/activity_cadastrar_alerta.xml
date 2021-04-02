@@ -6,25 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".activity.CadastrarAlertaActivity">
 
-    <View
+    <ImageView
+        android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_layer_gradient"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <TextView
-        android:id="@+id/txt_titulo2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="@string/titulotelacadastraralerta"
-        android:textColor="@color/colorPrimary"
-        android:textSize="36sp"
-        android:typeface="normal"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fundo_marrom"
+        android:contentDescription="@string/cadastrar"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,16 +32,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:hint="@string/nomealerta"
         app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titulo2"
+        app:layout_constraintTop_toTopOf="parent"
         app:startIconContentDescription="@string/nomealerta"
         app:startIconDrawable="@drawable/ic_icone_nome_alerta_24">
 
@@ -68,7 +64,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:hint="Escolha uma padaria"
+        android:hint="@string/escolhapadaria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +89,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:hint="Escolha um produto"
+        android:hint="@string/escolhaumproduto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,12 +107,10 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cadastrar_fun"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="64dp"
         android:background="@drawable/bg_button_logar"
         android:onClick="salvarAlerta"
         android:text="@string/cadastrar"

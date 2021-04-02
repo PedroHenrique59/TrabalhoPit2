@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -39,6 +41,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteProduto;
 
     private TextInputEditText editTextNomeAlerta;
+    private Toolbar toolbar;
 
     private ArrayAdapter arrayAdapterPadaria;
     private ArrayAdapter arrayAdapterProduto;
@@ -57,6 +60,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_alerta);
         inicializarComponentes();
+        configurarToolbar();
         listarNomePadaria();
         listenerSpinnerNomePadaria();
         validarAlertaSalvo();
@@ -67,6 +71,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         editTextNomeAlerta = findViewById(R.id.editTextNomeAlerta);
         autoCompletePadaria = findViewById(R.id.autoComletePadariaAlert);
         autoCompleteProduto = findViewById(R.id.autoComleteProdutoAlert);
+        toolbar = findViewById(R.id.toolbarPrincipal);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
         arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomeProduto);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -210,6 +215,24 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         usuario.setIdUsuario(id);
         usuario.setAlerta(alerta);
         usuario.salvarAlerta();
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Cadastre um alerta");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent i = new Intent(CadastrarAlertaActivity.this, MenuLateralActivity.class);
+        startActivity(i);
+        finish();
     }
 }
 

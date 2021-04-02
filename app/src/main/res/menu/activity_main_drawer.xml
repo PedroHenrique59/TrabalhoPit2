@@ -25,10 +25,6 @@
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados_funcionario" />
         <item
-            android:id="@+id/nav_enviar_alerta"
-            android:icon="@drawable/ic_notificar_usuario_24"
-            android:title="@string/enviaralerta" />
-        <item
             android:id="@+id/nav_adicionar_padaria"
             android:icon="@drawable/ic_padaria_loja_24"
             android:title="@string/adicionarpadaria" />
