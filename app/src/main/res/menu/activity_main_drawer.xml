@@ -33,6 +33,10 @@
             android:icon="@drawable/ic_padaria_loja_24"
             android:title="@string/adicionarproduto" />
         <item
+            android:id="@+id/nav_cadastrar_produto"
+            android:icon="@drawable/ic_produto_alerta_24"
+            android:title="@string/cadastrarproduto" />
+        <item
             android:id="@+id/nav_excluir_conta"
             android:icon="@drawable/ic_excluir"
             android:title="@string/excluir" />
