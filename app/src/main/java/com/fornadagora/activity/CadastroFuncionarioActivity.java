@@ -112,10 +112,6 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                             String idFuncionario = autenticacao.getCurrentUser().getUid();
                             funcionario.setIdFuncionario(idFuncionario);
                             funcionario.salvar();
-
-                            startActivity(new Intent(getApplicationContext(), MenuInicialAdminActivity.class));
-                            finish();
-
                         } else {
                             progressBar.setVisibility(View.GONE);
 
