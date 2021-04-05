@@ -49,6 +49,7 @@
     <string name="cancelar">Cancelar</string>
     <string name="notificarusuario">Notificar</string>
     <string name="escolhaumproduto">Escolha um produto:</string>
+    <string name="menu">Menu Principal</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -70,6 +70,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_lateral);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
@@ -123,6 +124,8 @@ public class MenuLateralActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        getSupportActionBar().setTitle(R.string.menu);
 
         inicializarComponentes(headerView);
         listarDadosPerfilLogado();
