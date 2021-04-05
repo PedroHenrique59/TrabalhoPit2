@@ -129,6 +129,10 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarProdutoActivity.class);
                     startActivity(i);
                 }
+                if(item.getItemId() == R.id.nav_cadastrar_categoria){
+                    Intent i = new Intent(MenuLateralActivity.this, CadastrarCategoriaActivity.class);
+                    startActivity(i);
+                }
                 return true;
             }
         });
@@ -281,6 +285,9 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_cadastrar_produto);
             menuItem.setVisible(false);
 
+            menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
+            menuItem.setVisible(false);
+
             menuItem = menu.findItem(R.id.nav_excluir_conta);
             menuItem.setVisible(true);
 
@@ -312,6 +319,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_cadastrar_produto);
                 menuItem.setVisible(true);
 
+                menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
+                menuItem.setVisible(true);
+
                 menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
             }else{
@@ -336,6 +346,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_produto);
+                menuItem.setVisible(false);
+
+                menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_excluir_conta);

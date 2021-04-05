@@ -53,6 +53,7 @@
     <string name="adicionarproduto">Adicionar produto</string>
     <string name="escolhacategoria">Escolha a categoria:</string>
     <string name="cadastrarproduto">Cadastrar produto</string>
+    <string name="cadastrarcategoria">Cadastrar categoria</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
