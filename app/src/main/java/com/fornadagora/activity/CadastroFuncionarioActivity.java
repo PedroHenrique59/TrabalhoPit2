@@ -214,7 +214,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     }
 
     public void configurarToolbar(){
-        toolbar.setTitle("Cadastrar um funcionário");
+        toolbar.setTitle("Cadastrar Funcionário");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

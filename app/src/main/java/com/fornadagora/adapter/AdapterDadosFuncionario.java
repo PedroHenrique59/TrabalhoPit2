@@ -41,7 +41,6 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
 
     private String nomeFun;
     private String emailFun;
-    private Padaria padariaFun;
 
     private ArrayAdapter arrayAdapterPadaria;
 

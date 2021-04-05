@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -36,6 +38,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
     private TextInputEditText editNomeFun;
     private TextInputEditText editEmailFun;
     private Button botaoSalvar;
+    private Toolbar toolbar;
 
     private AutoCompleteTextView autoCompleteFun;
     private AutoCompleteTextView autoCompletePadariaFun;
@@ -62,6 +65,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_funcionario);
         inicializarComponentes();
+        configurarToolbar();
         buscarFuncionarios();
         buscarPadarias();
         escolherFuncionario();
@@ -72,6 +76,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         editNomeFun = findViewById(R.id.edit_text_fun_nome_adm);
         editEmailFun = findViewById(R.id.edit_text_fun_email_adm);
         botaoSalvar = findViewById(R.id.btn_salvar_dados_fun_adm);
+        toolbar = findViewById(R.id.toolbarPrincipal);
         autoCompleteFun = findViewById(R.id.autoCompleteFunEditAdm);
         autoCompletePadariaFun = findViewById(R.id.autoComletePadariaFunEditAdm);
         referenciaFuncionarios = ConfiguracaoFirebase.getFirebase();
@@ -230,5 +235,23 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "A padaria informada não existe", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Alterar Dados Funcionário");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(this, MenuLateralActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
