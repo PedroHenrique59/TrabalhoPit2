@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,12 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
 
     private Categoria categoria;
 
+    private DatabaseReference referenciaCategoria;
+
+    private Context context;
+
+    private boolean categoriaJaSalva = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,8 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
         editTextNomeCategoria = findViewById(R.id.editTextNomeCategoria);
         toolbar = findViewById(R.id.toolbarPrincipal);
         botaoSalvar = findViewById(R.id.btn_cadastrar_categ);
+        referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
+        context = this;
     }
 
     public void configurarToolbar(){
@@ -72,9 +81,37 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
         if(!editTextNomeCategoria.getText().toString().isEmpty()){
             String nomeCategoria = editTextNomeCategoria.getText().toString();
             categoria = new Categoria(nomeCategoria);
-            categoria.salvar();
+            validarCategoriaJaSalva(categoria);
         }else{
             Toast.makeText(this, "Favor preencher o nome da categoria", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void validarCategoriaJaSalva(final Categoria categoria){
+        categoriaJaSalva = false;
+        referenciaCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapCategoria : snapshot.getChildren()){
+                        Categoria cat = snapCategoria.getValue(Categoria.class);
+                        String idCat = snapCategoria.getKey();
+                        if(cat.getNome().equalsIgnoreCase(categoria.getNome())){
+                            Toast.makeText(context, "Esta categoria já foi salva", Toast.LENGTH_SHORT).show();
+                            categoriaJaSalva = true;
+                            break;
+                        }
+                    }
+                    if(!categoriaJaSalva){
+                        categoria.salvar();
+                        Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
