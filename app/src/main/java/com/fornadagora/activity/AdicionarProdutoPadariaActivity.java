@@ -1,8 +1,11 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -10,9 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
@@ -29,21 +34,30 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     private DatabaseReference referenciaPadaria;
     private DatabaseReference referenciaFuncionario;
+    private DatabaseReference referenciaCategoria;
+    private DatabaseReference referenciaProduto;
+
     private FirebaseAuth autenticacao;
 
-    private Spinner spinner;
+    private AutoCompleteTextView autoComletePadariaAdd;
+    private AutoCompleteTextView autoComleteCategoriaAdd;
+    private AutoCompleteTextView autoComleteProdutoAdd;
 
     private Button botaoSalvar;
 
-    private CheckBox checkBoxPaoQueijo;
-    private CheckBox checkBoxCoxinha;
+    private Toolbar toolbar;
 
     private List<String> listaNomePadaria = new ArrayList<>();
     private List<Padaria> listaPadarias = new ArrayList<>();
-    private List<String> nomesProdutos = new ArrayList<>();
+    private List<String> listaNomesProdutos = new ArrayList<>();
     private List<Produto> listaProdutos = new ArrayList<>();
 
-    private ArrayAdapter arrayAdapter;
+    private ArrayList<String> listaNomeCategoria = new ArrayList<>();
+    private ArrayList<Categoria> listaCategoria = new ArrayList<>();
+
+    private ArrayAdapter arrayAdapterPadaria;
+    private ArrayAdapter arrayAdapterCategoria;
+    private ArrayAdapter arrayAdapterProduto;
 
     private Funcionario funcionarioRecuperado;
 
@@ -51,23 +65,28 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_produto_padaria);
-
         inicializarComponentes();
         validarFuncionario();
-        carregarSpinnerPadaria();
+        carregarPadarias();
+        carregarCategorias();
+        configurarToolbar();
     }
 
     public void inicializarComponentes() {
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
-
-        spinner = findViewById(R.id.spinnerNomePadaria);
-        checkBoxPaoQueijo = findViewById(R.id.checkBoxPaoQueijo);
-        checkBoxCoxinha = findViewById(R.id.checkBoxCoxinha);
-        botaoSalvar = findViewById(R.id.buttonSalvarProdutos);
-
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
+        referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
+        referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
+        autoComletePadariaAdd = findViewById(R.id.autoComletePadariaAdd);
+        autoComleteCategoriaAdd = findViewById(R.id.autoComleteCategoriaAdd);
+        autoComleteProdutoAdd = findViewById(R.id.autoComleteProdutoAdd);
+        toolbar = findViewById(R.id.toolbarPrincipal);
+        botaoSalvar = findViewById(R.id.btn_add_produto);
+        arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
+        arrayAdapterCategoria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoria);
+        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomesProdutos);
     }
 
+    /*
     public void salvarProdutos(View view) {
 
         String nomePadaria = "";
@@ -142,8 +161,9 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
             }
         }
     }
+    */
 
-    public void carregarSpinnerPadaria() {
+    public void carregarPadarias() {
         referenciaPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -159,9 +179,9 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                     listaPadarias.add(padariaFuncionario);
                                 }
                             }
-                            spinner.setAdapter(arrayAdapter);
+                            autoComletePadariaAdd.setAdapter(arrayAdapterPadaria);
                         } else {
-                            spinner.setAdapter(null);
+                            autoComletePadariaAdd.setAdapter(null);
                         }
                     }
                 }
@@ -170,6 +190,35 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void carregarCategorias(){
+        referenciaCategoria.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapCategoria : snapshot.getChildren()){
+                        Categoria cat = snapCategoria.getValue(Categoria.class);
+                        listaNomeCategoria.add(cat.getNome());
+                        listaCategoria.add(cat);
+                    }
+                    autoComleteCategoriaAdd.setAdapter(arrayAdapterCategoria);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        autoComleteCategoriaAdd.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String nomeCategoria = autoComleteCategoriaAdd.getText().toString();
+                carregarProdutosDaCategoria(nomeCategoria);
             }
         });
     }
@@ -196,5 +245,45 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Adicionar produto(s)");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(this, MenuLateralActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void carregarProdutosDaCategoria(final String nomeCategoria){
+        listaNomesProdutos.clear();
+        referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot dataSnapProduto : snapshot.getChildren()){
+                        Produto produto = dataSnapProduto.getValue(Produto.class);
+                        if(produto.getCategoria().getNome().equalsIgnoreCase(nomeCategoria)){
+                            listaNomesProdutos.add(produto.getNome());
+                        }
+                    }
+                    autoComleteProdutoAdd.setAdapter(arrayAdapterProduto);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
