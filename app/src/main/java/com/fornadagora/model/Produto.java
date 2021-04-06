@@ -3,12 +3,21 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
+
 public class Produto implements Parcelable {
 
     private String nome;
+    private Categoria categoria;
 
     public Produto(){
 
+    }
+
+    public Produto(String nome, Categoria categoria) {
+        this.nome = nome;
+        this.categoria = categoria;
     }
 
     public Produto(String nome) {
@@ -39,6 +48,14 @@ public class Produto implements Parcelable {
         this.nome = nome;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -47,5 +64,10 @@ public class Produto implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nome);
+    }
+
+    public void salvar(){
+        DatabaseReference referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("produtos");
+        referenciaCategoria.push().setValue(this);
     }
 }

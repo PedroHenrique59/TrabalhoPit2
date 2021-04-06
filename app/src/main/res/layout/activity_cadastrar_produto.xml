@@ -78,7 +78,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_cadastrar"
+        android:id="@+id/btn_cadastrar_produto"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="64dp"
