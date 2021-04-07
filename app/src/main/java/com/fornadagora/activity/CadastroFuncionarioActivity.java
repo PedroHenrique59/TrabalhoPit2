@@ -19,6 +19,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
+import com.fornadagora.vo.PadariaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -52,6 +53,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private List<Padaria> listaPadarias = new ArrayList<>();
 
     private Funcionario funcionario;
+    private PadariaVO padariaVO;
 
     private FirebaseAuth autenticacao;
     private DatabaseReference referenciaFuncionarios;
@@ -143,6 +145,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot snapShotPadaria : snapshot.getChildren()) {
                         Padaria padaria = snapShotPadaria.getValue(Padaria.class);
+                        padaria.setIdentificador(snapShotPadaria.getKey());
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
                     }
@@ -176,7 +179,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                                     if (!listaPadarias.isEmpty()) {
                                         for (Padaria padaria : listaPadarias) {
                                             if (nomePadaria.equals(padaria.getNome())) {
-                                                funcionario.setPadaria(padaria);
+                                                padariaVO = new PadariaVO(padaria.getIdentificador());
+                                                funcionario.setPadariaVO(padariaVO);
                                             }
                                         }
                                     }

@@ -1,8 +1,11 @@
 package com.fornadagora.model;
 
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.vo.PadariaVO;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+
+import kotlin.jvm.Transient;
 
 public class Funcionario {
 
@@ -12,6 +15,7 @@ public class Funcionario {
     private String senha;
     private String tipoPerfil;
     private Padaria padaria;
+    private PadariaVO padariaVO;
 
     public Funcionario(){
 
@@ -69,12 +73,21 @@ public class Funcionario {
         this.tipoPerfil = tipoPerfil;
     }
 
+    @Exclude
     public Padaria getPadaria() {
         return padaria;
     }
 
     public void setPadaria(Padaria padaria) {
         this.padaria = padaria;
+    }
+
+    public PadariaVO getPadariaVO() {
+        return padariaVO;
+    }
+
+    public void setPadariaVO(PadariaVO padariaVO) {
+        this.padariaVO = padariaVO;
     }
 
     public void salvar(){
