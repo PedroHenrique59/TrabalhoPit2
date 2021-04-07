@@ -86,6 +86,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                         Padaria padaria = padariaSnap.getValue(Padaria.class);
                         if (!padaria.getListaProdutos().isEmpty()) {
                             listaNomePadaria.add(padaria.getNome());
+                            padaria.setIdentificador(padariaSnap.getKey());
                             listaPadarias.add(padaria);
                         }
                     }
@@ -207,7 +208,10 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void montarAlerta(String nomeAlerta) {
-        Alerta alerta = new Alerta(nomeAlerta, padariaObj, produtoObj);
+        Alerta alerta = new Alerta();
+        alerta.setNome(nomeAlerta);
+        alerta.setIdPadaria(padariaObj.getIdentificador());
+
         Usuario usuario = new Usuario();
 
         String id = autenticacao.getCurrentUser().getUid();

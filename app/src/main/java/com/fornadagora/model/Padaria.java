@@ -36,7 +36,6 @@ public class Padaria implements Parcelable {
         }
     };
 
-    @Exclude
     public String getIdentificador() {
         return identificador;
     }

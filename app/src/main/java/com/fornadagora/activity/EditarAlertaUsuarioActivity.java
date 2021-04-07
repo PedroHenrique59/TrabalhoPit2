@@ -87,6 +87,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
     public void preencherCamposComDadosAlerta(Alerta alerta){
         if(alerta != null){
             editTextNomeAlerta.setText(alerta.getNome());
+            recuperarPadariaAlerta(alerta.getIdPadaria());
             autoComletePadaria.setText(alerta.getPadaria().getNome());
             autoComleteProduto.setText(alerta.getProduto().getNome());
         }
@@ -234,5 +235,22 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MenuLateralActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void recuperarPadariaAlerta(String idPadaria){
+        referenciaPadaria.child(idPadaria).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    Padaria teste = snapshot.getValue(Padaria.class);
+                    alerta.setPadaria(teste);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
