@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 
 public class Produto implements Parcelable {
 
+    private String id;
     private String nome;
     private Categoria categoria;
 
@@ -39,6 +40,14 @@ public class Produto implements Parcelable {
             return new Produto[size];
         }
     };
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;

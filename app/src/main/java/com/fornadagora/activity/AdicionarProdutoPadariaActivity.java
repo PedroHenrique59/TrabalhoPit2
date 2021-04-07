@@ -1,14 +1,14 @@
 package com.fornadagora.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.PointerIcon;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +21,8 @@ import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
+import com.fornadagora.vo.PadariaVO;
+import com.fornadagora.vo.ProdutoVO;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,6 +54,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     private List<String> listaNomesProdutos = new ArrayList<>();
     private List<String> listaCarregaNomeProduto = new ArrayList<>();
     private List<Produto> listaProdutos = new ArrayList<>();
+    private List<ProdutoVO> listaProdutosVO = new ArrayList<>();
 
     private ArrayList<String> listaNomeCategoria = new ArrayList<>();
     private ArrayList<Categoria> listaCategoria = new ArrayList<>();
@@ -62,9 +65,13 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     private Funcionario funcionarioRecuperado;
     private Categoria categoria;
+    private ProdutoVO produtoVO = new ProdutoVO();
+    private Produto produtoEscolhido = new Produto();
 
     private String nomePadaria;
     private String nomeCategoria;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         autoComleteCategoriaAdd = findViewById(R.id.autoComleteCategoriaAdd);
         autoComleteProdutoAdd = findViewById(R.id.autoComleteProdutoAdd);
         toolbar = findViewById(R.id.toolbarPrincipal);
+        context = this;
         botaoSalvar = findViewById(R.id.btn_add_produto);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
         arrayAdapterCategoria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoria);
@@ -99,28 +107,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                     nomePadaria = autoComletePadariaAdd.getText().toString();
                     nomeCategoria = autoComleteCategoriaAdd.getText().toString();
                     String nomeProduto = autoComleteProdutoAdd.getText().toString();
-                    if (!listaPadarias.isEmpty()) {
-                        for (Padaria padaria : listaPadarias) {
-                            if (padaria.getNome().equals(nomePadaria)) {
-                                if (!padaria.getListaProdutos().isEmpty()) {
-                                    for (Produto produto : padaria.getListaProdutos()) {
-                                        if (produto.getNome().equals(nomeProduto)) {
-                                            Toast.makeText(this, "Produto escolhido já adicionado a padaria", Toast.LENGTH_SHORT).show();
-                                            listaNomesProdutos.clear();
-                                            break;
-                                        }else{
-                                            if(listaNomesProdutos.isEmpty()){
-                                                listaNomesProdutos.add(nomeProduto);
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    listaNomesProdutos.add(nomeProduto);
-                                    buscarCategoria(nomeCategoria);
-                                }
-                            }
-                        }
-                    }
+                    recuperarProdutoESalvar(nomeProduto);
                 } else {
                     Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
                 }
@@ -130,20 +117,6 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Favor escolher a padaria", Toast.LENGTH_SHORT).show();
         }
-        if (!listaNomesProdutos.isEmpty()) {
-            for (String nomeProduto : listaNomesProdutos) {
-                Produto produto = new Produto(nomeProduto, categoria);
-                listaProdutos.add(produto);
-            }
-            for (Padaria padaria : listaPadarias) {
-                if (padaria.getNome().equals(nomePadaria)) {
-                    padaria.getListaProdutos().addAll(listaProdutos);
-                    referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
-                    referenciaFuncionario.child("padaria").setValue(padaria);
-                }
-            }
-            Toast.makeText(this, "Produto adicionado com sucesso", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void carregarPadarias() {
@@ -152,14 +125,15 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     if (funcionarioRecuperado != null) {
-                        if (funcionarioRecuperado.getPadaria() != null) {
+                        if (funcionarioRecuperado.getPadariaVO() != null) {
                             for (DataSnapshot snapPadaria : snapshot.getChildren()) {
                                 Padaria padaria = snapPadaria.getValue(Padaria.class);
-                                Padaria padariaFuncionario = funcionarioRecuperado.getPadaria();
-                                if (padaria.getNome().equals(padariaFuncionario.getNome())) {
-                                    padariaFuncionario.setIdentificador(snapPadaria.getKey());
-                                    listaNomePadaria.add(padariaFuncionario.getNome());
-                                    listaPadarias.add(padariaFuncionario);
+                                padaria.setIdentificador(snapPadaria.getKey());
+                                PadariaVO padariaFuncionarioVO = funcionarioRecuperado.getPadariaVO();
+                                if (padaria.getIdentificador().equals(padariaFuncionarioVO.getIdentificador())) {
+                                    padaria.setIdentificador(snapPadaria.getKey());
+                                    listaNomePadaria.add(padaria.getNome());
+                                    listaPadarias.add(padaria);
                                 }
                             }
                             autoComletePadariaAdd.setAdapter(arrayAdapterPadaria);
@@ -184,6 +158,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot snapCategoria : snapshot.getChildren()) {
                         Categoria cat = snapCategoria.getValue(Categoria.class);
+                        cat.setIdentificador(snapCategoria.getKey());
                         listaNomeCategoria.add(cat.getNome());
                         listaCategoria.add(cat);
                     }
@@ -271,19 +246,100 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         });
     }
 
-    public void limparListas(){
+    public void limparListas() {
         listaNomesProdutos.clear();
         listaProdutos.clear();
+        listaProdutosVO.clear();
     }
 
-    public Categoria buscarCategoria(String nome){
-        if(!listaCategoria.isEmpty()){
-            for(Categoria cat : listaCategoria){
-                if(cat.getNome().equalsIgnoreCase(nome)){
+    public Categoria buscarCategoria(String nome) {
+        if (!listaCategoria.isEmpty()) {
+            for (Categoria cat : listaCategoria) {
+                if (cat.getNome().equalsIgnoreCase(nome)) {
                     categoria = cat;
                 }
             }
         }
         return categoria;
+    }
+
+    public void buscarProdutoESalvarNaLista(final String nome) {
+        referenciaProduto.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapProduto : snapshot.getChildren()) {
+                        Produto produto = dataSnapProduto.getValue(Produto.class);
+                        if (produto.getNome().equalsIgnoreCase(nome)) {
+                            produtoVO.setIdProduto(dataSnapProduto.getKey());
+                            buscarCategoria(nomeCategoria);
+                            produtoVO.setIdCategoria(categoria.getIdentificador());
+                            listaProdutosVO.add(produtoVO);
+                            for (Padaria padaria : listaPadarias) {
+                                if (padaria.getNome().equals(nomePadaria)) {
+                                    padaria.getListaProdutosVO().addAll(listaProdutosVO);
+                                    referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void recuperarProdutoESalvar(String nomeProduto) {
+        if (!listaPadarias.isEmpty()) {
+            for (Padaria padaria : listaPadarias) {
+                if (padaria.getNome().equals(nomePadaria)) {
+                    if (!padaria.getListaProdutosVO().isEmpty()) {
+                        buscarProdutoEscolhido(nomeProduto, padaria);
+                    } else {
+                        //continuar daqui
+                    }
+                }
+            }
+        }
+    }
+
+    public void buscarProdutoEscolhido(final String nomeProduto, final Padaria padaria) {
+        referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapProduto : snapshot.getChildren()) {
+                        Produto produtoSnap = snapProduto.getValue(Produto.class);
+                        if (produtoSnap.getNome().equalsIgnoreCase(nomeProduto)) {
+                            produtoEscolhido = produtoSnap;
+                            produtoEscolhido.setId(snapProduto.getKey());
+                        }
+                    }
+                    for (ProdutoVO produtoVo : padaria.getListaProdutosVO()) {
+                        if (produtoVo.getIdProduto().equals(produtoEscolhido.getId())) {
+                            Toast.makeText(context, "Produto escolhido já adicionado a padaria", Toast.LENGTH_SHORT).show();
+                            listaNomesProdutos.clear();
+                            break;
+                        } else {
+                            if (listaNomesProdutos.isEmpty()) {
+                                listaNomesProdutos.add(nomeProduto);
+                                listaProdutosVO.add(produtoVo);
+                            }
+                        }
+                    }
+                    padaria.getListaProdutosVO().addAll(listaProdutosVO);
+                    referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

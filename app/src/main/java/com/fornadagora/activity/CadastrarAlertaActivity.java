@@ -20,6 +20,7 @@ import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.model.Usuario;
+import com.fornadagora.vo.AlertaVO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -208,16 +209,13 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void montarAlerta(String nomeAlerta) {
-        Alerta alerta = new Alerta();
-        alerta.setNome(nomeAlerta);
-        alerta.setIdPadaria(padariaObj.getIdentificador());
-
         Usuario usuario = new Usuario();
-
         String id = autenticacao.getCurrentUser().getUid();
 
+       //AlertaVO alertaVO = new AlertaVO(padariaObj.getIdentificador(), produtoObj.g);
+
         usuario.setIdUsuario(id);
-        usuario.setAlerta(alerta);
+        //usuario.setAlertaVO(alerta);
         usuario.salvarAlerta();
     }
 

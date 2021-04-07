@@ -1,6 +1,7 @@
 package com.fornadagora.model;
 
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.vo.AlertaVO;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
@@ -13,6 +14,7 @@ public class Usuario {
     private String tipoPerfil;
     private String token;
     private Alerta alerta;
+    private AlertaVO alertaVO;
 
     public Usuario() {
     }
@@ -73,12 +75,21 @@ public class Usuario {
         this.token = token;
     }
 
+    @Exclude
     public Alerta getAlerta() {
         return alerta;
     }
 
     public void setAlerta(Alerta alerta) {
         this.alerta = alerta;
+    }
+
+    public AlertaVO getAlertaVO() {
+        return alertaVO;
+    }
+
+    public void setAlertaVO(AlertaVO alertaVO) {
+        this.alertaVO = alertaVO;
     }
 
     public void salvar(){

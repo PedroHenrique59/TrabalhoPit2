@@ -3,6 +3,7 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fornadagora.vo.ProdutoVO;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Padaria implements Parcelable {
     private String nome;
     private LocalMapa local;
     private List<Produto> listaProdutos = new ArrayList<>();
+    private List<ProdutoVO> listaProdutosVO = new ArrayList<>();
 
     public Padaria(){
 
@@ -66,6 +68,10 @@ public class Padaria implements Parcelable {
 
     public List<Produto> getListaProdutos() {
         return listaProdutos;
+    }
+
+    public List<ProdutoVO> getListaProdutosVO() {
+        return listaProdutosVO;
     }
 
     @Override
