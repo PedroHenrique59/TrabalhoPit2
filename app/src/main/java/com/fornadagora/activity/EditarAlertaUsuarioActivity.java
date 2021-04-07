@@ -2,8 +2,10 @@ package com.fornadagora.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +57,8 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
 
     private Context context;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
         alerta = getIntent().getExtras().getParcelable("alertaObj");
         context = this;
         inicializarComponentes();
+        configurarToolbar();
         preencherCamposComDadosAlerta(alerta);
         carregarPadarias();
         carregarProdutos();
@@ -71,6 +76,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
         editTextNomeAlerta = findViewById(R.id.editTextNomeAlertaEdit);
         autoComletePadaria = findViewById(R.id.autoComletePadariaAlertEdit);
         autoComleteProduto = findViewById(R.id.autoComleteProdutoAlertEdit);
+        toolbar = findViewById(R.id.toolbarPrincipal);
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaAlerta = ConfiguracaoFirebase.getFirebase();
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -210,5 +216,23 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void configurarToolbar(){
+        toolbar.setTitle("Editar Dados Alerta");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMenuLateral();
+            }
+        });
+    }
+
+    public void abrirMenuLateral(){
+        Intent intent = new Intent(this, MenuLateralActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
