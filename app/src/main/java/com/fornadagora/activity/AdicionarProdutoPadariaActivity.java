@@ -73,6 +73,8 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     private Context context;
 
+    private boolean produtoJaSalvo = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +109,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                     nomePadaria = autoComletePadariaAdd.getText().toString();
                     nomeCategoria = autoComleteCategoriaAdd.getText().toString();
                     String nomeProduto = autoComleteProdutoAdd.getText().toString();
-                    recuperarProdutoESalvar(nomeProduto);
+                    buscarProdutoESalvarNaPadaria(nomeProduto);
                 } else {
                     Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
                 }
@@ -263,7 +265,8 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         return categoria;
     }
 
-    public void buscarProdutoESalvarNaLista(final String nome) {
+    public void buscarProdutoESalvarNaPadaria(final String nome) {
+        produtoJaSalvo = false;
         referenciaProduto.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -271,68 +274,36 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapProduto : snapshot.getChildren()) {
                         Produto produto = dataSnapProduto.getValue(Produto.class);
                         if (produto.getNome().equalsIgnoreCase(nome)) {
+                            produtoVO = new ProdutoVO();
                             produtoVO.setIdProduto(dataSnapProduto.getKey());
                             buscarCategoria(nomeCategoria);
                             produtoVO.setIdCategoria(categoria.getIdentificador());
                             listaProdutosVO.add(produtoVO);
                             for (Padaria padaria : listaPadarias) {
-                                if (padaria.getNome().equals(nomePadaria)) {
+                                if (padaria.getListaProdutosVO().isEmpty()) {
                                     padaria.getListaProdutosVO().addAll(listaProdutosVO);
                                     referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
+                                    listaPadarias.clear();
+                                    listaPadarias.add(padaria);
+                                } else {
+                                    for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
+                                        if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
+                                            Toast.makeText(context, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_SHORT).show();
+                                            produtoJaSalvo = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!produtoJaSalvo) {
+                                        padaria.getListaProdutosVO().addAll(listaProdutosVO);
+                                        referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
+                                        listaPadarias.clear();
+                                        listaPadarias.add(padaria);
+                                        Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void recuperarProdutoESalvar(String nomeProduto) {
-        if (!listaPadarias.isEmpty()) {
-            for (Padaria padaria : listaPadarias) {
-                if (padaria.getNome().equals(nomePadaria)) {
-                    if (!padaria.getListaProdutosVO().isEmpty()) {
-                        buscarProdutoEscolhido(nomeProduto, padaria);
-                    } else {
-                        //continuar daqui
-                    }
-                }
-            }
-        }
-    }
-
-    public void buscarProdutoEscolhido(final String nomeProduto, final Padaria padaria) {
-        referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot snapProduto : snapshot.getChildren()) {
-                        Produto produtoSnap = snapProduto.getValue(Produto.class);
-                        if (produtoSnap.getNome().equalsIgnoreCase(nomeProduto)) {
-                            produtoEscolhido = produtoSnap;
-                            produtoEscolhido.setId(snapProduto.getKey());
-                        }
-                    }
-                    for (ProdutoVO produtoVo : padaria.getListaProdutosVO()) {
-                        if (produtoVo.getIdProduto().equals(produtoEscolhido.getId())) {
-                            Toast.makeText(context, "Produto escolhido já adicionado a padaria", Toast.LENGTH_SHORT).show();
-                            listaNomesProdutos.clear();
-                            break;
-                        } else {
-                            if (listaNomesProdutos.isEmpty()) {
-                                listaNomesProdutos.add(nomeProduto);
-                                listaProdutosVO.add(produtoVo);
-                            }
-                        }
-                    }
-                    padaria.getListaProdutosVO().addAll(listaProdutosVO);
-                    referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
                 }
             }
 
