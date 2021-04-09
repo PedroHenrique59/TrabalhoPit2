@@ -1,11 +1,7 @@
 package com.fornadagora.vo;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
 public class AlertaVO  {
@@ -26,7 +22,6 @@ public class AlertaVO  {
         this.idProduto = idProduto;
     }
 
-    @Exclude
     public String getIdAlerta() {
         return idAlerta;
     }

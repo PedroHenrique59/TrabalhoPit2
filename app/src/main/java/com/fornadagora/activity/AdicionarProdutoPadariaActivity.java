@@ -45,8 +45,6 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     private AutoCompleteTextView autoComleteCategoriaAdd;
     private AutoCompleteTextView autoComleteProdutoAdd;
 
-    private Button botaoSalvar;
-
     private Toolbar toolbar;
 
     private List<String> listaNomePadaria = new ArrayList<>();
@@ -66,7 +64,6 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     private Funcionario funcionarioRecuperado;
     private Categoria categoria;
     private ProdutoVO produtoVO = new ProdutoVO();
-    private Produto produtoEscolhido = new Produto();
 
     private String nomePadaria;
     private String nomeCategoria;
@@ -95,7 +92,6 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         autoComleteProdutoAdd = findViewById(R.id.autoComleteProdutoAdd);
         toolbar = findViewById(R.id.toolbarPrincipal);
         context = this;
-        botaoSalvar = findViewById(R.id.btn_add_produto);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
         arrayAdapterCategoria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoria);
         arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaCarregaNomeProduto);

@@ -5,6 +5,9 @@ import com.fornadagora.vo.AlertaVO;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
 
     private String idUsuario;
@@ -14,7 +17,7 @@ public class Usuario {
     private String tipoPerfil;
     private String token;
     private Alerta alerta;
-    private AlertaVO alertaVO;
+    private List<AlertaVO> listaAlertaVO = new ArrayList<>();
 
     public Usuario() {
     }
@@ -84,12 +87,8 @@ public class Usuario {
         this.alerta = alerta;
     }
 
-    public AlertaVO getAlertaVO() {
-        return alertaVO;
-    }
-
-    public void setAlertaVO(AlertaVO alertaVO) {
-        this.alertaVO = alertaVO;
+    public List<AlertaVO> getListaAlertaVO() {
+        return listaAlertaVO;
     }
 
     public void salvar(){
@@ -103,8 +102,8 @@ public class Usuario {
         referencia.child("usuarios").child(this.idUsuario).child("email").setValue(this.email);
     }
 
-    public void salvarAlerta(){
+    public void salvarAlertaVO(){
         DatabaseReference referencia = ConfiguracaoFirebase.getFirebase();
-        referencia.child("usuarios").child(this.getIdUsuario()).child("alerta").push().setValue(alerta);
+        referencia.child("usuarios").child(this.idUsuario).child("listaAlertasVO").setValue(listaAlertaVO);
     }
 }

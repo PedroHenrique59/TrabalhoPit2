@@ -3,6 +3,7 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
@@ -13,6 +14,7 @@ public class Alerta implements Parcelable {
     private Padaria padaria;
     private Produto produto;
     private String idPadaria;
+    private String idProduto;
 
     public Alerta(){
 
@@ -22,6 +24,12 @@ public class Alerta implements Parcelable {
         this.nome = nome;
         this.padaria = padaria;
         this.produto = produto;
+    }
+
+    public Alerta(String nome, String idPadaria, String idProduto) {
+        this.nome = nome;
+        this.idPadaria = idPadaria;
+        this.idProduto = idProduto;
     }
 
     protected Alerta(Parcel in) {
@@ -87,6 +95,14 @@ public class Alerta implements Parcelable {
         this.idPadaria = idPadaria;
     }
 
+    public String getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(String idProduto) {
+        this.idProduto = idProduto;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -99,6 +115,11 @@ public class Alerta implements Parcelable {
         dest.writeString(idPadaria);
         dest.writeParcelable(produto, flags);
         dest.writeParcelable(padaria, flags);
+    }
+
+    public void salvar(){
+        DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlerta.push().setValue(this);
     }
 
     public void atualizarDados(Alerta alertaEditado, DatabaseReference referenciaAlertaExistente){
