@@ -3,7 +3,13 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.fornadagora.activity.CadastrarAlertaActivity;
+import com.fornadagora.activity.CadastroUsuarioActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
@@ -119,7 +125,12 @@ public class Alerta implements Parcelable {
 
     public void salvar(){
         DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
-        referenciaAlerta.push().setValue(this);
+        referenciaAlerta.push().setValue(this, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+               CadastrarAlertaActivity.teste(ref.getKey());
+            }
+        });
     }
 
     public void atualizarDados(Alerta alertaEditado, DatabaseReference referenciaAlertaExistente){

@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -24,6 +26,7 @@ import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.ProdutoVO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,10 +43,14 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
 
     private DatabaseReference referenciaPadaria;
     private DatabaseReference referenciaAlerta;
+    private static DatabaseReference referenciaAlertaStatica;
+
     private DatabaseReference referenciaProduto;
     private DatabaseReference referenciaUsuario;
+    private static DatabaseReference referenciaUsuarioStatica;
 
     private FirebaseAuth autenticacao;
+    private static FirebaseAuth autenticacaoStatica;
 
     private AutoCompleteTextView autoCompletePadaria;
     private AutoCompleteTextView autoCompleteProduto;
@@ -64,11 +71,15 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     private Padaria padariaObj;
     private Produto produtoObj;
     private Usuario usuarioRecuperado;
+    private static Usuario usuarioRecuperadoStatic;
 
     private boolean produtoJaSalvo = false;
     private boolean ehMesmoAlerta = false;
 
     private String nomeAlerta;
+
+    private Context context;
+    private static Context contextStatic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +97,17 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlertaStatica = ConfiguracaoFirebase.getFirebase().child("alertas");
         editTextNomeAlerta = findViewById(R.id.editTextNomeAlerta);
         autoCompletePadaria = findViewById(R.id.autoComletePadariaAlert);
         autoCompleteProduto = findViewById(R.id.autoComleteProdutoAlert);
         toolbar = findViewById(R.id.toolbarPrincipal);
+        context = this;
+        contextStatic = this;
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
         arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomeProduto);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        autenticacaoStatica = ConfiguracaoFirebase.getFirebaseAutenticacao();
     }
 
     public void carregarPadarias() {
@@ -161,14 +176,10 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             }
                         }
                         if (!listaComIdsAlertaVO.isEmpty()) {
-                            for (String id : listaComIdsAlertaVO) {
-                                recuperarAlertaVO(id);
-                            }
+                            validarAlertaIgual(listaComIdsAlertaVO);
                         } else {
                             if (!produtoJaSalvo) {
                                 montarAlertaESalvar(nomeAlerta);
-                                buscarAlertaSalvo(nomeAlerta);
-                                Toast.makeText(this, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -184,7 +195,6 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void carregarAlertasSalvos() {
-        listaComIdsAlertaVO.clear();
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(autenticacao.getUid()).child("listaAlertasVO");
         referenciaUsuario.addValueEventListener(new ValueEventListener() {
             @Override
@@ -192,6 +202,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     List<HashMap> lista;
                     lista = (List<HashMap>) snapshot.getValue();
+                    listaComIdsAlertaVO.clear();
                     for (HashMap h : lista) {
                         String result = h.get("idAlerta").toString();
                         listaComIdsAlertaVO.add(result);
@@ -207,6 +218,40 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void montarAlertaESalvar(String nomeAlerta) {
+        /*
+        referenciaAlerta.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    Alerta alerta = snapshot.getValue(Alerta.class);
+                    alerta.setIdAlerta(snapshot.getKey());
+                    alerta.getIdAlerta();
+                    buscarAlertaSalvo(alerta.getIdAlerta());
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        */
         Alerta alerta = new Alerta(nomeAlerta, padariaObj.getIdentificador(), produtoObj.getId());
         alerta.salvar();
     }
@@ -279,7 +324,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarAlertaSalvo(final String nomeAlerta) {
+    public void buscarAlertaSalvo(final String idAlertaSalvo) {
         referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -287,50 +332,8 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     for (DataSnapshot snapAlerta : snapshot.getChildren()) {
                         Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
                         alertaBanco.setIdAlerta(snapAlerta.getKey());
-                        if (alertaBanco.getNome().equalsIgnoreCase(nomeAlerta)) {
+                        if (alertaBanco.getIdAlerta().equalsIgnoreCase(idAlertaSalvo)) {
                             salvarAlertaNoUsuario(alertaBanco);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void salvarAlertaNoUsuario(Alerta alerta) {
-        AlertaVO alertaVO = new AlertaVO();
-        alertaVO.setIdAlerta(alerta.getIdAlerta());
-        Usuario usuario = new Usuario();
-        usuario.setIdUsuario(autenticacao.getCurrentUser().getUid());
-        recuperarUsuarioESalvarAlerta(usuario, alertaVO);
-    }
-
-    public void recuperarAlertaVO(final String idAlerta) {
-        listaAlertaVO.clear();
-        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
-                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
-                        alertaBanco.setIdAlerta(snapAlerta.getKey());
-                        if (alertaBanco.getIdAlerta().equalsIgnoreCase(idAlerta)) {
-                            AlertaVO alertaVO = new AlertaVO();
-                            alertaVO.setIdAlerta(idAlerta);
-                            alertaVO.setIdPadaria(alertaBanco.getIdPadaria());
-                            alertaVO.setIdProduto(alertaBanco.getIdProduto());
-                            listaAlertaVO.add(alertaVO);
-                            validarMesmoAlerta(alertaBanco);
-                            if (!ehMesmoAlerta) {
-                                montarAlertaESalvar(nomeAlerta);
-                                buscarAlertaSalvo(nomeAlerta);
-                                //Toast.makeText(context, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
-                                //validarSeAlertaJaFoiSalvo(alertaBanco.getNome());
-                            }
                             break;
                         }
                     }
@@ -344,6 +347,54 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         });
     }
 
+
+    /*
+    public void salvarAlertaNoUsuario(Alerta alerta) {
+        AlertaVO alertaVO = new AlertaVO();
+        alertaVO.setIdAlerta(alerta.getIdAlerta());
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(autenticacao.getCurrentUser().getUid());
+        recuperarUsuarioESalvarAlerta(usuario, alertaVO);
+    }
+    */
+
+    public void validarAlertaIgual(final List<String> listaDeIds) {
+        listaAlertaVO.clear();
+        ehMesmoAlerta = false;
+        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        alertaBanco.setIdAlerta(snapAlerta.getKey());
+                        for (String id : listaDeIds) {
+                            if (alertaBanco.getIdAlerta().equalsIgnoreCase(id)) {
+                                AlertaVO alertaVO = new AlertaVO();
+                                alertaVO.setIdAlerta(id);
+                                alertaVO.setIdPadaria(alertaBanco.getIdPadaria());
+                                alertaVO.setIdProduto(alertaBanco.getIdProduto());
+                                listaAlertaVO.add(alertaVO);
+                                validarMesmoAlerta(alertaBanco);
+                            }
+                        }
+                    }
+                    if (!ehMesmoAlerta) {
+                        montarAlertaESalvar(nomeAlerta);
+                    } else {
+                        Toast.makeText(context, "Já existe um alerta para o produto escolhido nesta padaria", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    /*
     public Usuario recuperarUsuarioESalvarAlerta(final Usuario usuario, final AlertaVO alertaVO) {
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(usuario.getIdUsuario());
         referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -356,9 +407,11 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             usuarioRecuperado = usuarioBanco;
                             usuarioRecuperado.getListaAlertaVO().add(alertaVO);
                             usuarioRecuperado.salvarAlertaVO();
+                            Toast.makeText(context, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
                         } else {
                             usuarioRecuperado.getListaAlertaVO().add(alertaVO);
                             usuarioRecuperado.salvarAlertaVO();
+                            Toast.makeText(context, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -372,31 +425,75 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         return usuarioRecuperado;
     }
 
-    public void validarSeAlertaJaFoiSalvo(String nomeAlerta) {
-        if (!listaAlertaVO.isEmpty()) {
-            for (AlertaVO alertaVO : listaAlertaVO) {
-                if (alertaVO.getIdPadaria().equalsIgnoreCase(padariaObj.getIdentificador())) {
-                    if (alertaVO.getIdProduto().equalsIgnoreCase(produtoObj.getId())) {
-                        Toast.makeText(this, "Você já salvou um alerta para esse produto nesta padaria", Toast.LENGTH_SHORT).show();
-                        produtoJaSalvo = true;
-                        break;
-                    }
-                }
-            }
-            if (!produtoJaSalvo) {
-                montarAlertaESalvar(nomeAlerta);
-                buscarAlertaSalvo(nomeAlerta);
-                Toast.makeText(this, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
+     */
     public void validarMesmoAlerta(Alerta alertaBanco) {
         if (padariaObj.getIdentificador().equalsIgnoreCase(alertaBanco.getIdPadaria())) {
             if (produtoObj.getId().equalsIgnoreCase(alertaBanco.getIdProduto())) {
                 ehMesmoAlerta = true;
             }
         }
+    }
+
+    public static void teste(final String idAlertaSalvo){
+        referenciaAlertaStatica.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        alertaBanco.setIdAlerta(snapAlerta.getKey());
+                        if (alertaBanco.getIdAlerta().equalsIgnoreCase(idAlertaSalvo)) {
+                            salvarAlertaNoUsuario(alertaBanco);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void salvarAlertaNoUsuario(Alerta alerta) {
+        AlertaVO alertaVO = new AlertaVO();
+        alertaVO.setIdAlerta(alerta.getIdAlerta());
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(autenticacaoStatica.getCurrentUser().getUid());
+        recuperarUsuarioESalvarAlerta(usuario, alertaVO);
+    }
+
+    public static Usuario recuperarUsuarioESalvarAlerta(final Usuario usuario, final AlertaVO alertaVO) {
+        referenciaUsuarioStatica = ConfiguracaoFirebase.getFirebase().child("usuarios").child(usuario.getIdUsuario());
+        referenciaUsuarioStatica.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Usuario usuarioBanco = snapshot.getValue(Usuario.class);
+                    if (usuarioBanco.getIdUsuario().equalsIgnoreCase(usuario.getIdUsuario())) {
+                        if (usuarioRecuperadoStatic == null) {
+                            usuarioRecuperadoStatic = usuarioBanco;
+                            usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
+                            usuarioRecuperadoStatic.salvarAlertaVO();
+                            Toast.makeText(contextStatic, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
+                        } else {
+                            usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
+                            usuarioRecuperadoStatic.salvarAlertaVO();
+                            Toast.makeText(contextStatic, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return usuarioRecuperadoStatic;
     }
 }
 
