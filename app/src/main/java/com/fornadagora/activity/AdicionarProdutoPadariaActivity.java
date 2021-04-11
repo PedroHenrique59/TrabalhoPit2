@@ -94,7 +94,6 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         context = this;
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
         arrayAdapterCategoria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoria);
-        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaCarregaNomeProduto);
     }
 
     public void salvarProdutos(View view) {
@@ -229,11 +228,14 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapProduto : snapshot.getChildren()) {
                         Produto produto = dataSnapProduto.getValue(Produto.class);
-                        if (produto.getCategoria().getNome().equalsIgnoreCase(nomeCategoria)) {
+                        Categoria categoriaEscolhida = buscarCategoria(nomeCategoria);
+                        if (produto.getCategoriaVO().getIdentificador().equalsIgnoreCase(categoriaEscolhida.getIdentificador())) {
                             listaCarregaNomeProduto.add(produto.getNome());
                         }
                     }
+                    arrayAdapterProduto = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listaCarregaNomeProduto);
                     autoComleteProdutoAdd.setAdapter(arrayAdapterProduto);
+                    autoComleteProdutoAdd.setText("");
                 }
             }
 
@@ -251,6 +253,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     }
 
     public Categoria buscarCategoria(String nome) {
+        categoria = null;
         if (!listaCategoria.isEmpty()) {
             for (Categoria cat : listaCategoria) {
                 if (cat.getNome().equalsIgnoreCase(nome)) {
@@ -258,7 +261,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                 }
             }
         }
-        return categoria;
+       return categoria;
     }
 
     public void buscarProdutoESalvarNaPadaria(final String nome) {
@@ -273,30 +276,34 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                             produtoVO = new ProdutoVO();
                             produtoVO.setIdProduto(dataSnapProduto.getKey());
                             buscarCategoria(nomeCategoria);
-                            produtoVO.setIdCategoria(categoria.getIdentificador());
-                            listaProdutosVO.add(produtoVO);
-                            for (Padaria padaria : listaPadarias) {
-                                if (padaria.getListaProdutosVO().isEmpty()) {
-                                    padaria.getListaProdutosVO().addAll(listaProdutosVO);
-                                    referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
-                                    listaPadarias.clear();
-                                    listaPadarias.add(padaria);
-                                } else {
-                                    for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
-                                        if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
-                                            Toast.makeText(context, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_SHORT).show();
-                                            produtoJaSalvo = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!produtoJaSalvo) {
+                            if (categoria != null) {
+                                produtoVO.setIdCategoria(categoria.getIdentificador());
+                                listaProdutosVO.add(produtoVO);
+                                for (Padaria padaria : listaPadarias) {
+                                    if (padaria.getListaProdutosVO().isEmpty()) {
                                         padaria.getListaProdutosVO().addAll(listaProdutosVO);
                                         referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
                                         listaPadarias.clear();
                                         listaPadarias.add(padaria);
-                                        Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
+                                            if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
+                                                Toast.makeText(context, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_SHORT).show();
+                                                produtoJaSalvo = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!produtoJaSalvo) {
+                                            padaria.getListaProdutosVO().addAll(listaProdutosVO);
+                                            referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
+                                            listaPadarias.clear();
+                                            listaPadarias.add(padaria);
+                                            Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
+                            }else{
+                                Toast.makeText(context, "Favor escolher uma categoria válida", Toast.LENGTH_LONG).show();
                             }
                         }
                     }

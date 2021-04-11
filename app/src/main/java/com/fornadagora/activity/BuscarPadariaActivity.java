@@ -8,12 +8,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentActivity;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
-import com.fornadagora.model.Alerta;
 import com.fornadagora.model.LocalMapa;
 import com.fornadagora.model.Padaria;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,8 +59,8 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot teste : snapshot.getChildren()) {
-                        Padaria padaria = teste.getValue(Padaria.class);
+                    for (DataSnapshot snapPadaria : snapshot.getChildren()) {
+                        Padaria padaria = snapPadaria.getValue(Padaria.class);
                         double latitude = Double.parseDouble(padaria.getLocal().getLatitude());
                         double longitude = Double.parseDouble(padaria.getLocal().getLongitude());
                         mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
