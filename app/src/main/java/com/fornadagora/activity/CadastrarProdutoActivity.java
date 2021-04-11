@@ -18,6 +18,7 @@ import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
+import com.fornadagora.vo.CategoriaVO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -103,6 +104,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot snapCategoria : snapshot.getChildren()){
                         Categoria cat = snapCategoria.getValue(Categoria.class);
+                        cat.setIdentificador(snapCategoria.getKey());
                         listaNomeCategoria.add(cat.getNome());
                         listaCategoria.add(cat);
                     }
@@ -124,7 +126,8 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                 String nomeCategoria = autoCompleteCategoria.getText().toString();
                 if(validarCategoria(nomeCategoria)){
                    Categoria categ = buscarCategoria(nomeCategoria);
-                   Produto produto = new Produto(nomeProduto, categ);
+                   CategoriaVO categVO = new CategoriaVO(categ.getIdentificador());
+                   Produto produto = new Produto(nomeProduto, categVO);
                    validarProduto(produto);
                 }else{
                     Toast.makeText(this, "A categoria informada não existe",Toast.LENGTH_SHORT).show();
@@ -177,6 +180,9 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                         prod.salvar();
                         Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    prod.salvar();
+                    Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -4,21 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.vo.CategoriaVO;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 
 public class Produto implements Parcelable {
 
     private String id;
     private String nome;
     private Categoria categoria;
+    private CategoriaVO categoriaVO;
 
     public Produto(){
 
     }
 
-    public Produto(String nome, Categoria categoria) {
+    public Produto(String nome, CategoriaVO categoriaVO) {
         this.nome = nome;
-        this.categoria = categoria;
+        this.categoriaVO = categoriaVO;
     }
 
     public Produto(String nome) {
@@ -57,12 +60,21 @@ public class Produto implements Parcelable {
         this.nome = nome;
     }
 
+    @Exclude
     public Categoria getCategoria() {
         return categoria;
     }
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public CategoriaVO getCategoriaVO() {
+        return categoriaVO;
+    }
+
+    public void setCategoriaVO(CategoriaVO categoriaVO) {
+        this.categoriaVO = categoriaVO;
     }
 
     @Override
@@ -76,7 +88,7 @@ public class Produto implements Parcelable {
     }
 
     public void salvar(){
-        DatabaseReference referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("produtos");
-        referenciaCategoria.push().setValue(this);
+        DatabaseReference referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
+        referenciaProduto.push().setValue(this);
     }
 }
