@@ -303,10 +303,13 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                     }
                                 }
                             }else{
-                                Toast.makeText(context, "Favor escolher uma categoria válida", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Produto/Categoria escolhido(a) inválidos. Favor selecionar algum(a) válida.", Toast.LENGTH_LONG).show();
                             }
                         }
                     }
+                }
+                if(produtoVO.getIdProduto() == null){
+                    Toast.makeText(context, "Produto/Categoria escolhido(a) inválidos. Favor selecionar algum(a) válida.", Toast.LENGTH_LONG).show();
                 }
             }
 
