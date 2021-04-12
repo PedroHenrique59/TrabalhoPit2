@@ -128,7 +128,7 @@ public class Alerta implements Parcelable {
         referenciaAlerta.push().setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-               CadastrarAlertaActivity.teste(ref.getKey());
+               CadastrarAlertaActivity.gravarAlerta(ref.getKey());
             }
         });
     }

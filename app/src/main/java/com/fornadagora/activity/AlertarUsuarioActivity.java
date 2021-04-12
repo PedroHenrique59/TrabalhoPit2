@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
+import com.fornadagora.model.Categoria;
 import com.fornadagora.notification.NotificacaoUsuario;
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -28,12 +30,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AlertarUsuarioActivity extends AppCompatActivity {
 
     private AutoCompleteTextView autoCompletePadaria;
     private AutoCompleteTextView autoCompleteProduto;
+    private AutoCompleteTextView autoCompleteCategoria;
 
     private Toolbar toolbar;
 
@@ -44,19 +48,27 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaUsuario;
     private DatabaseReference referenciaAlerta;
     private DatabaseReference referenciaProduto;
+    private DatabaseReference referenciaCategoria;
 
     private Funcionario funcionarioRecuperado;
 
     private ArrayAdapter arrayAdapterPadaria;
     private ArrayAdapter arrayAdapterProduto;
+    private ArrayAdapter arrayAdapterCategoria;
 
     private List<String> listaNomePadaria = new ArrayList<>();
-    private List<Produto> listaProdutos = new ArrayList<>();
+    private List<String> listaNomeProduto = new ArrayList<>();
+    private List<String> listaIdsCategoria = new ArrayList<>();
+    private List<String> listaNomeCategoriasPadaria = new ArrayList<>();
 
     private List<Padaria> listaPadarias = new ArrayList<>();
-    private List<String> listaNomeProduto = new ArrayList<>();
-
+    private List<Produto> listaProdutosDaCategoria = new ArrayList<>();
     private List<Alerta> listaAlertas = new ArrayList<>();
+    private List<ProdutoVO> listaProdutoVO;
+
+    private boolean ehMesmoIdCategoria = false;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +79,22 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         configurarToolbar();
         validarFuncionario();
         carregarPadarias();
-        carregarProdutosPadaria();
+        carregarCategoriasPadaria();
+        carregarProdutosCategoria();
     }
 
     public void inicializarComponentes() {
-        autoCompletePadaria = findViewById(R.id.autoComletePadaria);
-        autoCompleteProduto = findViewById(R.id.autoComleteProduto);
+        autoCompletePadaria = findViewById(R.id.autoCompletePadariaNot);
+        autoCompleteCategoria = findViewById(R.id.autoCompleteCategoriaNot);
+        autoCompleteProduto = findViewById(R.id.autoCompleteProdutoNot);
         toolbar = findViewById(R.id.toolbarPrincipal);
+        context = this;
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
+        referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
-        arrayAdapterProduto = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomeProduto);
     }
 
     public void validarFuncionario() {
@@ -136,20 +151,27 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void carregarProdutosPadaria() {
+    public void carregarCategoriasPadaria() {
         autoCompletePadaria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!listaPadarias.isEmpty()) {
-                    listaNomeProduto.clear();
-                    listaProdutos.clear();
                     for (Padaria padaria : listaPadarias) {
                         String nomePadaria = autoCompletePadaria.getText().toString();
                         if (padaria.getNome().equals(nomePadaria)) {
-                            buscarProdutosPadaria(nomePadaria);
+                            buscarIdsCategoriasPadaria(nomePadaria);
                         }
                     }
                 }
+            }
+        });
+    }
+
+    public void carregarProdutosCategoria() {
+        autoCompleteCategoria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                buscarProdutoPorCategoria(autoCompleteCategoria.getText().toString());
             }
         });
     }
@@ -236,22 +258,22 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         finish();
     }
 
-    public void buscarProdutosPadaria(final String nomePadaria) {
-        referenciaPadaria.addValueEventListener(new ValueEventListener() {
+    public void buscarProduto(final String id) {
+        listaNomeProduto.clear();
+        referenciaProduto.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot snpaPadaria : snapshot.getChildren()) {
-                        Padaria padariaBanco = snpaPadaria.getValue(Padaria.class);
-                        if (padariaBanco.getNome().equalsIgnoreCase(nomePadaria)) {
-                            if (!padariaBanco.getListaProdutosVO().isEmpty()) {
-                                for (ProdutoVO produtoVO : padariaBanco.getListaProdutosVO()) {
-                                    String idProduto = produtoVO.getIdProduto();
-                                    buscarProduto(idProduto);
-                                }
-                            }
+                    for (DataSnapshot snapProduto : snapshot.getChildren()) {
+                        Produto produtoBanco = snapProduto.getValue(Produto.class);
+                        produtoBanco.setId(snapProduto.getKey());
+                        if (produtoBanco.getId().equalsIgnoreCase(id)) {
+                            listaNomeProduto.add(produtoBanco.getNome());
                         }
                     }
+                    arrayAdapterProduto = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listaNomeProduto);
+                    autoCompleteProduto.setAdapter(arrayAdapterProduto);
+                    autoCompleteProduto.setText("");
                 }
             }
 
@@ -262,20 +284,87 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarProduto(final String id){
-        referenciaProduto.addValueEventListener(new ValueEventListener() {
+    public void buscarIdsCategoriasPadaria(final String nomePadaria) {
+        referenciaPadaria.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapProduto : snapshot.getChildren()){
-                        Produto produtoBanco = snapProduto.getValue(Produto.class);
-                        produtoBanco.setId(snapProduto.getKey());
-                        if(produtoBanco.getId().equalsIgnoreCase(id)){
-                            listaProdutos.add(produtoBanco);
-                            listaNomeProduto.add(produtoBanco.getNome());
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapPadaria : snapshot.getChildren()) {
+                        Padaria padariaBanco = snapPadaria.getValue(Padaria.class);
+                        if (padariaBanco.getNome().equalsIgnoreCase(nomePadaria)) {
+                            listaProdutoVO = new ArrayList<>();
+                            listaProdutoVO.addAll(padariaBanco.getListaProdutosVO());
+                            listaIdsCategoria.clear();
+                            for (ProdutoVO produtoVO : listaProdutoVO) {
+                                if (listaIdsCategoria.isEmpty()) {
+                                    listaIdsCategoria.add(produtoVO.getIdCategoria());
+                                } else {
+                                    for (String idCategoria : listaIdsCategoria) {
+                                        if (produtoVO.getIdCategoria().equalsIgnoreCase(idCategoria)) {
+                                            ehMesmoIdCategoria = true;
+                                        }
+                                    }
+                                    if (!ehMesmoIdCategoria) {
+                                        listaIdsCategoria.add(produtoVO.getIdCategoria());
+                                    }
+                                }
+                            }
                         }
                     }
-                    autoCompleteProduto.setAdapter(arrayAdapterProduto);
+                    buscarCategoriasPadaria(listaIdsCategoria);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void buscarCategoriasPadaria(final List<String> listaIdsCategoria) {
+        listaNomeCategoriasPadaria.clear();
+        referenciaCategoria.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapCategoria : snapshot.getChildren()) {
+                        Categoria categoriaBanco = snapCategoria.getValue(Categoria.class);
+                        categoriaBanco.setIdentificador(snapCategoria.getKey());
+                        for (String idCategoria : listaIdsCategoria) {
+                            if (categoriaBanco.getIdentificador().equalsIgnoreCase(idCategoria)) {
+                                listaNomeCategoriasPadaria.add(categoriaBanco.getNome());
+                            }
+                        }
+                    }
+                    arrayAdapterCategoria = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoriasPadaria);
+                    autoCompleteCategoria.setAdapter(arrayAdapterCategoria);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void buscarProdutoPorCategoria(final String nomeCategoria) {
+        referenciaCategoria.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapCategoria : snapshot.getChildren()) {
+                        Categoria categoriaBanco = snapCategoria.getValue(Categoria.class);
+                        categoriaBanco.setIdentificador(snapCategoria.getKey());
+                        if (categoriaBanco.getNome().equalsIgnoreCase(nomeCategoria)) {
+                            for (ProdutoVO produtoVO : listaProdutoVO) {
+                                if (produtoVO.getIdCategoria().equalsIgnoreCase(categoriaBanco.getIdentificador())) {
+                                    buscarProduto(produtoVO.getIdProduto());
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
