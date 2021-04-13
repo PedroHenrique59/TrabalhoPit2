@@ -305,7 +305,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         }
     }
 
-    public static void gravarAlerta(final String idAlertaSalvo){
+    public static void gravarAlerta(final String idAlertaSalvo) {
         referenciaAlertaStatica.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -344,6 +344,15 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     Usuario usuarioBanco = snapshot.getValue(Usuario.class);
                     if (usuarioBanco.getIdUsuario().equalsIgnoreCase(usuario.getIdUsuario())) {
+                        if (snapshot.child("listaAlertasVO").exists()) {
+                            Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                            for (DataSnapshot alertaSnapshot : snapshot.child("listaAlertasVO").getChildren()) {
+                                AlertaVO alertaVO = alertaSnapshot.getValue(AlertaVO.class);
+                                td.put(alertaSnapshot.getKey(), alertaVO);
+                            }
+                            ArrayList<AlertaVO> values = new ArrayList<>(td.values());
+                            usuarioBanco.getListaAlertaVO().addAll(values);
+                        }
                         if (usuarioRecuperadoStatic == null) {
                             usuarioRecuperadoStatic = usuarioBanco;
                             usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
