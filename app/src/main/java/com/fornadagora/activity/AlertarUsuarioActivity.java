@@ -339,7 +339,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                             for (AlertaVO alertaVO : values) {
                                 for (Alerta alerta : listaAlerta) {
                                     if (alerta.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())) {
-                                        alertarUsuario(padariaEscolhida.getNome(), "Acabou de sair do forno " + produtoEscolhido.getNome(), usuario.getToken());
+                                        alertarUsuario(padariaEscolhida.getNome(), "Acabou de sair do forno: " + produtoEscolhido.getNome(), usuario.getToken());
                                     }
                                 }
                             }
