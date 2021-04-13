@@ -7,11 +7,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.fornadagora.model.Categoria;
 import com.fornadagora.notification.NotificacaoUsuario;
@@ -22,16 +24,23 @@ import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.model.Usuario;
+import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.ProdutoVO;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import okhttp3.internal.cache.DiskLruCache;
 
 public class AlertarUsuarioActivity extends AppCompatActivity {
 
@@ -46,11 +55,18 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaFuncionario;
     private DatabaseReference referenciaPadaria;
     private DatabaseReference referenciaUsuario;
+    private DatabaseReference referenciaAlertaVO;
     private DatabaseReference referenciaAlerta;
+
     private DatabaseReference referenciaProduto;
     private DatabaseReference referenciaCategoria;
 
     private Funcionario funcionarioRecuperado;
+    private Usuario usuarioComToken;
+
+    private Padaria padariaEscolhida;
+    private Categoria categoriaEscolhida;
+    private Produto produtoEscolhido;
 
     private ArrayAdapter arrayAdapterPadaria;
     private ArrayAdapter arrayAdapterProduto;
@@ -60,11 +76,16 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private List<String> listaNomeProduto = new ArrayList<>();
     private List<String> listaIdsCategoria = new ArrayList<>();
     private List<String> listaNomeCategoriasPadaria = new ArrayList<>();
+    private List<String> listaComIdsAlertaVO = new ArrayList<>();
 
     private List<Padaria> listaPadarias = new ArrayList<>();
     private List<Produto> listaProdutosDaCategoria = new ArrayList<>();
-    private List<Alerta> listaAlertas = new ArrayList<>();
+    private List<Alerta> listaAlertasParaEnviar = new ArrayList<>();
     private List<ProdutoVO> listaProdutoVO;
+    private List<Padaria> listaPadariaAlerta = new ArrayList<>();
+    private List<Produto> listaProdutoAlerta = new ArrayList<>();
+    private List<Usuario> listaUsuariosReceberAlerta = new ArrayList<>();
+
 
     private boolean ehMesmoIdCategoria = false;
 
@@ -94,6 +115,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
+        referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
     }
 
@@ -177,18 +199,119 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void enviarAlerta(View view) {
-        referenciaUsuario.addValueEventListener(new ValueEventListener() {
+
+        if (!autoCompletePadaria.getText().toString().isEmpty()) {
+            if (!autoCompleteCategoria.getText().toString().isEmpty()) {
+                if (!autoCompleteProduto.getText().toString().isEmpty()) {
+
+                    String nomePadariaEscolhida = autoCompletePadaria.getText().toString();
+                    String nomeCategoriaEscolhida = autoCompleteCategoria.getText().toString();
+                    String nomeProdutoEscolhido = autoCompleteProduto.getText().toString();
+
+                    Query queryPadaria = ConfiguracaoFirebase.getFirebase().child("padarias").orderByChild("nome").equalTo(nomePadariaEscolhida);
+                    queryPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot snapPadaria : snapshot.getChildren()) {
+                                    Padaria padaria = snapPadaria.getValue(Padaria.class);
+                                    padaria.setIdentificador(snapPadaria.getKey());
+                                    padariaEscolhida = new Padaria();
+                                    padariaEscolhida = padaria;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    Query queryCategoria = ConfiguracaoFirebase.getFirebase().child("categorias").orderByChild("nome").equalTo(nomeCategoriaEscolhida);
+                    queryCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot snapCategoria : snapshot.getChildren()) {
+                                    Categoria categoria = snapCategoria.getValue(Categoria.class);
+                                    categoria.setIdentificador(snapCategoria.getKey());
+                                    categoriaEscolhida = new Categoria();
+                                    categoriaEscolhida = categoria;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    Query queryProduto = ConfiguracaoFirebase.getFirebase().child("produtos").orderByChild("nome").equalTo(nomeProdutoEscolhido);
+                    queryProduto.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot snapProduto : snapshot.getChildren()) {
+                                    Produto produto = snapProduto.getValue(Produto.class);
+                                    produto.setId(snapProduto.getKey());
+                                    produtoEscolhido = new Produto();
+                                    produtoEscolhido = produto;
+                                    validarPadariaCategoriaProduto(padariaEscolhida, categoriaEscolhida, produtoEscolhido);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(this, "Favor informar um produto", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Favor informar uma categoria", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void validarPadariaCategoriaProduto(Padaria padariaEscolhida, Categoria categoriaEscolhida, Produto produtoEscolhido) {
+        if (padariaEscolhida != null) {
+            if (categoriaEscolhida != null) {
+                if (produtoEscolhido != null) {
+                    buscarAlertasUsuario(padariaEscolhida, categoriaEscolhida, produtoEscolhido);
+                } else {
+                    Toast.makeText(this, "O produto informado não existe. Favor escolher um válido.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this, "A categoria informada não existe. Favor escolher uma válida.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "A padaria informada não existe. Favor escolher uma válida.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void buscarAlertasUsuario(Padaria padariaEscolhida, Categoria categoriaEscolhida, final Produto produtoEscolhido) {
+
+        Query queryAlerta = ConfiguracaoFirebase.getFirebase().child("alertas").orderByChild("idPadaria").equalTo(padariaEscolhida.getIdentificador());
+        queryAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot snapUsu : snapshot.getChildren()) {
-                        Usuario usuario = snapUsu.getValue(Usuario.class);
-                        if (usuario.getToken() == null) {
-                            usuario.setToken("");
-                        } else {
-                            buscarAlertasUsuario(usuario);
+                    listaAlertasParaEnviar.clear();
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        Alerta alerta = snapAlerta.getValue(Alerta.class);
+                        if (alerta.getIdProduto().equalsIgnoreCase(produtoEscolhido.getId())) {
+                            alerta.setIdAlerta(snapAlerta.getKey());
+                            listaAlertasParaEnviar.add(alerta);
                         }
                     }
+                    buscarAlertasUsuarioBanco(listaAlertasParaEnviar);
                 }
             }
 
@@ -199,28 +322,25 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarAlertasUsuario(final Usuario usuario) {
-
-        final String nomePadaria = autoCompletePadaria.getText().toString();
-        final String nomeProduto = autoCompleteProduto.getText().toString();
-
-        String id = usuario.getIdUsuario();
-
-        referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("usuarios").child(id).child("alerta");
-        referenciaAlerta.addValueEventListener(new ValueEventListener() {
+    public void buscarAlertasUsuarioBanco(final List<Alerta> listaAlerta) {
+        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    listaAlertas.clear();
-                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
-                        Alerta alerta = snapAlerta.getValue(Alerta.class);
-                        listaAlertas.add(alerta);
-                    }
-                    if (!listaAlertas.isEmpty()) {
-                        for (Alerta alerta : listaAlertas) {
-                            if (alerta.getPadaria().getNome().equals(nomePadaria)) {
-                                if (alerta.getProduto().getNome().equals(nomeProduto)) {
-                                    alertarUsuario(alerta.getPadaria().getNome(), "Acabou de sair do forno " + alerta.getProduto().getNome(), usuario.getToken());
+                    for (DataSnapshot snapUsuario : snapshot.getChildren()) {
+                        if (snapUsuario.child("listaAlertasVO").exists()) {
+                            Usuario usuario = snapUsuario.getValue(Usuario.class);
+                            Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                            for (DataSnapshot alertaSnapshot : snapUsuario.child("listaAlertasVO").getChildren()) {
+                                AlertaVO alertaVO = alertaSnapshot.getValue(AlertaVO.class);
+                                td.put(alertaSnapshot.getKey(), alertaVO);
+                            }
+                            ArrayList<AlertaVO> values = new ArrayList<>(td.values());
+                            for (AlertaVO alertaVO : values) {
+                                for (Alerta alerta : listaAlerta) {
+                                    if (alerta.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())) {
+                                        alertarUsuario(padariaEscolhida.getNome(), "Acabou de sair do forno " + produtoEscolhido.getNome(), usuario.getToken());
+                                    }
                                 }
                             }
                         }
