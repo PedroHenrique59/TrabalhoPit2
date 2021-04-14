@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
@@ -157,7 +158,7 @@ public class BuscarPadariaActivity extends FragmentActivity implements OnMapRead
         } else {
             String nomePadaria = editNomePadaria.getText().toString();
             padaria.setNome(nomePadaria);
-            referenciaPadaria.push().setValue(padaria);
+            padaria.salvar();
 
             mMap.addMarker(new MarkerOptions().position(latLng)
                     .title(nomePadaria)

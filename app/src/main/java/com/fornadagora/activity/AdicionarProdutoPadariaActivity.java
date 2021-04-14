@@ -63,7 +63,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     private Funcionario funcionarioRecuperado;
     private Categoria categoria;
-    private ProdutoVO produtoVO = new ProdutoVO();
+    private ProdutoVO produtoVO;
 
     private String nomePadaria;
     private String nomeCategoria;
@@ -71,6 +71,8 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     private Context context;
 
     private boolean produtoJaSalvo = false;
+    private boolean produtoValido = false;
+    private boolean padariaValida = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +100,19 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
     public void salvarProdutos(View view) {
         limparListas();
+        padariaValida = false;
         if (!autoComletePadariaAdd.getText().toString().isEmpty()) {
             if (!autoComleteCategoriaAdd.getText().toString().isEmpty()) {
                 if (!autoComleteProdutoAdd.getText().toString().isEmpty()) {
                     nomePadaria = autoComletePadariaAdd.getText().toString();
                     nomeCategoria = autoComleteCategoriaAdd.getText().toString();
                     String nomeProduto = autoComleteProdutoAdd.getText().toString();
-                    buscarProdutoESalvarNaPadaria(nomeProduto);
+                    validarPadaria();
+                    if (padariaValida) {
+                        buscarProdutoESalvarNaPadaria(nomeProduto);
+                    }else{
+                        Toast.makeText(this, "Padaria informada inválida. Favor escolher uma válida.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
                 }
@@ -114,6 +122,17 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Favor escolher a padaria", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean validarPadaria(){
+        if (!listaNomePadaria.isEmpty()) {
+            for (String nome : listaNomePadaria) {
+                if (nome.equalsIgnoreCase(nomePadaria)) {
+                    padariaValida = true;
+                }
+            }
+        }
+        return padariaValida;
     }
 
     public void carregarPadarias() {
@@ -261,11 +280,12 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                 }
             }
         }
-       return categoria;
+        return categoria;
     }
 
     public void buscarProdutoESalvarNaPadaria(final String nome) {
         produtoJaSalvo = false;
+        produtoValido = false;
         referenciaProduto.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -273,6 +293,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapProduto : snapshot.getChildren()) {
                         Produto produto = dataSnapProduto.getValue(Produto.class);
                         if (produto.getNome().equalsIgnoreCase(nome)) {
+                            produtoValido = true;
                             produtoVO = new ProdutoVO();
                             produtoVO.setIdProduto(dataSnapProduto.getKey());
                             buscarCategoria(nomeCategoria);
@@ -302,13 +323,13 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                            }else{
+                            } else {
                                 Toast.makeText(context, "Produto/Categoria escolhido(a) inválidos. Favor selecionar algum(a) válida.", Toast.LENGTH_LONG).show();
                             }
                         }
                     }
                 }
-                if(produtoVO.getIdProduto() == null){
+                if (!produtoValido) {
                     Toast.makeText(context, "Produto/Categoria escolhido(a) inválidos. Favor selecionar algum(a) válida.", Toast.LENGTH_LONG).show();
                 }
             }

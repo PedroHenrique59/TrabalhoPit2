@@ -3,7 +3,13 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.vo.ProdutoVO;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -83,5 +89,15 @@ public class Padaria implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nome);
         dest.writeList(listaProdutos);
+    }
+
+    public void salvar(){
+        DatabaseReference referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
+        referenciaPadaria.push().setValue(this, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                ref.child("identificador").setValue(ref.getKey());
+            }
+        });
     }
 }
