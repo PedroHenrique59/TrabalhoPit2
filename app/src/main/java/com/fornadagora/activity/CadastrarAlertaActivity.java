@@ -7,12 +7,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -27,15 +24,12 @@ import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.ProdutoVO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +71,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     private List<ProdutoVO> listaProdutoVO;
 
     private Padaria padariaObj;
+    private Categoria categoriaObj;
     private Produto produtoObj;
 
     private static Usuario usuarioRecuperadoStatic;
@@ -149,38 +144,56 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
         produtoJaSalvo = false;
         if (!editTextNomeAlerta.getText().toString().isEmpty()) {
             if (!autoCompletePadaria.getText().toString().isEmpty()) {
-                if (!autoCompleteProduto.getText().toString().isEmpty()) {
+                if (!autoCompleteCategoria.getText().toString().isEmpty()) {
+                    if (!autoCompleteProduto.getText().toString().isEmpty()) {
 
-                    nomeAlerta = editTextNomeAlerta.getText().toString();
-                    String nomePadaria = autoCompletePadaria.getText().toString();
-                    String nomeProduto = autoCompleteProduto.getText().toString();
+                        nomeAlerta = editTextNomeAlerta.getText().toString();
+                        String nomePadaria = autoCompletePadaria.getText().toString();
+                        String nomeCategoria = autoCompleteCategoria.getText().toString();
+                        String nomeProduto = autoCompleteProduto.getText().toString();
 
-                    if (!listaPadarias.isEmpty()) {
-                        for (Padaria padaria : listaPadarias) {
-                            if (padaria.getNome().equals(nomePadaria)) {
-                                padariaObj = new Padaria();
-                                padariaObj = padaria;
-                                for (Produto produto : listaProdutos) {
-                                    if (produto.getNome().equals(nomeProduto)) {
-                                        produtoObj = new Produto();
-                                        produtoObj = produto;
-                                    }
+                        if (!listaPadarias.isEmpty()) {
+                            for (Padaria padaria : listaPadarias) {
+                                if (padaria.getNome().equals(nomePadaria)) {
+                                    padariaObj = new Padaria();
+                                    padariaObj = padaria;
                                 }
                             }
                         }
-                        if (!listaComIdsAlertaVO.isEmpty()) {
-                            validarAlertaIgual(listaComIdsAlertaVO);
-                        } else {
-                            if (!produtoJaSalvo) {
-                                montarAlertaESalvar(nomeAlerta);
+                        if (!listaNomeCategoriasPadaria.isEmpty()) {
+                            for (String nome : listaNomeCategoriasPadaria) {
+                                if (nome.equalsIgnoreCase(nomeCategoria)) {
+                                    categoriaObj = new Categoria();
+                                }
                             }
                         }
+                        if (!listaProdutos.isEmpty()) {
+                            for (Produto produto : listaProdutos) {
+                                if (produto.getNome().equals(nomeProduto)) {
+                                    produtoObj = new Produto();
+                                    produtoObj = produto;
+                                }
+                            }
+                        }
+                        if (padariaObj == null || categoriaObj == null || produtoObj == null) {
+                            Toast.makeText(this, "Favor informar uma padaria/produto/categoria válido", Toast.LENGTH_LONG).show();
+                        } else {
+                            if (!listaComIdsAlertaVO.isEmpty()) {
+                                validarAlertaIgual(listaComIdsAlertaVO);
+                            } else {
+                                if (!produtoJaSalvo) {
+                                    montarAlertaESalvar(nomeAlerta);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Favor informar o produto", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor informar a categoria", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Favor informar o produto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Favor informar o nome do alerta", Toast.LENGTH_SHORT).show();
