@@ -18,6 +18,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
+import com.fornadagora.vo.PadariaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -36,8 +37,9 @@ import java.util.List;
 public class BuscarFuncionarioActivity extends AppCompatActivity {
 
     private TextInputEditText editNomeFun;
-    private TextInputEditText editEmailFun;
+
     private Button botaoSalvar;
+
     private Toolbar toolbar;
 
     private AutoCompleteTextView autoCompleteFun;
@@ -47,16 +49,15 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaPadarias;
 
     private List<Funcionario> listaDeFuncionarios = new ArrayList<>();
-    private List<String> listaNomesFuncionarios = new ArrayList<>();
     private List<Padaria> listaDePadaria = new ArrayList<>();
+
     private List<String> listaNomePadaria = new ArrayList<>();
+    private List<String> listaNomesFuncionarios = new ArrayList<>();
 
     private ArrayAdapter arrayAdapterFuncionario;
     private ArrayAdapter arrayAdapterPadaria;
 
     private Funcionario funcionario;
-
-    private FirebaseUser user;
 
     private boolean padariaEncontrada = false;
 
@@ -72,9 +73,8 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         eventoClickBotaoSalvar();
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
         editNomeFun = findViewById(R.id.edit_text_fun_nome_adm);
-        editEmailFun = findViewById(R.id.edit_text_fun_email_adm);
         botaoSalvar = findViewById(R.id.btn_salvar_dados_fun_adm);
         toolbar = findViewById(R.id.toolbarPrincipal);
         autoCompleteFun = findViewById(R.id.autoCompleteFunEditAdm);
@@ -87,16 +87,16 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
     }
 
-    public void buscarFuncionarios(){
+    public void buscarFuncionarios() {
         referenciaFuncionarios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     listaDeFuncionarios.clear();
                     listaNomesFuncionarios.clear();
                     for (DataSnapshot snapFun : snapshot.getChildren()) {
                         Funcionario funcionario = snapFun.getValue(Funcionario.class);
-                        if(funcionario != null){
+                        if (funcionario != null) {
                             listaNomesFuncionarios.add(funcionario.getNome());
                             listaDeFuncionarios.add(funcionario);
                         }
@@ -104,6 +104,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
                     autoCompleteFun.setAdapter(arrayAdapterFuncionario);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -111,14 +112,15 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarPadarias(){
+    public void buscarPadarias() {
         referenciaPadarias.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     for (DataSnapshot snapPadaria : snapshot.getChildren()) {
                         Padaria padaria = snapPadaria.getValue(Padaria.class);
-                        if(padaria != null){
+                        if (padaria != null) {
+                            padaria.setIdentificador(snapPadaria.getKey());
                             listaDePadaria.add(padaria);
                             listaNomePadaria.add(padaria.getNome());
                         }
@@ -134,15 +136,17 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void escolherFuncionario(){
+    public void escolherFuncionario() {
         autoCompleteFun.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!listaDeFuncionarios.isEmpty()){
-                    for(Funcionario fun : listaDeFuncionarios){
+                if (!listaDeFuncionarios.isEmpty()) {
+                    for (Funcionario fun : listaDeFuncionarios) {
                         String nome = (String) parent.getItemAtPosition(position);
-                        if(fun.getNome().equals(nome)){
+                        if (fun.getNome().equals(nome)) {
+                            funcionario = new Funcionario();
                             funcionario = fun;
+                            buscarPadariaFuncionario(funcionario.getPadariaVO().getIdentificador());
                             preencherCampos(funcionario);
                         }
                     }
@@ -151,14 +155,13 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void preencherCampos(Funcionario funcionario){
+    public void preencherCampos(Funcionario funcionario) {
         editNomeFun.setText(funcionario.getNome());
-        editEmailFun.setText(funcionario.getEmail());
         autoCompletePadariaFun.setAdapter(arrayAdapterPadaria);
         autoCompletePadariaFun.setText(funcionario.getPadaria().getNome());
     }
 
-    public void eventoClickBotaoSalvar(){
+    public void eventoClickBotaoSalvar() {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,39 +170,26 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void salvarDados(){
-        if(!autoCompleteFun.getText().toString().isEmpty()){
-            if(!editNomeFun.getText().toString().isEmpty()){
-                if(!editEmailFun.getText().toString().isEmpty()){
-                    if(!autoCompletePadariaFun.getText().toString().isEmpty()){
-                        String nome = editNomeFun.getText().toString();
-                        String email = editEmailFun.getText().toString();
-                        if(!email.isEmpty()){
-                            if(validarEmail(email)){
-                                user = FirebaseAuth.getInstance().getCurrentUser();
-                                reautenticarFuncionario(funcionario);
-                            }else{
-                                Toast.makeText(this, "Informe um e-mail válido", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }else{
-                        Toast.makeText(this, "Favor escolher uma padaria", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(this, "Favor preencher o e-mail do funcionário", Toast.LENGTH_SHORT).show();
+    public void salvarDados() {
+        if (!autoCompleteFun.getText().toString().isEmpty()) {
+            if (!editNomeFun.getText().toString().isEmpty()) {
+                if (!autoCompletePadariaFun.getText().toString().isEmpty()) {
+                    atualizarDadosFuncionario(funcionario);
+                } else {
+                    Toast.makeText(this, "Favor escolher uma padaria", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 Toast.makeText(this, "Favor preencher o nome do funcionário", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(this, "Favor escolher um funcionário", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void buscarPadariaFuncionario(Funcionario funcionario){
-        if(!listaDePadaria.isEmpty()){
-            for(Padaria padaria : listaDePadaria){
-                if(padaria.getNome().equals(autoCompletePadariaFun.getText().toString())){
+    public void buscarPadariaFuncionario(String idPadaria) {
+        if (!listaDePadaria.isEmpty()) {
+            for (Padaria padaria : listaDePadaria) {
+                if (padaria.getIdentificador().equalsIgnoreCase(idPadaria)) {
                     funcionario.setPadaria(padaria);
                     padariaEncontrada = true;
                 }
@@ -207,37 +197,20 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validarEmail(String email){
-        return ValidaEmail.validarEmail(email);
-    }
-
-    public void reautenticarFuncionario(final Funcionario funcionario){
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(funcionario.getEmail(), funcionario.getSenha());
-        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                user.updateEmail(editEmailFun.getText().toString());
-                atualizarDadosFuncionario(funcionario);
-            }
-        });
-    }
-
-    public void atualizarDadosFuncionario(Funcionario funcionario){
+    public void atualizarDadosFuncionario(Funcionario funcionario) {
         funcionario.setNome(editNomeFun.getText().toString());
-        funcionario.setEmail(editEmailFun.getText().toString());
-        buscarPadariaFuncionario(funcionario);
-        if(padariaEncontrada){
+        buscarPadariaEscolhida(autoCompletePadariaFun.getText().toString());
+        if (padariaEncontrada) {
             funcionario.atualizarDadosPeloAdm();
             autoCompleteFun.setText(funcionario.getNome());
             buscarFuncionarios();
             Toast.makeText(this, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "A padaria informada não existe", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Padaria informada inválida. Favor escolher uma válida.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void configurarToolbar(){
+    public void configurarToolbar() {
         toolbar.setTitle("Alterar Dados Funcionário");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
@@ -249,9 +222,22 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void abrirMenuLateral(){
+    public void abrirMenuLateral() {
         Intent intent = new Intent(this, MenuLateralActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void buscarPadariaEscolhida(String nomePadaria){
+        padariaEncontrada = false;
+        if(!listaDePadaria.isEmpty()){
+            for(Padaria padaria : listaDePadaria){
+                if(padaria.getNome().equalsIgnoreCase(nomePadaria)){
+                    PadariaVO padariaVO = new PadariaVO(padaria.getIdentificador());
+                    funcionario.setPadariaVO(padariaVO);
+                    padariaEncontrada = true;
+                }
+            }
+        }
     }
 }

@@ -80,50 +80,18 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_email_fun_edit_adm"
-        style="@style/Widget.App.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:hint="@string/email"
-        app:hintTextColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_nome_fun_edit_adm"
-        app:startIconContentDescription="@string/emaildofuncionario"
-        app:startIconDrawable="@drawable/ic_email_24dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_fun_email_adm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            tools:layout_editor_absoluteX="33dp"
-            tools:layout_editor_absoluteY="179dp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_nome_padaria_fun_edit_adm"
         style="@style/TemaAutoComplete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:hint="@string/escolhapadaria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_email_fun_edit_adm">
+        app:layout_constraintTop_toBottomOf="@+id/layout_nome_fun_edit_adm">
 
         <AutoCompleteTextView
             android:id="@+id/autoComletePadariaFunEditAdm"
