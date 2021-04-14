@@ -70,16 +70,10 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private List<String> listaNomeProduto = new ArrayList<>();
     private List<String> listaIdsCategoria = new ArrayList<>();
     private List<String> listaNomeCategoriasPadaria = new ArrayList<>();
-    private List<String> listaComIdsAlertaVO = new ArrayList<>();
 
     private List<Padaria> listaPadarias = new ArrayList<>();
-    private List<Produto> listaProdutosDaCategoria = new ArrayList<>();
     private List<Alerta> listaAlertasParaEnviar = new ArrayList<>();
     private List<ProdutoVO> listaProdutoVO;
-    private List<Padaria> listaPadariaAlerta = new ArrayList<>();
-    private List<Produto> listaProdutoAlerta = new ArrayList<>();
-    private List<Usuario> listaUsuariosReceberAlerta = new ArrayList<>();
-
 
     private boolean ehMesmoIdCategoria = false;
 

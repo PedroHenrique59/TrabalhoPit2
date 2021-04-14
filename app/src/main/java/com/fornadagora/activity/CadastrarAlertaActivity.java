@@ -428,6 +428,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                                         listaIdsCategoria.add(produtoVO.getIdCategoria());
                                     }
                                 }
+                                ehMesmoIdCategoria = false;
                             }
                         }
                     }
@@ -459,6 +460,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     }
                     arrayAdapterCategoria = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoriasPadaria);
                     autoCompleteCategoria.setAdapter(arrayAdapterCategoria);
+                    autoCompleteCategoria.setText("");
                 }
             }
 
