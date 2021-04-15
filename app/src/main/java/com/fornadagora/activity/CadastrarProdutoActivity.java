@@ -130,7 +130,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                    Produto produto = new Produto(nomeProduto, categVO);
                    validarProduto(produto);
                 }else{
-                    Toast.makeText(this, "A categoria informada não existe",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "A categoria informada é inválida. Favor informar uma válida",Toast.LENGTH_SHORT).show();
                 }
             }else{
                 Toast.makeText(this, "Favor escolher uma categoria para o produto",Toast.LENGTH_SHORT).show();

@@ -106,6 +106,9 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
                         categoria.salvar();
                         Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    categoria.salvar();
+                    Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override

@@ -306,6 +306,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                         referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
                                         listaPadarias.clear();
                                         listaPadarias.add(padaria);
+                                        Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
                                     } else {
                                         for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
                                             if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
