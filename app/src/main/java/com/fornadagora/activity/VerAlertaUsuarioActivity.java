@@ -1,9 +1,11 @@
 package com.fornadagora.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,23 +36,17 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
     private AdapterAlertaUsuario adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ver_alerta_usuario);
-        recyclerViewAlerta = findViewById(R.id.recyclerViewAlerta);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         listarAlertas();
     }
 
     public void listarAlertas() {
         if (autenticacao.getCurrentUser() != null) {
-
             String id = autenticacao.getCurrentUser().getUid();
-
             referenciaAlerta = ConfiguracaoFirebase.getFirebase();
-
             referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
-
             referenciaAlerta.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -61,6 +57,8 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
                             listaAlertas.add(alerta);
                         }
                         configuraRecyclerView();
+                    }else{
+                        abrirTelaNaoExisteAlerta();
                     }
                 }
 
@@ -75,9 +73,16 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
     public void configuraRecyclerView() {
         adapter = new AdapterAlertaUsuario(listaAlertas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewAlerta = findViewById(R.id.recyclerViewAlerta);
         recyclerViewAlerta.setLayoutManager(layoutManager);
         recyclerViewAlerta.setHasFixedSize(true);
         recyclerViewAlerta.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerViewAlerta.setAdapter(adapter);
+    }
+
+    public void abrirTelaNaoExisteAlerta(){
+        Intent i = new Intent(VerAlertaUsuarioActivity.this, NaoExisteAlertaActivity.class);
+        startActivity(i);
+        finish();
     }
 }

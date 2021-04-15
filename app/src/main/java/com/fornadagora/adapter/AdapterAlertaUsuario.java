@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     private FirebaseAuth autenticacao;
     private DatabaseReference referenciaAlerta;
-    private DatabaseReference referenciaProduto;
 
     private TextView nomeAlerta;
     private TextView nomePadaria;
