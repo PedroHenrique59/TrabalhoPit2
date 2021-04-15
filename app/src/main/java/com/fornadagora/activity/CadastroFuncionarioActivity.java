@@ -49,6 +49,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private AutoCompleteTextView autoComplete;
 
     private ArrayAdapter arrayAdapterPadaria;
+
     private List<String> listaNomePadaria = new ArrayList<>();
     private List<Padaria> listaPadarias = new ArrayList<>();
 
@@ -60,6 +61,10 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaPadarias;
 
     private static String tipoPerfil = "Funcionario";
+
+    private String nomePadaria;
+
+    private boolean padariaValida = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +135,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                                 erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
                                 e.printStackTrace();
                             }
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Erro: " + erroExcecao, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -166,7 +171,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         String textoEmail = campoEmail.getText().toString();
         String textoSenha = campoSenha.getText().toString();
         String textoConfirmarSenha = campoConfirmarSenha.getText().toString();
-        String nomePadaria = autoComplete.getEditableText().toString();
+        nomePadaria = autoComplete.getText().toString();
 
         if (!textoNome.isEmpty()) {
             if (!textoEmail.isEmpty()) {
@@ -174,19 +179,21 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     if (!textoConfirmarSenha.isEmpty()) {
                         if (!nomePadaria.isEmpty()) {
                             if (textoConfirmarSenha.equals(textoSenha)) {
-                                if(validarEmail(textoEmail)){
+                                if (validarEmail(textoEmail)) {
                                     funcionario = new Funcionario(textoNome, textoEmail, textoSenha, tipoPerfil);
                                     if (!listaPadarias.isEmpty()) {
-                                        for (Padaria padaria : listaPadarias) {
-                                            if (nomePadaria.equals(padaria.getNome())) {
-                                                padariaVO = new PadariaVO(padaria.getIdentificador());
-                                                funcionario.setPadariaVO(padariaVO);
-                                            }
+                                        padariaValida = false;
+                                        validarPadaria(nomePadaria);
+                                        if (padariaValida) {
+                                            salvarFuncionario(funcionario);
+                                        }else{
+                                            Toast.makeText(CadastroFuncionarioActivity.this, "Informe uma padaria válida!", Toast.LENGTH_LONG).show();
                                         }
+                                    } else {
+                                        Toast.makeText(CadastroFuncionarioActivity.this, "Informe uma padaria válida!", Toast.LENGTH_LONG).show();
                                     }
-                                    salvarFuncionario(funcionario);
-                                }else{
-                                    Toast.makeText(CadastroFuncionarioActivity.this, "Informe um e-mail válido", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(CadastroFuncionarioActivity.this, "Informe um e-mail válido!", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 Toast.makeText(CadastroFuncionarioActivity.this, "As senhas informadas não conferem!", Toast.LENGTH_SHORT).show();
@@ -209,11 +216,11 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validarEmail(String email){
+    public boolean validarEmail(String email) {
         return ValidaEmail.validarEmail(email);
     }
 
-    public void configurarToolbar(){
+    public void configurarToolbar() {
         toolbar.setTitle("Cadastrar Funcionário");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
@@ -225,9 +232,19 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void abrirMenuLateral(){
+    public void abrirMenuLateral() {
         Intent intent = new Intent(this, MenuLateralActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void validarPadaria(String nomePadaria) {
+        for (Padaria padaria : listaPadarias) {
+            if (nomePadaria.equals(padaria.getNome())) {
+                padariaVO = new PadariaVO(padaria.getIdentificador());
+                funcionario.setPadariaVO(padariaVO);
+                padariaValida = true;
+            }
+        }
     }
 }
