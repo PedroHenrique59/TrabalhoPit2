@@ -2,6 +2,7 @@ package com.fornadagora.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -22,6 +23,7 @@ import com.fornadagora.model.Padaria;
 import com.fornadagora.vo.PadariaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -42,8 +44,13 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private EditText campoSenha;
     private EditText campoConfirmarSenha;
 
+    private TextInputLayout layout_senha_fun;
+    private TextInputLayout layout_confirmar_senha_fun;
+
     private Button botaoCadastrar;
+
     private ProgressBar progressBar;
+
     private Toolbar toolbar;
 
     private AutoCompleteTextView autoComplete;
@@ -57,6 +64,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private PadariaVO padariaVO;
 
     private FirebaseAuth autenticacao;
+
     private DatabaseReference referenciaFuncionarios;
     private DatabaseReference referenciaPadarias;
 
@@ -72,6 +80,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_funcionario);
 
         inicializarComponentes();
+        configurarIconeVisualizarSenha();
         configurarToolbar();
         carregarListaPadarias();
 
@@ -90,6 +99,9 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         campoEmail = findViewById(R.id.edit_text_cadastro_fun_email);
         campoSenha = findViewById(R.id.edit_text_cadastro_fun_senha);
         campoConfirmarSenha = findViewById(R.id.edit_text_senha_fun_confirmar);
+
+        layout_senha_fun = findViewById(R.id.layout_senha_fun);
+        layout_confirmar_senha_fun = findViewById(R.id.layout_confirmar_senha_fun);
 
         botaoCadastrar = findViewById(R.id.btn_cadastrar_fun);
         progressBar = findViewById(R.id.progressCadastroFun);
@@ -246,5 +258,39 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                 padariaValida = true;
             }
         }
+    }
+
+    public void configurarIconeVisualizarSenha(){
+        layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+        layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+
+        layout_senha_fun.setEndIconVisible(true);
+        layout_confirmar_senha_fun.setEndIconVisible(true);
+
+        layout_senha_fun.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                    campoSenha.setTransformationMethod(null);
+                    layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_24);
+                }else if(campoSenha.getTransformationMethod() == null){
+                    campoSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+                }
+            }
+        });
+
+        layout_confirmar_senha_fun.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(campoConfirmarSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                    campoConfirmarSenha.setTransformationMethod(null);
+                    layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_24);
+                }else if(campoConfirmarSenha.getTransformationMethod() == null){
+                    campoConfirmarSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
+                }
+            }
+        });
     }
 }
