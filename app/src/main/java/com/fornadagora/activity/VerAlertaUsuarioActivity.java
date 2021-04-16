@@ -15,6 +15,7 @@ import com.fornadagora.R;
 import com.fornadagora.adapter.AdapterAlertaUsuario;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
+import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.vo.AlertaVO;
@@ -42,6 +43,7 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaUsuario;
     private DatabaseReference referenciaAlerta;
     private DatabaseReference referenciaPadaria;
+    private DatabaseReference referenciaCategoria;
 
     private FirebaseAuth autenticacao;
 
@@ -61,6 +63,7 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         recyclerViewAlerta = findViewById(R.id.recyclerViewAlerta);
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
+        referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
     }
 
     public void listarAlertas() {
@@ -175,8 +178,30 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
                         Produto produto = snapProduto.getValue(Produto.class);
                         produtoRecuperado = new Produto();
                         produtoRecuperado = produto;
-                        alerta.setProduto(produtoRecuperado);
-                        listaAlertaComPadariaProduto.add(alerta);
+                        buscarCategoriaProduto(produtoRecuperado, alerta);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void buscarCategoriaProduto(final Produto produto, final Alerta alerta){
+        referenciaCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapCategoria : snapshot.getChildren()){
+                        Categoria categoria = snapCategoria.getValue(Categoria.class);
+                        if(categoria.getIdentificador().equalsIgnoreCase(produto.getCategoriaVO().getIdentificador())){
+                            produto.setCategoria(categoria);
+                            alerta.setProduto(produto);
+                            listaAlertaComPadariaProduto.add(alerta);
+                        }
                     }
                     configuraRecyclerView();
                 }

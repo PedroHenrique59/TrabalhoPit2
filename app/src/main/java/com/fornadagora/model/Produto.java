@@ -33,7 +33,9 @@ public class Produto implements Parcelable {
     }
 
     protected Produto(Parcel in) {
+        id = in.readString();
         nome = in.readString();
+        categoria = in.readParcelable(Categoria.class.getClassLoader());
     }
 
     public static final Creator<Produto> CREATOR = new Creator<Produto>() {
@@ -88,7 +90,9 @@ public class Produto implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(nome);
+        dest.writeParcelable(categoria, flags);
     }
 
     public void salvar(){

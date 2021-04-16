@@ -20,6 +20,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
+import com.fornadagora.vo.AlertaVO;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +28,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsuario.MyViewHolder> {
 
@@ -165,34 +169,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         materialAlertDialogBuilder.show();
     }
 
-    public void editarAlerta(Alerta alerta){
-        final String nome = alerta.getNome();
-
-        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        referenciaAlerta = ConfiguracaoFirebase.getFirebase();
-
-        final String id = autenticacao.getCurrentUser().getUid();
-
-        referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
-        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
-                        Alerta alerta = snapAlerta.getValue(Alerta.class);
-                        if(alerta.getNome().equals(nome)){
-                            alerta.setIdAlerta(snapAlerta.getKey());
-                            abrirDialogEditar(alerta);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    public void editarAlerta(final Alerta alerta){
+        abrirDialogEditar(alerta);
     }
 
     public void abrirDialogEditar(final Alerta alerta){
