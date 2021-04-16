@@ -19,6 +19,7 @@ import com.fornadagora.activity.EditarAlertaUsuarioActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Padaria;
+import com.fornadagora.model.Produto;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,8 +44,6 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     private Alerta alertaSelecionado;
 
-    private DatabaseReference referenciaPadaria;
-
     public AdapterAlertaUsuario(List<Alerta> listaAlerta) {
         this.listaAlertas = listaAlerta;
     }
@@ -60,7 +59,9 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Alerta alerta = listaAlertas.get(position);
-        recuperarPadariaDoAlerta(alerta);
+        nomeAlerta.setText(alerta.getNome());
+        nomePadaria.setText(alerta.getPadaria().getNome());
+        nomeProduto.setText(alerta.getProduto().getNome());
     }
 
     @Override
@@ -224,24 +225,5 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         bd.putParcelable("alertaObj", alerta);
         intent.putExtras(bd);
         context.startActivity(intent);
-    }
-
-    public void recuperarPadariaDoAlerta(final Alerta alerta){
-        referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
-        referenciaPadaria.child(alerta.getIdPadaria()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    Padaria snapPadaria = snapshot.getValue(Padaria.class);
-                    alerta.setPadaria(snapPadaria);
-                    nomePadaria.setText(alerta.getPadaria().getNome());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }

@@ -3,8 +3,12 @@ package com.fornadagora.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.vo.CategoriaVO;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
@@ -89,6 +93,11 @@ public class Produto implements Parcelable {
 
     public void salvar(){
         DatabaseReference referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
-        referenciaProduto.push().setValue(this);
+        referenciaProduto.push().setValue(this, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                ref.child("id").setValue(ref.getKey());
+            }
+        });
     }
 }

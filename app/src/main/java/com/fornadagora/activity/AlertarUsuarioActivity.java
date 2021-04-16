@@ -49,14 +49,12 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaFuncionario;
     private DatabaseReference referenciaPadaria;
     private DatabaseReference referenciaUsuario;
-    private DatabaseReference referenciaAlertaVO;
     private DatabaseReference referenciaAlerta;
 
     private DatabaseReference referenciaProduto;
     private DatabaseReference referenciaCategoria;
 
     private Funcionario funcionarioRecuperado;
-    private Usuario usuarioComToken;
 
     private Padaria padariaEscolhida;
     private Categoria categoriaEscolhida;
