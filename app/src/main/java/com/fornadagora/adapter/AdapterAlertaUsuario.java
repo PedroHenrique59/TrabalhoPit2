@@ -39,6 +39,9 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     private FirebaseAuth autenticacao;
     private DatabaseReference referenciaAlerta;
+    private DatabaseReference referenciaAlertas;
+
+    private DataSnapshot snapAlerta;
 
     private TextView nomeAlerta;
     private TextView nomePadaria;
@@ -73,7 +76,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         return listaAlertas.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageViewExcluir;
         ImageView imageViewEditar;
@@ -91,12 +94,12 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                 @Override
                 public void onClick(View v) {
                     int posicao = getAdapterPosition();
-                    if(posicao != RecyclerView.NO_POSITION){
-                        if(!listaAlertas.isEmpty()){
+                    if (posicao != RecyclerView.NO_POSITION) {
+                        if (!listaAlertas.isEmpty()) {
                             alertaSelecionado = listaAlertas.get(posicao);
                         }
                     }
-                    excluirAlerta(alertaSelecionado);
+                    excluirAlertaUsuario(alertaSelecionado);
                 }
             });
 
@@ -104,8 +107,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                 @Override
                 public void onClick(View v) {
                     int posicao = getAdapterPosition();
-                    if(posicao != RecyclerView.NO_POSITION){
-                        if(!listaAlertas.isEmpty()){
+                    if (posicao != RecyclerView.NO_POSITION) {
+                        if (!listaAlertas.isEmpty()) {
                             alertaSelecionado = listaAlertas.get(posicao);
                         }
                     }
@@ -115,23 +118,25 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         }
     }
 
-    public void excluirAlerta(Alerta alerta){
-        final String nome = alerta.getNome();
-
+    public void excluirAlertaUsuario(final Alerta alerta) {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        referenciaAlerta = ConfiguracaoFirebase.getFirebase();
-
-        String id = autenticacao.getCurrentUser().getUid();
-
-        referenciaAlerta = referenciaAlerta.child("usuarios").child(id).child("alerta");
+        referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("usuarios").child(autenticacao.getUid());
         referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
-                        Alerta alerta = snapAlerta.getValue(Alerta.class);
-                        if(alerta.getNome().equals(nome)){
-                            abrirDialog(snapAlerta);
+                if (snapshot.exists()) {
+                    if (snapshot.child("listaAlertasVO").exists()) {
+                        Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                        for (DataSnapshot snapAlertah : snapshot.child("listaAlertasVO").getChildren()) {
+                            AlertaVO alertaVO = snapAlertah.getValue(AlertaVO.class);
+                            td.put(snapAlertah.getKey(), alertaVO);
+                            snapAlerta = snapAlertah;
+                        }
+                        ArrayList<AlertaVO> values = new ArrayList<>(td.values());
+                        for(AlertaVO alertaVO : values){
+                            if(alertaVO.getIdAlerta().equalsIgnoreCase(alerta.getIdAlerta())){
+                                abrirDialogExcluir(snapAlerta);
+                            }
                         }
                     }
                 }
@@ -144,7 +149,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         });
     }
 
-    public void abrirDialog(final DataSnapshot dataSnap){
+    public void abrirDialogExcluir(final DataSnapshot dataSnap) {
 
         MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
         materialAlertDialogBuilder.setTitle("Confirmar");
@@ -155,6 +160,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             public void onClick(DialogInterface dialog, int which) {
                 dataSnap.getRef().removeValue();
                 Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
+                excluirAlertaBanco(dataSnap);
             }
         });
 
@@ -169,11 +175,35 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         materialAlertDialogBuilder.show();
     }
 
-    public void editarAlerta(final Alerta alerta){
+    public void excluirAlertaBanco(final DataSnapshot dataSnap){
+        final AlertaVO alertaVO = dataSnap.getValue(AlertaVO.class);
+        referenciaAlertas = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlertas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
+                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        if(alertaBanco.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())){
+                            snapAlerta.getRef().removeValue();
+                            Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void editarAlerta(final Alerta alerta) {
         abrirDialogEditar(alerta);
     }
 
-    public void abrirDialogEditar(final Alerta alerta){
+    public void abrirDialogEditar(final Alerta alerta) {
 
         MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
         materialAlertDialogBuilder.setTitle("Confirmar");
@@ -197,7 +227,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         materialAlertDialogBuilder.show();
     }
 
-    public void abrirEditarAlerta(Alerta alerta){
+    public void abrirEditarAlerta(Alerta alerta) {
         Intent intent = new Intent(context, EditarAlertaUsuarioActivity.class);
         Bundle bd = new Bundle();
         bd.putParcelable("alertaObj", alerta);

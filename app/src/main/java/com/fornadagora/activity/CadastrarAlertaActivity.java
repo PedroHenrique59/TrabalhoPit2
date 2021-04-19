@@ -202,7 +202,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
 
     public void carregarAlertasSalvos() {
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(autenticacao.getUid()).child("listaAlertasVO");
-        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+        referenciaUsuario.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
