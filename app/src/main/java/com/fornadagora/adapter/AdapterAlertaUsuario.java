@@ -184,6 +184,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                 if(snapshot.exists()){
                     for(DataSnapshot snapAlerta : snapshot.getChildren()){
                         Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        alertaBanco.setIdAlerta(snapAlerta.getKey());
                         if(alertaBanco.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())){
                             snapAlerta.getRef().removeValue();
                             Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
