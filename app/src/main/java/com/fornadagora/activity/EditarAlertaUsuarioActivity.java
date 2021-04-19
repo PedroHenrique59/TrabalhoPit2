@@ -42,7 +42,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
     private AutoCompleteTextView autoComleteProduto;
 
     private DatabaseReference referenciaPadaria;
-    private DatabaseReference referenciaAlerta;
+    private DatabaseReference referenciaAlertaExistente;
     private DatabaseReference referenciaProduto;
     private DatabaseReference referenciaCategoria;
 
@@ -64,10 +64,13 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
 
     private List<String> listaIdsCategoria = new ArrayList<>();
     private List<String> listaNomeCategoriasPadaria = new ArrayList<>();
+    private List<Categoria> listaCategoriasPadaria = new ArrayList<>();
 
     private boolean padariaDisponivel = false;
     private boolean produtoDisponivel = false;
+    private boolean categoriaDisponivel = false;
     private boolean ehMesmoIdCategoria = false;
+    private boolean ehMesmoAlerta = false;
     private boolean preencheuDadosDoAlerta = false;
 
     private Context context;
@@ -95,7 +98,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
         autoComleteProduto = findViewById(R.id.autoComleteProdutoAlertEdit);
         toolbar = findViewById(R.id.toolbarPrincipal);
         referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias");
-        referenciaAlerta = ConfiguracaoFirebase.getFirebase();
+        referenciaAlertaExistente = ConfiguracaoFirebase.getFirebase().child("alertas");
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -223,6 +226,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
 
     public void buscarCategoriasPadaria(final List<String> listaIdsCategoria) {
         listaNomeCategoriasPadaria.clear();
+        listaCategoriasPadaria.clear();
         referenciaCategoria.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -233,6 +237,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                         for (String idCategoria : listaIdsCategoria) {
                             if (categoriaBanco.getIdentificador().equalsIgnoreCase(idCategoria)) {
                                 listaNomeCategoriasPadaria.add(categoriaBanco.getNome());
+                                listaCategoriasPadaria.add(categoriaBanco);
                             }
                         }
                     }
@@ -337,69 +342,119 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
             String nomeEscolhido = editTextNomeAlerta.getText().toString();
             alertaEditado = new Alerta();
             alertaEditado.setNome(nomeEscolhido);
-        }
-        if (!autoComletePadaria.getText().toString().isEmpty()) {
-            String nomePadariaEscolhida = autoComletePadaria.getText().toString();
-            if (!listaPadarias.isEmpty()) {
-                for (Padaria padaria : listaPadarias) {
-                    if (padaria.getNome().equals(nomePadariaEscolhida)) {
-                        padariaDisponivel = true;
-                        alertaEditado.setPadaria(padaria);
+            if (!autoComletePadaria.getText().toString().isEmpty()) {
+                String nomePadariaEscolhida = autoComletePadaria.getText().toString();
+                if (!listaPadarias.isEmpty()) {
+                    for (Padaria padaria : listaPadarias) {
+                        if (padaria.getNome().equals(nomePadariaEscolhida)) {
+                            padariaDisponivel = true;
+                            alertaEditado.setPadaria(padaria);
+                        }
                     }
-                }
-                if (padariaDisponivel) {
-                    if (!autoComleteProduto.getText().toString().isEmpty()) {
-                        String nomeProdutoEscolhido = autoComleteProduto.getText().toString();
-                        if (!listaProdutos.isEmpty()) {
-                            for (Produto produto : listaProdutos) {
-                                if (produto.getNome().equals(nomeProdutoEscolhido)) {
-                                    produtoDisponivel = true;
-                                    alertaEditado.setProduto(produto);
+                    if (!autoCompleteCategoria.getText().toString().isEmpty()) {
+                        String nomeCategoriaEscolhida = autoCompleteCategoria.getText().toString();
+                        if (!listaCategoriasPadaria.isEmpty()) {
+                            for (Categoria categoria : listaCategoriasPadaria) {
+                                if (categoria.getNome().equalsIgnoreCase(nomeCategoriaEscolhida)) {
+                                    categoriaDisponivel = true;
                                 }
                             }
-                            if (!produtoDisponivel) {
-                                Toast.makeText(this, "Este produto não está disponível para a padaria escolhida. Favor escolher um que esteja na listagem acima ", Toast.LENGTH_SHORT).show();
+                        }
+                        if (padariaDisponivel) {
+                            if (categoriaDisponivel) {
+                                if (!autoComleteProduto.getText().toString().isEmpty()) {
+                                    String nomeProdutoEscolhido = autoComleteProduto.getText().toString();
+                                    if (!listaProdutos.isEmpty()) {
+                                        for (Produto produto : listaProdutos) {
+                                            if (produto.getNome().equals(nomeProdutoEscolhido)) {
+                                                produtoDisponivel = true;
+                                                alertaEditado.setProduto(produto);
+                                            }
+                                        }
+                                        if (!produtoDisponivel) {
+                                            Toast.makeText(this, "Este produto não está disponível para a padaria escolhida. Favor escolher um que esteja na lista acima.", Toast.LENGTH_SHORT).show();
+                                        }
+                                        if (produtoDisponivel && padariaDisponivel && categoriaDisponivel) {
+                                            validarExisteAlerta(alertaEditado);
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(this, "Favor escolher um produto!", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(this, "Esta categoria não está disponível. Favor escolher uma na lista acima.", Toast.LENGTH_LONG).show();
                             }
-                            if (produtoDisponivel && padariaDisponivel) {
-                                salvarEdicaoAlerta(alertaEditado);
-                            }
+                        } else {
+                            Toast.makeText(this, "Esta padaria não está disponível. Favor escolher uma na lista acima.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Favor escolher uma categoria!", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(this, "Esta padaria não está disponível. Favor escolher uma que esteja na listagem acima", Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(this, "Favor escolher uma padaria!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Favor escolher uma padaria", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor informar um nome para o alerta!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void salvarEdicaoAlerta(final Alerta alertaEditado) {
-        if (autenticacao.getCurrentUser() != null) {
-            String idUsuario = autenticacao.getCurrentUser().getUid();
-            referenciaAlerta = referenciaAlerta.child("usuarios").child(idUsuario).child("alerta").child(alerta.getIdAlerta());
-            referenciaAlerta.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        alertaEditado.atualizarDados(alertaEditado, referenciaAlerta);
-                        Toast.makeText(context, "Alerta editado com sucesso", Toast.LENGTH_SHORT).show();
+    public void validarExisteAlerta(final Alerta alertaEditado) {
+        referenciaAlertaExistente.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    ehMesmoAlerta = false;
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        if (alertaBanco.getIdPadaria().equalsIgnoreCase(alertaEditado.getPadaria().getIdentificador()) && alertaBanco.getIdProduto().equalsIgnoreCase(alertaEditado.getProduto().getId())) {
+                            ehMesmoAlerta = true;
+                        }
+                    }
+                    if (ehMesmoAlerta) {
+                        Toast.makeText(context, "Já existe um alerta salvo para esse produto nesta padaria. Favor escolher outra padaria ou outro produto!", Toast.LENGTH_LONG).show();
+                    } else {
+                        salvarEdicaoAlerta(alertaEditado);
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void salvarEdicaoAlerta(final Alerta alertaEditado) {
+        final DatabaseReference referencia = ConfiguracaoFirebase.getFirebase().child("alertas").child(alerta.getIdAlerta());
+        referencia.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    alertaEditado.atualizarDados(alertaEditado, referencia);
+                    Toast.makeText(context, "Alerta editado com sucesso!", Toast.LENGTH_SHORT).show();
+                    finish();
+                    abrirTelaListaAlertas();
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void abrirMenuLateral() {
         Intent intent = new Intent(this, MenuLateralActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    public void abrirTelaListaAlertas(){
+        Intent i = new Intent(EditarAlertaUsuarioActivity.this, VerAlertaUsuarioActivity.class);
+        startActivity(i);
         finish();
     }
 }

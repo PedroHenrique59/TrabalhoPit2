@@ -128,14 +128,15 @@ public class Alerta implements Parcelable {
         referenciaAlerta.push().setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-               CadastrarAlertaActivity.gravarAlerta(ref.getKey());
+                ref.child("id").setValue(ref.getKey());
+                CadastrarAlertaActivity.gravarAlerta(ref.getKey());
             }
         });
     }
 
     public void atualizarDados(Alerta alertaEditado, DatabaseReference referenciaAlertaExistente){
+        referenciaAlertaExistente.child("idPadaria").setValue(alertaEditado.getPadaria().getIdentificador());
+        referenciaAlertaExistente.child("idProduto").setValue(alertaEditado.getProduto().getId());
         referenciaAlertaExistente.child("nome").setValue(alertaEditado.getNome());
-        referenciaAlertaExistente.child("padaria").setValue(alertaEditado.getPadaria());
-        referenciaAlertaExistente.child("produto").setValue(alertaEditado.getProduto());
     }
 }

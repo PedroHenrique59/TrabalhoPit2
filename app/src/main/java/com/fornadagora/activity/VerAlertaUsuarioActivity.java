@@ -75,16 +75,18 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         listaAlertasVO.clear();
-                        Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
-                        for (DataSnapshot snapAlerta : snapshot.child("listaAlertasVO").getChildren()) {
-                            AlertaVO alertaVO = snapAlerta.getValue(AlertaVO.class);
-                            td.put(snapAlerta.getKey(), alertaVO);
+                        if (snapshot.child("listaAlertasVO").exists()) {
+                            Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                            for (DataSnapshot snapAlerta : snapshot.child("listaAlertasVO").getChildren()) {
+                                AlertaVO alertaVO = snapAlerta.getValue(AlertaVO.class);
+                                td.put(snapAlerta.getKey(), alertaVO);
+                            }
+                            ArrayList<AlertaVO> listaAlertas = new ArrayList<>(td.values());
+                            listaAlertasVO.addAll(listaAlertas);
+                            buscarAlertas(listaAlertasVO);
+                        } else {
+                            abrirTelaNaoExisteAlerta();
                         }
-                        ArrayList<AlertaVO> listaAlertas = new ArrayList<>(td.values());
-                        listaAlertasVO.addAll(listaAlertas);
-                        buscarAlertas(listaAlertasVO);
-                    } else {
-                        abrirTelaNaoExisteAlerta();
                     }
                 }
 
@@ -168,12 +170,12 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarProduto(String idProduto, final Alerta alerta){
+    public void buscarProduto(String idProduto, final Alerta alerta) {
         Query queryProduto = ConfiguracaoFirebase.getFirebase().child("produtos").orderByChild("id").equalTo(idProduto);
         queryProduto.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     for (DataSnapshot snapProduto : snapshot.getChildren()) {
                         Produto produto = snapProduto.getValue(Produto.class);
                         produtoRecuperado = new Produto();
@@ -190,14 +192,14 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarCategoriaProduto(final Produto produto, final Alerta alerta){
+    public void buscarCategoriaProduto(final Produto produto, final Alerta alerta) {
         referenciaCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapCategoria : snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapCategoria : snapshot.getChildren()) {
                         Categoria categoria = snapCategoria.getValue(Categoria.class);
-                        if(categoria.getIdentificador().equalsIgnoreCase(produto.getCategoriaVO().getIdentificador())){
+                        if (categoria.getIdentificador().equalsIgnoreCase(produto.getCategoriaVO().getIdentificador())) {
                             produto.setCategoria(categoria);
                             alerta.setProduto(produto);
                             listaAlertaComPadariaProduto.add(alerta);

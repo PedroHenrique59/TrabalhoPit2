@@ -402,6 +402,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                             listaProdutoVO.addAll(padariaBanco.getListaProdutosVO());
                             listaIdsCategoria.clear();
                             for (ProdutoVO produtoVO : listaProdutoVO) {
+                                ehMesmoIdCategoria = false;
                                 if (listaIdsCategoria.isEmpty()) {
                                     listaIdsCategoria.add(produtoVO.getIdCategoria());
                                 } else {
