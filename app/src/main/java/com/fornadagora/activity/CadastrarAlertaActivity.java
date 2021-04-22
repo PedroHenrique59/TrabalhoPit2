@@ -350,6 +350,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public static Usuario recuperarUsuarioESalvarAlerta(final Usuario usuario, final AlertaVO alertaVO) {
+        usuarioRecuperadoStatic = null;
         referenciaUsuarioStatica = ConfiguracaoFirebase.getFirebase().child("usuarios").child(usuario.getIdUsuario());
         referenciaUsuarioStatica.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -368,10 +369,6 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                         }
                         if (usuarioRecuperadoStatic == null) {
                             usuarioRecuperadoStatic = usuarioBanco;
-                            usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
-                            usuarioRecuperadoStatic.salvarAlertaVO();
-                            Toast.makeText(contextStatic, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
-                        } else {
                             usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
                             usuarioRecuperadoStatic.salvarAlertaVO();
                             Toast.makeText(contextStatic, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();

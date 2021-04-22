@@ -58,7 +58,6 @@ public class Alerta implements Parcelable {
         }
     };
 
-    @Exclude
     public String getIdAlerta() {
         return idAlerta;
     }
@@ -128,7 +127,7 @@ public class Alerta implements Parcelable {
         referenciaAlerta.push().setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                ref.child("id").setValue(ref.getKey());
+                ref.child("idAlerta").setValue(ref.getKey());
                 CadastrarAlertaActivity.gravarAlerta(ref.getKey());
             }
         });

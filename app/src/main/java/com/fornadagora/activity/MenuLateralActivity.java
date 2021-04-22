@@ -24,15 +24,28 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
+import com.fornadagora.vo.AlertaVO;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MenuLateralActivity extends AppCompatActivity {
 
@@ -52,9 +65,11 @@ public class MenuLateralActivity extends AppCompatActivity {
     private ImageView imagemDir2;
 
     private FirebaseAuth autenticacao;
+    private FirebaseUser user;
 
     private DatabaseReference referenciaFuncionario;
     private DatabaseReference referenciaUsuario;
+    private DatabaseReference referenciaAlertaUsuario;
 
     private String parametro = "";
 
@@ -99,7 +114,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, VerDadosUsuarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_edit_dados_fun){
+                if (item.getItemId() == R.id.nav_edit_dados_fun) {
                     Intent intent = new Intent(MenuLateralActivity.this, VerDadosFuncionarioActivity.class);
                     Bundle b = new Bundle();
                     b.putString("parametro", parametro);
@@ -110,26 +125,26 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, BuscarFuncionarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_excluir_conta){
+                if (item.getItemId() == R.id.nav_excluir_conta) {
                     excluirConta();
                 }
-                if(item.getItemId() == R.id.nav_cadastrar_fun){
+                if (item.getItemId() == R.id.nav_cadastrar_fun) {
                     Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_adicionar_padaria){
+                if (item.getItemId() == R.id.nav_adicionar_padaria) {
                     Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_adicionar_produto){
+                if (item.getItemId() == R.id.nav_adicionar_produto) {
                     Intent i = new Intent(MenuLateralActivity.this, AdicionarProdutoPadariaActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_cadastrar_produto){
+                if (item.getItemId() == R.id.nav_cadastrar_produto) {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarProdutoActivity.class);
                     startActivity(i);
                 }
-                if(item.getItemId() == R.id.nav_cadastrar_categoria){
+                if (item.getItemId() == R.id.nav_cadastrar_categoria) {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarCategoriaActivity.class);
                     startActivity(i);
                 }
@@ -250,15 +265,15 @@ public class MenuLateralActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
     }
 
-    public void recuperarParametro(){
+    public void recuperarParametro() {
         Bundle b = getIntent().getExtras();
-        if(b != null){
+        if (b != null) {
             parametro = b.getString("parametro");
         }
     }
 
-    public void configurarOpcoesNavigationView(NavigationView navigationView){
-        if(funcionario != null){
+    public void configurarOpcoesNavigationView(NavigationView navigationView) {
+        if (funcionario != null) {
             Menu menu = navigationView.getMenu();
 
             MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
@@ -291,8 +306,8 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_excluir_conta);
             menuItem.setVisible(true);
 
-        }else if(usuario != null){
-            if(isEhAdm(usuario)){
+        } else if (usuario != null) {
+            if (isEhAdm(usuario)) {
                 Menu menu = navigationView.getMenu();
 
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
@@ -324,7 +339,7 @@ public class MenuLateralActivity extends AppCompatActivity {
 
                 menuItem = menu.findItem(R.id.nav_excluir_conta);
                 menuItem.setVisible(true);
-            }else{
+            } else {
                 Menu menu = navigationView.getMenu();
 
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
@@ -357,15 +372,15 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isEhAdm(Usuario usuario){
-        if(usuario.getTipoPerfil().equals("Administrador")){
+    public boolean isEhAdm(Usuario usuario) {
+        if (usuario.getTipoPerfil().equals("Administrador")) {
             ehAdm = true;
         }
         return ehAdm;
     }
 
-    public void excluirConta(){
-        if(usuario != null){
+    public void excluirConta() {
+        if (usuario != null) {
             referenciaUsuario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -383,7 +398,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                 }
             });
         }
-        if(funcionario != null){
+        if (funcionario != null) {
             referenciaFuncionario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -403,7 +418,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
     }
 
-    public void abrirDialog(final DataSnapshot dataSnap){
+    public void abrirDialog(final DataSnapshot dataSnap) {
 
         MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.TemaDialog);
         materialAlertDialogBuilder.setTitle("Confirmar");
@@ -412,10 +427,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dataSnap.getRef().removeValue();
-                autenticacao.getCurrentUser().delete();
-                deslogarUsuario();
-                abrirTelaLogin();
+                excluirAlertasAssociados(dataSnap);
             }
         });
 
@@ -430,20 +442,104 @@ public class MenuLateralActivity extends AppCompatActivity {
         materialAlertDialogBuilder.show();
     }
 
+    public void excluirAlertasAssociados(DataSnapshot snapUsuario) {
+        Usuario usuario = snapUsuario.getValue(Usuario.class);
+        buscarAlertasUsuarioBanco(usuario, snapUsuario);
+    }
+
+    public void buscarAlertasUsuarioBanco(final Usuario usuario, final DataSnapshot snapUsuario) {
+        referenciaAlertaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(usuario.getIdUsuario());
+        referenciaAlertaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    if (snapshot.child("listaAlertasVO").exists()) {
+                        Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                        for (DataSnapshot alertaSnapshot : snapshot.child("listaAlertasVO").getChildren()) {
+                            AlertaVO alertaVO = alertaSnapshot.getValue(AlertaVO.class);
+                            td.put(alertaSnapshot.getKey(), alertaVO);
+                        }
+                        ArrayList<AlertaVO> values = new ArrayList<>(td.values());
+                        usuario.getListaAlertaVO().addAll(values);
+                        if (!usuario.getListaAlertaVO().isEmpty()) {
+                            List<AlertaVO> listaAlertaVO = new ArrayList<>();
+                            listaAlertaVO.addAll(usuario.getListaAlertaVO());
+                            exlcuirAlertasUsuario(listaAlertaVO, snapUsuario);
+                        } else {
+                            excluirUsuario(snapUsuario);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void exlcuirAlertasUsuario(final List<AlertaVO> alertaVOS, final DataSnapshot snapUsuario) {
+        DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
+                        for (AlertaVO alertaVO : alertaVOS) {
+                            if (alertaVO.getIdAlerta().equalsIgnoreCase(alertaBanco.getIdAlerta())) {
+                                snapAlerta.getRef().removeValue();
+                            }
+                        }
+                    }
+                    excluirUsuario(snapUsuario);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void excluirUsuario(DataSnapshot dataSnap) {
+        Usuario usuario = dataSnap.getValue(Usuario.class);
+        reautenticarUsuario(usuario, dataSnap);
+    }
+
+    public void reautenticarUsuario(final Usuario usuario, final DataSnapshot dataSnap) {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(usuario.getEmail(), usuario.getSenha());
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    user.delete();
+                    dataSnap.getRef().removeValue();
+                    deslogarUsuario();
+                    finish();
+                    abrirTelaLogin();
+                }
+            }
+        });
+    }
+
     public void abrirTelaLogin() {
         Intent i = new Intent(MenuLateralActivity.this, MainActivity.class);
         startActivity(i);
         Toast.makeText(getApplicationContext(), "Conta excluída com sucesso", Toast.LENGTH_LONG).show();
     }
 
-    public void configuraImagens(){
-        if(usuario != null){
+    public void configuraImagens() {
+        if (usuario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
             imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_48dp);
             ehUsuario = true;
             configurarEventosClick();
         }
-        if(funcionario != null){
+        if (funcionario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
             imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_48);
             ehFuncionario = true;
@@ -451,7 +547,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
     }
 
-    public void configurarEventosClick(){
+    public void configurarEventosClick() {
         imagemEsq1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -461,22 +557,22 @@ public class MenuLateralActivity extends AppCompatActivity {
         imagemDir1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ehUsuario){
+                if (ehUsuario) {
                     abrirTelaSalvarAlerta();
                 }
-                if(ehFuncionario){
+                if (ehFuncionario) {
                     abrirTelaEnviarAlerta();
                 }
             }
         });
     }
 
-    public void abrirTelaSalvarAlerta(){
+    public void abrirTelaSalvarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, CadastrarAlertaActivity.class);
         startActivity(i);
     }
 
-    public void abrirTelaEnviarAlerta(){
+    public void abrirTelaEnviarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
         startActivity(i);
     }
