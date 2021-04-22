@@ -39,4 +39,8 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="TemaAutoCompleteSingleLine" parent="">
+        <item name="android:singleLine">true</item>
+    </style>
+
 </resources>

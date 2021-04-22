@@ -10,13 +10,13 @@
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/cadastrar"
         android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fundo_marrom"
-        android:contentDescription="@string/cadastrar"/>
+        app:srcCompat="@drawable/fundo_marrom" />
 
     <include
         android:id="@+id/include_toolbar"
@@ -45,7 +45,8 @@
             android:id="@+id/autoComletePadariaAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            style="@style/TemaAutoCompleteSingleLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,7 +71,8 @@
             android:id="@+id/autoComleteCategoriaAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            style="@style/TemaAutoCompleteSingleLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +95,8 @@
             android:id="@+id/autoComleteProdutoAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            style="@style/TemaAutoCompleteSingleLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,12 +108,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="64dp"
         android:background="@drawable/bg_button_logar"
+        android:onClick="salvarProdutos"
         android:text="@string/adicionarproduto"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:onClick="salvarProdutos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
