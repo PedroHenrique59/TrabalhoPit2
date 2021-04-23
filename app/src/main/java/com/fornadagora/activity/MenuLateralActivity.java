@@ -427,7 +427,11 @@ public class MenuLateralActivity extends AppCompatActivity {
         materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                excluirAlertasAssociados(dataSnap);
+                if(usuario != null){
+                    excluirAlertasAssociados(dataSnap);
+                }else{
+                    excluirFuncionario(dataSnap);
+                }
             }
         });
 
@@ -525,6 +529,29 @@ public class MenuLateralActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void excluirFuncionario(DataSnapshot dataSnap) {
+        Funcionario funcionario = dataSnap.getValue(Funcionario.class);
+        reautenticarFuncionario(funcionario, dataSnap);
+    }
+
+    public void reautenticarFuncionario(final Funcionario funcionario, final DataSnapshot dataSnap) {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(funcionario.getEmail(), funcionario.getSenha());
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    user.delete();
+                    dataSnap.getRef().removeValue();
+                    deslogarUsuario();
+                    finish();
+                    abrirTelaLogin();
+                }
+            }
+        });
+    }
+
 
     public void abrirTelaLogin() {
         Intent i = new Intent(MenuLateralActivity.this, MainActivity.class);
