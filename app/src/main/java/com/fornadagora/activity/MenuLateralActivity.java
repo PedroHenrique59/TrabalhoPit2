@@ -185,6 +185,7 @@ public class MenuLateralActivity extends AppCompatActivity {
             case R.id.action_deslogar:
                 deslogarUsuario();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -556,7 +557,7 @@ public class MenuLateralActivity extends AppCompatActivity {
     public void abrirTelaLogin() {
         Intent i = new Intent(MenuLateralActivity.this, MainActivity.class);
         startActivity(i);
-        Toast.makeText(getApplicationContext(), "Conta excluída com sucesso", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Conta excluída com sucesso!", Toast.LENGTH_LONG).show();
     }
 
     public void configuraImagens() {
@@ -597,10 +598,12 @@ public class MenuLateralActivity extends AppCompatActivity {
     public void abrirTelaSalvarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, CadastrarAlertaActivity.class);
         startActivity(i);
+        finish();
     }
 
     public void abrirTelaEnviarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
         startActivity(i);
+        finish();
     }
 }

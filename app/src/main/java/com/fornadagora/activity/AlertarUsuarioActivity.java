@@ -49,7 +49,6 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private DatabaseReference referenciaFuncionario;
     private DatabaseReference referenciaPadaria;
     private DatabaseReference referenciaUsuario;
-    private DatabaseReference referenciaAlerta;
 
     private DatabaseReference referenciaProduto;
     private DatabaseReference referenciaCategoria;
@@ -101,7 +100,6 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         referenciaCategoria = ConfiguracaoFirebase.getFirebase().child("categorias");
-        referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listaNomePadaria);
     }
 
