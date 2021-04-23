@@ -47,11 +47,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        verificarUsuarioLogado();
+    }
 
+    public void configurarTelaParaLogin(){
+        setContentView(R.layout.activity_main);
         inicializarComponentes();
         progressBar.setVisibility(View.GONE);
-
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configurarIconeVisualizarSenha();
-        verificarUsuarioLogado();
     }
 
     public void abrirCadastro(View view) {
@@ -106,14 +107,12 @@ public class MainActivity extends AppCompatActivity {
     public void verificarUsuarioLogado() {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         if (autenticacao.getCurrentUser() != null) {
-
             String id = autenticacao.getCurrentUser().getUid();
 
             DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
-
             DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
-            final DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
 
+            final DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
             usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -143,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+        }else{
+            
+            configurarTelaParaLogin();
         }
     }
 
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean validarPerfilUsuario(Usuario usuario) {
-        if(usuario.getTipoPerfil().equals("Administrador")) {
+        if (usuario.getTipoPerfil().equals("Administrador")) {
             ehAdministrador = true;
             startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
             finish();
@@ -223,20 +225,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void validarPerfilFuncionario(Funcionario funcionario) {
         if (funcionario.getTipoPerfil().equals("Funcionario")) {
-           abriMenuLateralFuncionario(funcionario);
+            abriMenuLateralFuncionario(funcionario);
         }
     }
 
-    public void configurarIconeVisualizarSenha(){
+    public void configurarIconeVisualizarSenha() {
         layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
         layout_senha_usu.setEndIconVisible(true);
         layout_senha_usu.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                if (campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     campoSenha.setTransformationMethod(null);
                     layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_24);
-                }else if(campoSenha.getTransformationMethod() == null){
+                } else if (campoSenha.getTransformationMethod() == null) {
                     campoSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
                 }
@@ -244,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void abriMenuLateralFuncionario(Funcionario funcionario){
+    public void abriMenuLateralFuncionario(Funcionario funcionario) {
         Intent intent = new Intent(getApplicationContext(), MenuLateralActivity.class);
         Bundle b = new Bundle();
         b.putString("parametro", funcionario.getSenha());
