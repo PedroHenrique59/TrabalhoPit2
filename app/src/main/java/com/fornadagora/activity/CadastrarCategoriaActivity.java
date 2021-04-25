@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Categoria;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,7 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Teclado.fecharTeclado(v);
                 salvar();
             }
         });

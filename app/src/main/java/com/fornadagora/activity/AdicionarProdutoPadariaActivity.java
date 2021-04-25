@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.PointerIcon;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
@@ -99,6 +101,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
     }
 
     public void salvarProdutos(View view) {
+        Teclado.fecharTeclado(view);
         limparListas();
         padariaValida = false;
         if (!autoComletePadariaAdd.getText().toString().isEmpty()) {
@@ -110,21 +113,21 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                     validarPadaria();
                     if (padariaValida) {
                         buscarProdutoESalvarNaPadaria(nomeProduto);
-                    }else{
-                        Toast.makeText(this, "Padaria informada inválida. Favor escolher uma válida.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Padaria informada inválida. Favor escolher uma válida.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(this, "Favor escolher um produto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor escolher um produto!", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Favor escolher uma categoria", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor escolher uma categoria!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Favor escolher a padaria", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor escolher a padaria!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public boolean validarPadaria(){
+    public boolean validarPadaria() {
         if (!listaNomePadaria.isEmpty()) {
             for (String nome : listaNomePadaria) {
                 if (nome.equalsIgnoreCase(nomePadaria)) {
@@ -306,11 +309,11 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                         referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
                                         listaPadarias.clear();
                                         listaPadarias.add(padaria);
-                                        Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
                                     } else {
                                         for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
                                             if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
-                                                Toast.makeText(context, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_LONG).show();
                                                 produtoJaSalvo = true;
                                                 break;
                                             }
@@ -320,7 +323,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                             referenciaPadaria.child(padaria.getIdentificador()).setValue(padaria);
                                             listaPadarias.clear();
                                             listaPadarias.add(padaria);
-                                            Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.vo.CategoriaVO;
@@ -63,6 +64,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Teclado.fecharTeclado(v);
                 salvar();
             }
         });

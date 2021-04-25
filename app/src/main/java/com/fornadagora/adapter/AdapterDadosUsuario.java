@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fornadagora.R;
 import com.fornadagora.activity.MenuLateralActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
@@ -101,10 +102,11 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
         }
 
         public void validarCampos(View view) {
+            Teclado.fecharTeclado(view);
             if (!nomeInformado.getText().toString().isEmpty()) {
                 if (!emailInformado.getText().toString().isEmpty()) {
                     if (nomeInformado.getText().toString().equals(nomeUser) && emailInformado.getText().toString().equals(emailUser)) {
-                        emitirMensagem("Nome e email");
+                        emitirMensagem("Nome e email informados");
                     } else {
                         if(!usuario.getEmail().equals(emailInformado.getText().toString())){
                             emailAlterado = true;
@@ -127,7 +129,7 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
                             user = FirebaseAuth.getInstance().getCurrentUser();
                             reautenticarUsuario(usuario);
                         }else{
-                            Toast.makeText(context, "Favor informar um e-mail válido", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Favor informar um e-mail válido!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         atualizarDados();
@@ -155,7 +157,7 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
         usuario.setNome(nomeInformado.getText().toString());
         usuario.setEmail(emailInformado.getText().toString());
         usuario.atualizarDados();
-        Toast.makeText(context, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
     }
 
     public boolean validarEmail(String email){

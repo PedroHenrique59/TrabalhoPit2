@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fornadagora.R;
 import com.fornadagora.activity.MenuLateralActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Usuario;
@@ -121,16 +122,18 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                 }
             });
         }
+
         public void validarCamposAlterados(View view) {
+            Teclado.fecharTeclado(view);
             if (!nomeInformado.getText().toString().isEmpty()) {
                 if (!emailInformado.getText().toString().isEmpty()) {
                     if (nomeInformado.getText().toString().equals(nomeFun) && emailInformado.getText().toString().equals(emailFun)) {
-                        emitirMensagem("Nome e email");
+                        emitirMensagem("Nome e email informados");
                     } else {
-                        if(!funcionario.getEmail().equals(emailInformado.getText().toString())){
+                        if (!funcionario.getEmail().equals(emailInformado.getText().toString())) {
                             emailAlterado = true;
                         }
-                        if(!funcionario.getNome().equals(nomeInformado.getText().toString())){
+                        if (!funcionario.getNome().equals(nomeInformado.getText().toString())) {
                             funcionario.setNome(nomeInformado.getText().toString());
                         }
                         salvarDados(funcionario);
@@ -140,13 +143,13 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         }
 
         public void emitirMensagem(String nome) {
-            Toast.makeText(context, nome + " são os mesmos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, nome + " são os mesmos", Toast.LENGTH_LONG).show();
         }
 
-        public void salvarDados(final Funcionario funcionario){
-            if(funcionario != null){
-                if(autenticacao.getCurrentUser() != null){
-                    if(emailAlterado){
+        public void salvarDados(final Funcionario funcionario) {
+            if (funcionario != null) {
+                if (autenticacao.getCurrentUser() != null) {
+                    if (emailAlterado) {
                         user = FirebaseAuth.getInstance().getCurrentUser();
                         reautenticarFuncionario(funcionario);
                     }
@@ -156,7 +159,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         }
     }
 
-    public void inicializarComponentes(){
+    public void inicializarComponentes() {
         arrayAdapterPadaria = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
         referenciaAdm = ConfiguracaoFirebase.getFirebase();
     }
@@ -173,9 +176,9 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
                     }
-                    if(ehAdm){
+                    if (ehAdm) {
                         autoComletePadariaFunEdit.setAdapter(arrayAdapterPadaria);
-                    }else{
+                    } else {
                         autoComletePadariaFunEdit.setAdapter(null);
                     }
                 }
@@ -188,7 +191,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         });
     }
 
-    public void reautenticarFuncionario(final Funcionario funcionario){
+    public void reautenticarFuncionario(final Funcionario funcionario) {
         AuthCredential credential = EmailAuthProvider
                 .getCredential(funcionario.getEmail(), funcionario.getSenha());
         user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -200,19 +203,19 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         });
     }
 
-    public void atualizarDados(){
+    public void atualizarDados() {
         String id = autenticacao.getCurrentUser().getUid();
         funcionario.setIdFuncionario(id);
         funcionario.setEmail(emailInformado.getText().toString());
         funcionario.atualizarDados();
-        Toast.makeText(context, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Dados atualizados com sucesso!", Toast.LENGTH_LONG).show();
     }
 
-    public void verificarPerfilLogado(){
-        if(funcionario != null){
+    public void verificarPerfilLogado() {
+        if (funcionario != null) {
             desabilitarComponentes(false);
-        }else{
-            if(autenticacao.getCurrentUser() != null){
+        } else {
+            if (autenticacao.getCurrentUser() != null) {
 
                 String id = autenticacao.getCurrentUser().getUid();
                 referenciaAdm = referenciaAdm.child("usuarios").child(id);
@@ -220,10 +223,10 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                 referenciaAdm.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                        if (snapshot.exists()) {
                             Usuario usuarioAdm = snapshot.getValue(Usuario.class);
-                            if(usuarioAdm != null){
-                                if(usuarioAdm.getTipoPerfil().equals("Administrador")){
+                            if (usuarioAdm != null) {
+                                if (usuarioAdm.getTipoPerfil().equals("Administrador")) {
                                     ehAdm = true;
                                     desabilitarComponentes(ehAdm);
                                 }
@@ -240,15 +243,15 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         }
     }
 
-    public void desabilitarComponentes(boolean ehAdm){
-        if(ehAdm){
+    public void desabilitarComponentes(boolean ehAdm) {
+        if (ehAdm) {
             autoComletePadariaFunEdit.setEnabled(true);
-        }else{
+        } else {
             autoComletePadariaFunEdit.setEnabled(false);
         }
     }
 
-    public void configurarToolbar(){
+    public void configurarToolbar() {
         toolbar.setTitle("Alterar dados");
         toolbar.setTitleTextColor(context.getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
@@ -260,7 +263,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         });
     }
 
-    public void abrirMenuLateral(){
+    public void abrirMenuLateral() {
         Intent intent = new Intent(context, MenuLateralActivity.class);
         context.startActivity(intent);
     }

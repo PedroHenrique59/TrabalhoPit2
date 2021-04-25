@@ -17,18 +17,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.NaoExisteAlertaActivity"></activity>
-        <activity android:name=".activity.CadastrarCategoriaActivity" />
-        <activity android:name=".activity.CadastrarProdutoActivity" />
-        <activity android:name=".activity.EditarAlertaUsuarioActivity" />
-        <activity android:name=".activity.BuscarFuncionarioActivity" />
-        <activity android:name=".activity.VerDadosFuncionarioActivity" />
+        <activity
+            android:name=".activity.NaoExisteAlertaActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.CadastrarCategoriaActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.CadastrarProdutoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.EditarAlertaUsuarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.BuscarFuncionarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.VerDadosFuncionarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.MenuLateralActivity"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.VerDadosUsuarioActivity" />
-        <activity android:name=".activity.AlertarUsuarioActivity" />
+        <activity
+            android:name=".activity.VerDadosUsuarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.AlertarUsuarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".notification.FirebaseService"
@@ -39,10 +64,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activity.VerAlertaUsuarioActivity" />
+        <activity
+            android:name=".activity.VerAlertaUsuarioActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.CadastrarAlertaActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -60,23 +89,27 @@
             android:label="@string/title_activity_ver_padarias_mapa" />
         <activity
             android:name=".activity.AdicionarProdutoPadariaActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.BuscarPadariaActivity"
             android:label="@string/titulotelabuscarpadaria"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CadastroFuncionarioActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.RecuperarSenhaActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.MenuInicialActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CadastroUsuarioActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".notification.NotificacaoUsuario" />
         <activity
             android:name=".activity.MainActivity"

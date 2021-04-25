@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
@@ -61,6 +63,8 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
 
     private boolean padariaEncontrada = false;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +87,8 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         referenciaFuncionarios = referenciaFuncionarios.child("funcionarios");
         referenciaPadarias = ConfiguracaoFirebase.getFirebase();
         referenciaPadarias = referenciaPadarias.child("padarias");
-        arrayAdapterFuncionario = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomesFuncionarios);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
+        context = this;
     }
 
     public void buscarFuncionarios() {
@@ -101,7 +105,9 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
                             listaDeFuncionarios.add(funcionario);
                         }
                     }
+                    arrayAdapterFuncionario = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, listaNomesFuncionarios);
                     autoCompleteFun.setAdapter(arrayAdapterFuncionario);
+                    autoCompleteFun.setText("");
                 }
             }
 
@@ -165,6 +171,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Teclado.fecharTeclado(v);
                 salvarDados();
             }
         });
@@ -176,13 +183,13 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
                 if (!autoCompletePadariaFun.getText().toString().isEmpty()) {
                     atualizarDadosFuncionario(funcionario);
                 } else {
-                    Toast.makeText(this, "Favor escolher uma padaria", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor escolher uma padaria!", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Favor preencher o nome do funcionário", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor preencher o nome do funcionário!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Favor escolher um funcionário", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor escolher um funcionário!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -204,10 +211,15 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
             funcionario.atualizarDadosPeloAdm();
             autoCompleteFun.setText(funcionario.getNome());
             buscarFuncionarios();
-            Toast.makeText(this, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+            limparCampos();
+            Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Padaria informada inválida. Favor escolher uma válida.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void limparCampos(){
+        editNomeFun.setText("");
     }
 
     public void configurarToolbar() {

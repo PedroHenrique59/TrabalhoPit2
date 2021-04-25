@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Teclado.fecharTeclado(view);
 
                 String textoEmail = campoEmail.getText().toString();
                 String textoSenha = campoSenha.getText().toString();

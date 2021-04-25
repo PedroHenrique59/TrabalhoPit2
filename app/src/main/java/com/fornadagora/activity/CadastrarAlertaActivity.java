@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Padaria;
@@ -141,6 +142,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     }
 
     public void salvarAlerta(View view) {
+        Teclado.fecharTeclado(view);
         produtoJaSalvo = false;
         if (!editTextNomeAlerta.getText().toString().isEmpty()) {
             if (!autoCompletePadaria.getText().toString().isEmpty()) {
@@ -187,16 +189,16 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        Toast.makeText(this, "Favor informar o produto", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Favor informar o produto!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Favor informar a categoria", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor informar a categoria!", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor informar a padaria!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Favor informar o nome do alerta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor informar o nome do alerta!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -298,7 +300,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     if (!ehMesmoAlerta) {
                         montarAlertaESalvar(nomeAlerta);
                     } else {
-                        Toast.makeText(context, "Já existe um alerta para o produto escolhido nesta padaria", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Já existe um alerta para o produto escolhido nesta padaria.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -371,7 +373,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                             usuarioRecuperadoStatic = usuarioBanco;
                             usuarioRecuperadoStatic.getListaAlertaVO().add(alertaVO);
                             usuarioRecuperadoStatic.salvarAlertaVO();
-                            Toast.makeText(contextStatic, "Alerta salvo com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(contextStatic, "Alerta salvo com sucesso!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

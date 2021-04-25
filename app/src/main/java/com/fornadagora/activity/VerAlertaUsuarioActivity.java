@@ -70,7 +70,7 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         if (autenticacao.getCurrentUser() != null) {
             String idUsuario = autenticacao.getCurrentUser().getUid();
             referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(idUsuario);
-            referenciaUsuario.addValueEventListener(new ValueEventListener() {
+            referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {

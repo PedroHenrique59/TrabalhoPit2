@@ -63,7 +63,7 @@ public class Categoria implements Parcelable {
         referenciaCategoria.push().setValue(this, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                ref.child("id").setValue(ref.getKey());
+                ref.child("identificador").setValue(ref.getKey());
             }
         });
     }

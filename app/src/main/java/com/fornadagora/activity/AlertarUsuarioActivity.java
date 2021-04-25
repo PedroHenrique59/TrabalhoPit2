@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Funcionario;
@@ -183,7 +184,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void enviarAlerta(View view) {
-
+        Teclado.fecharTeclado(view);
         if (!autoCompletePadaria.getText().toString().isEmpty()) {
             if (!autoCompleteCategoria.getText().toString().isEmpty()) {
                 if (!autoCompleteProduto.getText().toString().isEmpty()) {
