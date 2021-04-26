@@ -126,14 +126,13 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_SHORT).show();
-
                             String idFuncionario = autenticacao.getCurrentUser().getUid();
                             funcionario.setIdFuncionario(idFuncionario);
                             funcionario.salvar();
+                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+                            limparCampos();
                         } else {
                             progressBar.setVisibility(View.GONE);
-
                             String erroExcecao = "";
                             try {
                                 throw task.getException();
@@ -198,7 +197,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                                         validarPadaria(nomePadaria);
                                         if (padariaValida) {
                                             salvarFuncionario(funcionario);
-                                        }else{
+                                        } else {
                                             Toast.makeText(CadastroFuncionarioActivity.this, "Informe uma padaria válida!", Toast.LENGTH_LONG).show();
                                         }
                                     } else {
@@ -260,7 +259,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         }
     }
 
-    public void configurarIconeVisualizarSenha(){
+    public void configurarIconeVisualizarSenha() {
         layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
         layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
 
@@ -270,10 +269,10 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         layout_senha_fun.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                if (campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     campoSenha.setTransformationMethod(null);
                     layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_24);
-                }else if(campoSenha.getTransformationMethod() == null){
+                } else if (campoSenha.getTransformationMethod() == null) {
                     campoSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     layout_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
                 }
@@ -283,14 +282,22 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         layout_confirmar_senha_fun.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(campoConfirmarSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                if (campoConfirmarSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     campoConfirmarSenha.setTransformationMethod(null);
                     layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_24);
-                }else if(campoConfirmarSenha.getTransformationMethod() == null){
+                } else if (campoConfirmarSenha.getTransformationMethod() == null) {
                     campoConfirmarSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     layout_confirmar_senha_fun.setEndIconDrawable(R.drawable.ic_visibility_off_24);
                 }
             }
         });
+    }
+
+    public void limparCampos(){
+        campoNome.setText("");
+        campoEmail.setText("");
+        campoSenha.setText("");
+        campoConfirmarSenha.setText("");
+        campoNome.requestFocus();
     }
 }

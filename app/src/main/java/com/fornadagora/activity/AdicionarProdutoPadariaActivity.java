@@ -310,6 +310,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                         listaPadarias.clear();
                                         listaPadarias.add(padaria);
                                         Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
+                                        limparCampos();
                                     } else {
                                         for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
                                             if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
@@ -324,6 +325,7 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
                                             listaPadarias.clear();
                                             listaPadarias.add(padaria);
                                             Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
+                                            limparCampos();
                                         }
                                     }
                                 }
@@ -343,5 +345,11 @@ public class AdicionarProdutoPadariaActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void limparCampos() {
+        autoComleteCategoriaAdd.setText("");
+        autoComleteProdutoAdd.setText("");
+        autoComleteCategoriaAdd.requestFocus();
     }
 }

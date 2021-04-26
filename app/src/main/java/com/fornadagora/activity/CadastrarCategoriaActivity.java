@@ -97,7 +97,6 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot snapCategoria : snapshot.getChildren()){
                         Categoria cat = snapCategoria.getValue(Categoria.class);
-                        String idCat = snapCategoria.getKey();
                         if(cat.getNome().equalsIgnoreCase(categoria.getNome())){
                             Toast.makeText(context, "Esta categoria já foi salva", Toast.LENGTH_SHORT).show();
                             categoriaJaSalva = true;
@@ -107,10 +106,12 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
                     if(!categoriaJaSalva){
                         categoria.salvar();
                         Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
+                        limparCampos();
                     }
                 }else{
                     categoria.salvar();
                     Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
+                    limparCampos();
                 }
             }
             @Override
@@ -118,5 +119,9 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void limparCampos(){
+        editTextNomeCategoria.setText("");
     }
 }

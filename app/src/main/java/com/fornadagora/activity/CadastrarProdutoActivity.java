@@ -181,10 +181,12 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                     if(!produtoExiste){
                         prod.salvar();
                         Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
+                        limparCampos();
                     }
                 }else{
                     prod.salvar();
                     Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
+                    limparCampos();
                 }
             }
 
@@ -193,5 +195,11 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void limparCampos(){
+        editTextNome.setText("");
+        autoCompleteCategoria.setText("");
+        editTextNome.requestFocus();
     }
 }

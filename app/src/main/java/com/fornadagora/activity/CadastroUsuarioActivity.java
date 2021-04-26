@@ -103,15 +103,14 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_SHORT).show();
 
                             String idUsuario = autenticacao.getCurrentUser().getUid();
                             usuario.setIdUsuario(idUsuario);
                             usuario.salvar();
 
                             startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
+                            Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show();
                             finish();
-
                         } else {
                             progressBar.setVisibility(View.GONE);
 

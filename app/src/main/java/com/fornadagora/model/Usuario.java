@@ -1,5 +1,6 @@
 package com.fornadagora.model;
 
+import com.fornadagora.activity.CadastrarAlertaActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.vo.AlertaVO;
 import com.google.firebase.database.DatabaseReference;

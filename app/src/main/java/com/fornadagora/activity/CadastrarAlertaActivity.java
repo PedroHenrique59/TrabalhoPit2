@@ -228,6 +228,14 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
     public void montarAlertaESalvar(String nomeAlerta) {
         Alerta alerta = new Alerta(nomeAlerta, padariaObj.getIdentificador(), produtoObj.getId());
         alerta.salvar();
+        limparCampos();
+    }
+
+    public void limparCampos(){
+        editTextNomeAlerta.setText("");
+        autoCompleteCategoria.setText("");
+        autoCompleteProduto.setText("");
+        editTextNomeAlerta.requestFocus();
     }
 
     public void configurarToolbar() {
