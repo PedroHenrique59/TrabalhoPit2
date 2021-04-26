@@ -57,6 +57,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private Funcionario funcionarioRecuperado;
 
     private Padaria padariaEscolhida;
+    private Padaria padariaDoFun;
     private Categoria categoriaEscolhida;
     private Produto produtoEscolhido;
 
@@ -86,7 +87,6 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
         configurarToolbar();
         validarFuncionario();
         carregarPadarias();
-        carregarCategoriasPadaria();
         carregarProdutosCategoria();
     }
 
@@ -139,11 +139,14 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                                 padariaBanco.setIdentificador(snapPadaria.getKey());
                                 if (padariaBanco.getIdentificador().equalsIgnoreCase(funcionarioRecuperado.getPadariaVO().getIdentificador())) {
                                     Padaria padariaFuncionario = padariaBanco;
+                                    padariaDoFun = padariaFuncionario;
                                     listaNomePadaria.add(padariaFuncionario.getNome());
                                     listaPadarias.add(padariaFuncionario);
                                 }
                             }
                             autoCompletePadaria.setAdapter(arrayAdapterPadaria);
+                            autoCompletePadaria.setText(padariaDoFun.getNome());
+                            carregarCategoriasPadaria();
                         } else {
                             autoCompletePadaria.setAdapter(null);
                         }
@@ -159,19 +162,14 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void carregarCategoriasPadaria() {
-        autoCompletePadaria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!listaPadarias.isEmpty()) {
-                    for (Padaria padaria : listaPadarias) {
-                        String nomePadaria = autoCompletePadaria.getText().toString();
-                        if (padaria.getNome().equals(nomePadaria)) {
-                            buscarIdsCategoriasPadaria(nomePadaria);
-                        }
-                    }
+        if (!listaPadarias.isEmpty()) {
+            for (Padaria padaria : listaPadarias) {
+                String nomePadaria = autoCompletePadaria.getText().toString();
+                if (padaria.getNome().equals(nomePadaria)) {
+                    buscarIdsCategoriasPadaria(nomePadaria);
                 }
             }
-        });
+        }
     }
 
     public void carregarProdutosCategoria() {
