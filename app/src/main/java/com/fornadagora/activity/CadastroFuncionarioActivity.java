@@ -20,6 +20,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
+import com.fornadagora.model.Usuario;
 import com.fornadagora.vo.PadariaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -62,8 +64,10 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
     private Funcionario funcionario;
     private PadariaVO padariaVO;
+    private Usuario usuarioAdm;
 
     private FirebaseAuth autenticacao;
+    private FirebaseAuth autenticacaoAdm;
 
     private DatabaseReference referenciaFuncionarios;
     private DatabaseReference referenciaPadarias;
@@ -83,6 +87,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         configurarIconeVisualizarSenha();
         configurarToolbar();
         carregarListaPadarias();
+        recuperarDadosAdm();
 
         progressBar.setVisibility(View.GONE);
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +136,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                             funcionario.salvar();
                             Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
                             limparCampos();
+                            logarAdm();
                         } else {
                             progressBar.setVisibility(View.GONE);
                             String erroExcecao = "";
@@ -293,11 +299,35 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void limparCampos(){
+    public void limparCampos() {
         campoNome.setText("");
         campoEmail.setText("");
         campoSenha.setText("");
         campoConfirmarSenha.setText("");
         campoNome.requestFocus();
+    }
+
+    public void recuperarDadosAdm() {
+        autenticacaoAdm = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        String id = autenticacaoAdm.getCurrentUser().getUid();
+        Query queryAdm = ConfiguracaoFirebase.getFirebase().child("usuarios").child(id);
+        queryAdm.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Usuario usuario = snapshot.getValue(Usuario.class);
+                    usuarioAdm = usuario;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void logarAdm() {
+        autenticacaoAdm.signInWithEmailAndPassword(usuarioAdm.getEmail(), usuarioAdm.getSenha());
     }
 }
