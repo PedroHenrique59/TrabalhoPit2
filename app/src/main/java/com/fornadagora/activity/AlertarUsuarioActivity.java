@@ -294,7 +294,9 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                             listaAlertasParaEnviar.add(alerta);
                         }
                     }
-                    buscarAlertasUsuarioBanco(listaAlertasParaEnviar);
+                    if(!listaAlertasParaEnviar.isEmpty()){
+                        buscarAlertasUsuarioBanco(listaAlertasParaEnviar);
+                    }
                 }
             }
 

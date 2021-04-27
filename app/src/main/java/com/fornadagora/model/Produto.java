@@ -6,8 +6,10 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.fornadagora.activity.CadastrarProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.vo.CategoriaVO;
+import com.fornadagora.vo.PadariaVO;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -18,6 +20,7 @@ public class Produto implements Parcelable {
     private String nome;
     private Categoria categoria;
     private CategoriaVO categoriaVO;
+    private PadariaVO padariaVO;
 
     public Produto(){
 
@@ -26,6 +29,12 @@ public class Produto implements Parcelable {
     public Produto(String nome, CategoriaVO categoriaVO) {
         this.nome = nome;
         this.categoriaVO = categoriaVO;
+    }
+
+    public Produto(String nome, CategoriaVO categoriaVO, PadariaVO padariaVO) {
+        this.nome = nome;
+        this.categoriaVO = categoriaVO;
+        this.padariaVO = padariaVO;
     }
 
     public Produto(String nome) {
@@ -79,6 +88,14 @@ public class Produto implements Parcelable {
         return categoriaVO;
     }
 
+    public PadariaVO getPadariaVO() {
+        return padariaVO;
+    }
+
+    public void setPadariaVO(PadariaVO padariaVO) {
+        this.padariaVO = padariaVO;
+    }
+
     public void setCategoriaVO(CategoriaVO categoriaVO) {
         this.categoriaVO = categoriaVO;
     }
@@ -101,6 +118,7 @@ public class Produto implements Parcelable {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 ref.child("id").setValue(ref.getKey());
+                CadastrarProdutoActivity.buscarProdutoESalvarNaPadaria(ref.getKey());
             }
         });
     }

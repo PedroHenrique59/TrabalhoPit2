@@ -299,7 +299,7 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem.setVisible(true);
 
             menuItem = menu.findItem(R.id.nav_cadastrar_produto);
-            menuItem.setVisible(false);
+            menuItem.setVisible(true);
 
             menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
             menuItem.setVisible(false);
@@ -333,7 +333,7 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_produto);
-                menuItem.setVisible(true);
+                menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
                 menuItem.setVisible(true);
