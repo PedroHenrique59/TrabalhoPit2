@@ -29,10 +29,6 @@
             android:icon="@drawable/ic_padaria_loja_24"
             android:title="@string/adicionarpadaria" />
         <item
-            android:id="@+id/nav_adicionar_produto"
-            android:icon="@drawable/ic_padaria_loja_24"
-            android:title="@string/adicionarproduto" />
-        <item
             android:id="@+id/nav_cadastrar_categoria"
             android:icon="@drawable/ic_categoria_24"
             android:title="@string/cadastrarcategoria" />

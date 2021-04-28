@@ -136,10 +136,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
                     startActivity(i);
                 }
-                if (item.getItemId() == R.id.nav_adicionar_produto) {
-                    Intent i = new Intent(MenuLateralActivity.this, AdicionarProdutoPadariaActivity.class);
-                    startActivity(i);
-                }
                 if (item.getItemId() == R.id.nav_cadastrar_produto) {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarProdutoActivity.class);
                     startActivity(i);
@@ -295,9 +291,6 @@ public class MenuLateralActivity extends AppCompatActivity {
             menuItem = menu.findItem(R.id.nav_adicionar_padaria);
             menuItem.setVisible(false);
 
-            menuItem = menu.findItem(R.id.nav_adicionar_produto);
-            menuItem.setVisible(true);
-
             menuItem = menu.findItem(R.id.nav_cadastrar_produto);
             menuItem.setVisible(true);
 
@@ -329,9 +322,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem = menu.findItem(R.id.nav_adicionar_padaria);
                 menuItem.setVisible(true);
 
-                menuItem = menu.findItem(R.id.nav_adicionar_produto);
-                menuItem.setVisible(false);
-
                 menuItem = menu.findItem(R.id.nav_cadastrar_produto);
                 menuItem.setVisible(false);
 
@@ -356,9 +346,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_adicionar_padaria);
-                menuItem.setVisible(false);
-
-                menuItem = menu.findItem(R.id.nav_adicionar_produto);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_produto);

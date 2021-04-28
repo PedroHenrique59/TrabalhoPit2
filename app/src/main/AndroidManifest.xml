@@ -88,10 +88,6 @@
             android:name=".activity.VerPadariasMapaActivity"
             android:label="@string/title_activity_ver_padarias_mapa" />
         <activity
-            android:name=".activity.AdicionarProdutoPadariaActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".activity.BuscarPadariaActivity"
             android:label="@string/titulotelabuscarpadaria"
             android:screenOrientation="portrait" />
