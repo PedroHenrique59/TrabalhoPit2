@@ -17,17 +17,10 @@ import androidx.appcompat.widget.Toolbar;
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.Teclado;
-import com.fornadagora.helper.ValidaEmail;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.vo.PadariaVO;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -220,6 +213,8 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
 
     public void limparCampos(){
         editNomeFun.setText("");
+        autoCompleteFun.requestFocus();
+        autoCompletePadariaFun.setText("");
     }
 
     public void configurarToolbar() {
