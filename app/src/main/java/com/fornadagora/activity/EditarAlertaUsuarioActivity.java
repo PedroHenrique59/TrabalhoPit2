@@ -130,7 +130,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
     }
 
     public void carregarPadarias() {
-        referenciaPadaria.addValueEventListener(new ValueEventListener() {
+        referenciaPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -250,7 +250,6 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                         arrayAdapterCategoria = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listaNomeCategoriasPadaria);
                         autoCompleteCategoria.setAdapter(arrayAdapterCategoria);
                     }
-                    preencheuDadosDoAlerta = false;
                 }
             }
 
@@ -277,7 +276,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
     }
 
     public void buscarProdutoPorCategoria(final String nomeCategoria) {
-        referenciaCategoria.addValueEventListener(new ValueEventListener() {
+        referenciaCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -288,6 +287,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                             for (ProdutoVO produtoVO : listaProdutoVO) {
                                 if (produtoVO.getIdCategoria().equalsIgnoreCase(categoriaBanco.getIdentificador())) {
                                     buscarProduto(produtoVO.getIdProduto());
+                                    break;
                                 }
                             }
                         }
@@ -305,7 +305,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
     public void buscarProduto(final String id) {
         listaProdutos.clear();
         listaNomeProduto.clear();
-        referenciaProduto.addValueEventListener(new ValueEventListener() {
+        referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
