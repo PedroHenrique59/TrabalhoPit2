@@ -407,7 +407,9 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                     ehMesmoAlerta = false;
                     for (DataSnapshot snapAlerta : snapshot.getChildren()) {
                         Alerta alertaBanco = snapAlerta.getValue(Alerta.class);
-                        if (alertaBanco.getIdPadaria().equalsIgnoreCase(alertaEditado.getPadaria().getIdentificador()) && alertaBanco.getIdProduto().equalsIgnoreCase(alertaEditado.getProduto().getId())) {
+                        if (!alertaBanco.getNome().equalsIgnoreCase(alertaEditado.getNome()) && alertaBanco.getIdPadaria().equalsIgnoreCase(alertaEditado.getPadaria().getIdentificador()) && alertaBanco.getIdProduto().equalsIgnoreCase(alertaEditado.getProduto().getId())) {
+                            ehMesmoAlerta = false;
+                        }else if(alertaBanco.getNome().equalsIgnoreCase(alertaEditado.getNome()) && alertaBanco.getIdPadaria().equalsIgnoreCase(alertaEditado.getPadaria().getIdentificador()) && alertaBanco.getIdProduto().equalsIgnoreCase(alertaEditado.getProduto().getId())){
                             ehMesmoAlerta = true;
                         }
                     }

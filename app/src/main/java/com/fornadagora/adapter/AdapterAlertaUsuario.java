@@ -1,5 +1,6 @@
 package com.fornadagora.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
 import com.fornadagora.activity.EditarAlertaUsuarioActivity;
+import com.fornadagora.activity.NaoExisteAlertaActivity;
+import com.fornadagora.activity.VerAlertaUsuarioActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
-import com.fornadagora.model.Padaria;
-import com.fornadagora.model.Produto;
 import com.fornadagora.vo.AlertaVO;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     private Context context;
 
     private Alerta alertaSelecionado;
+
+    private int posicao;
 
     public AdapterAlertaUsuario(List<Alerta> listaAlerta) {
         this.listaAlertas = listaAlerta;
@@ -93,7 +96,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             imageViewExcluir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int posicao = getAdapterPosition();
+                    posicao = getAdapterPosition();
                     if (posicao != RecyclerView.NO_POSITION) {
                         if (!listaAlertas.isEmpty()) {
                             alertaSelecionado = listaAlertas.get(posicao);
@@ -188,6 +191,10 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                         if(alertaBanco.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())){
                             snapAlerta.getRef().removeValue();
                             Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
+                            listaAlertas.remove(posicao);
+                            notifyItemRemoved(posicao);
+                            notifyDataSetChanged();
+                            validarUltimoAlerta(listaAlertas);
                         }
                     }
                 }
@@ -234,5 +241,17 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         bd.putParcelable("alertaObj", alerta);
         intent.putExtras(bd);
         context.startActivity(intent);
+    }
+
+    public void validarUltimoAlerta(List<Alerta> listaAlertas ){
+        if(listaAlertas.isEmpty()){
+            abrirTelaNaoExisteAlerta();
+        }
+    }
+
+    public void abrirTelaNaoExisteAlerta() {
+        Intent i = new Intent(context, NaoExisteAlertaActivity.class);
+        context.startActivity(i);
+        ((Activity)context).finish();
     }
 }
