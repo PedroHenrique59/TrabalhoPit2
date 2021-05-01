@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.VerCategoriasActivity"></activity>
         <activity
             android:name=".activity.NaoExisteAlertaActivity"
             android:screenOrientation="portrait"

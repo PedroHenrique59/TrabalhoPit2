@@ -58,6 +58,8 @@
     <string name="nenhumalerta">Nenhum alerta cadastrado :(</string>
     <string name="naopossuiconta">Não possui uma conta? Cadastre-se</string>
     <string name="todo">A definir</string>
+    <string name="ver_categorias">Gerenciar categorias</string>
+    <string name="nomecategoria">Nome da categoria</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
