@@ -2,6 +2,8 @@ package com.fornadagora.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.activity.EditarAlertaUsuarioActivity;
+import com.fornadagora.activity.EditarCategoriaActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
@@ -97,6 +101,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                             categoriaSelecionada = listaCategorias.get(posicao);
                         }
                     }
+                    editarCateogoria(categoriaSelecionada);
                 }
             });
         }
@@ -171,11 +176,45 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                     Toast.makeText(context, "Essa categoria está associada a algum produto. Não é possível exclui-la.", Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+    }
+
+    public void editarCateogoria(Categoria categoria){
+        abrirDialogEditar(categoria);
+    }
+
+    public void abrirDialogEditar(final Categoria categoria){
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
+        materialAlertDialogBuilder.setTitle("Confirmar");
+        materialAlertDialogBuilder.setMessage("Deseja realmente editar esta categoria?");
+
+        materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                abrirEditarCategoria(categoria);
+            }
+        });
+
+        materialAlertDialogBuilder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        materialAlertDialogBuilder.create();
+        materialAlertDialogBuilder.show();
+    }
+
+    public void abrirEditarCategoria(Categoria categoria){
+        Intent intent = new Intent(context, EditarCategoriaActivity.class);
+        Bundle bd = new Bundle();
+        bd.putParcelable("categoriaObj", categoria);
+        intent.putExtras(bd);
+        context.startActivity(intent);
     }
 }

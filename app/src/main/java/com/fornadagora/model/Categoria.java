@@ -68,6 +68,10 @@ public class Categoria implements Parcelable {
         });
     }
 
+    public void atualizarDados(Categoria categoria, DatabaseReference referenciaCategoria){
+        referenciaCategoria.child("nome").setValue(categoria.getNome());
+    }
+
     @Override
     public int describeContents() {
         return 0;

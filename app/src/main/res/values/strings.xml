@@ -33,6 +33,7 @@
     <string name="ver_alertas">Alertas salvos</string>
     <string name="editar_dados">Editar dados</string>
     <string name="editar_alerta">Editar alerta</string>
+    <string name="editar_categoria">Editar categoria</string>
     <string name="editar_dados_funcionario">Editar dados funcionário</string>
     <string name="sair">Sair</string>
     <string name="nomedousuario">Informe seu nome</string>
