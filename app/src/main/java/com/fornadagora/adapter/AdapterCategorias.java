@@ -100,7 +100,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                             categoriaSelecionada = listaCategorias.get(posicao);
                         }
                     }
-                    editarCateogoria(categoriaSelecionada);
+                    editarCategoria(categoriaSelecionada);
                 }
             });
         }
@@ -182,7 +182,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
         });
     }
 
-    public void editarCateogoria(Categoria categoria){
+    public void editarCategoria(Categoria categoria){
         abrirDialogEditar(categoria);
     }
 

@@ -1,16 +1,27 @@
 package com.fornadagora.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -21,6 +32,10 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
     private Context context;
 
     private TextView nomeProduto;
+
+    private int posicao;
+
+    private Produto produtoSelecionado;
 
     public AdapterProdutos(List<Produto> listaProduto) {
         this.listaProdutos = listaProduto;
@@ -46,9 +61,84 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageViewExcluir;
+        ImageView imageViewEditar;
+
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             nomeProduto = itemView.findViewById(R.id.textViewNomeProdutoAdp);
+            imageViewExcluir = itemView.findViewById(R.id.imageViewExcluirProduto);
+            imageViewEditar = itemView.findViewById(R.id.imageViewEditarProduto);
+
+            imageViewExcluir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posicao = getAdapterPosition();
+                    if (posicao != RecyclerView.NO_POSITION) {
+                        if (!listaProdutos.isEmpty()) {
+                            produtoSelecionado = listaProdutos.get(posicao);
+                        }
+                    }
+                    abrirDialogExcluir();
+                }
+            });
+
+            imageViewEditar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int posicao = getAdapterPosition();
+                    if (posicao != RecyclerView.NO_POSITION) {
+                        if (!listaProdutos.isEmpty()) {
+                            produtoSelecionado = listaProdutos.get(posicao);
+                        }
+                    }
+                }
+            });
         }
+    }
+
+    public void abrirDialogExcluir() {
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
+        materialAlertDialogBuilder.setTitle("Confirmar");
+        materialAlertDialogBuilder.setMessage("Deseja realmente excluir este produto?");
+
+        materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                excluirProduto();
+            }
+        });
+
+        materialAlertDialogBuilder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        materialAlertDialogBuilder.create();
+        materialAlertDialogBuilder.show();
+    }
+
+    public void excluirProduto(){
+        final Query queryProduto = ConfiguracaoFirebase.getFirebase().child("produtos").child(produtoSelecionado.getId());
+        queryProduto.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    queryProduto.getRef().removeValue();
+                    listaProdutos.remove(posicao);
+                    notifyItemRemoved(posicao);
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Produto excluído com sucesso", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
