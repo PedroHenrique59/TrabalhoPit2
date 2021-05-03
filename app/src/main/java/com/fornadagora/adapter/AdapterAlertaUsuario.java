@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fornadagora.R;
 import com.fornadagora.activity.EditarAlertaUsuarioActivity;
 import com.fornadagora.activity.NaoExisteAlertaActivity;
-import com.fornadagora.activity.VerAlertaUsuarioActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Alerta;
 import com.fornadagora.vo.AlertaVO;
@@ -89,7 +88,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
             nomeAlerta = itemView.findViewById(R.id.textViewNomeAlerta);
             nomePadaria = itemView.findViewById(R.id.textViewNomePadaria);
-            nomeProduto = itemView.findViewById(R.id.textViewNomeProduto);
+            nomeProduto = itemView.findViewById(R.id.textViewNomeProdutoAdp);
             imageViewExcluir = itemView.findViewById(R.id.imageViewExcluir);
             imageViewEditar = itemView.findViewById(R.id.imageViewEditar);
 

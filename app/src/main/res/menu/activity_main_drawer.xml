@@ -39,7 +39,11 @@
         <item
             android:id="@+id/nav_gerenciar_categorias"
             android:icon="@drawable/ic_editar"
-            android:title="@string/ver_categorias" />
+            android:title="@string/gerenciarcategorias" />
+        <item
+            android:id="@+id/nav_gerenciar_produtos"
+            android:icon="@drawable/ic_editar"
+            android:title="@string/gerenciarprodutos" />
         <item
             android:id="@+id/nav_excluir_conta"
             android:icon="@drawable/ic_excluir"

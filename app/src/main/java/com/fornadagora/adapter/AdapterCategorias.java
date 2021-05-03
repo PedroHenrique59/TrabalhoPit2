@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
-import com.fornadagora.activity.EditarAlertaUsuarioActivity;
 import com.fornadagora.activity.EditarCategoriaActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Categoria;
@@ -75,7 +74,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
-            nomeCategoria = itemView.findViewById(R.id.textViewNomeCategoria);
+            nomeCategoria = itemView.findViewById(R.id.textViewNomeProduto);
             imageViewExcluir = itemView.findViewById(R.id.imageViewExcluirCategoria);
             imageViewEditar = itemView.findViewById(R.id.imageViewEditarCategoria);
 
