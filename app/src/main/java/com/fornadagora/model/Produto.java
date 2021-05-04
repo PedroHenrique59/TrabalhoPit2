@@ -10,9 +10,13 @@ import com.fornadagora.activity.CadastrarProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.vo.CategoriaVO;
 import com.fornadagora.vo.PadariaVO;
+import com.google.android.gms.maps.internal.IProjectionDelegate;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Produto implements Parcelable {
 
@@ -45,6 +49,7 @@ public class Produto implements Parcelable {
         id = in.readString();
         nome = in.readString();
         categoria = in.readParcelable(Categoria.class.getClassLoader());
+        categoriaVO = in.readParcelable(CategoriaVO.class.getClassLoader());
     }
 
     public static final Creator<Produto> CREATOR = new Creator<Produto>() {
@@ -110,6 +115,7 @@ public class Produto implements Parcelable {
         dest.writeString(id);
         dest.writeString(nome);
         dest.writeParcelable(categoria, flags);
+        dest.writeParcelable(categoriaVO, flags);
     }
 
     public void salvar(){
@@ -121,5 +127,10 @@ public class Produto implements Parcelable {
                 CadastrarProdutoActivity.buscarProdutoESalvarNaPadaria(ref.getKey());
             }
         });
+    }
+
+    public void atualizarDados(Produto produto, DatabaseReference referenciaProduto){
+        referenciaProduto.child("nome").setValue(produto.getNome());
+        referenciaProduto.child("categoriaVO").setValue(produto.getCategoriaVO());
     }
 }

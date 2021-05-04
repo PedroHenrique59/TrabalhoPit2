@@ -8,14 +8,14 @@ import android.view.View;
 
 import com.fornadagora.R;
 
-public class NaoExisteAlertaActivity extends AppCompatActivity {
+public class NaoExisteProdutoActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nao_existe_alerta);
+        setContentView(R.layout.activity_nao_existe_produto);
         inicializarComponentes();
         configurarToolbar();
     }

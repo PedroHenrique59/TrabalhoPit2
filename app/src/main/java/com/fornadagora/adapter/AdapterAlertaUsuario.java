@@ -88,7 +88,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
             nomeAlerta = itemView.findViewById(R.id.textViewNomeAlerta);
             nomePadaria = itemView.findViewById(R.id.textViewNomePadaria);
-            nomeProduto = itemView.findViewById(R.id.textViewNomeProdutoAdp);
+            nomeProduto = itemView.findViewById(R.id.textViewNomeProduto);
             imageViewExcluir = itemView.findViewById(R.id.imageViewExcluir);
             imageViewEditar = itemView.findViewById(R.id.imageViewEditar);
 

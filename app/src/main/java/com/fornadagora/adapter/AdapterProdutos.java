@@ -1,7 +1,10 @@
 package com.fornadagora.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.activity.EditarCategoriaActivity;
+import com.fornadagora.activity.EditarProdutoActivity;
+import com.fornadagora.activity.NaoExisteAlertaActivity;
+import com.fornadagora.activity.NaoExisteProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
@@ -93,9 +100,41 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                             produtoSelecionado = listaProdutos.get(posicao);
                         }
                     }
+                    abrirDialogEditar();
                 }
             });
         }
+    }
+
+    public void abrirDialogEditar(){
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
+        materialAlertDialogBuilder.setTitle("Confirmar");
+        materialAlertDialogBuilder.setMessage("Deseja realmente editar este produto?");
+
+        materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                abrirEditarProduto();
+            }
+        });
+
+        materialAlertDialogBuilder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        materialAlertDialogBuilder.create();
+        materialAlertDialogBuilder.show();
+    }
+
+    public void abrirEditarProduto(){
+        Intent intent = new Intent(context, EditarProdutoActivity.class);
+        Bundle bd = new Bundle();
+        bd.putParcelable("produtoObj", produtoSelecionado);
+        intent.putExtras(bd);
+        context.startActivity(intent);
     }
 
     public void abrirDialogExcluir() {
@@ -132,6 +171,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                     notifyItemRemoved(posicao);
                     notifyDataSetChanged();
                     Toast.makeText(context, "Produto excluído com sucesso", Toast.LENGTH_SHORT).show();
+                    validarUltimoProduto(listaProdutos);
                 }
             }
 
@@ -140,5 +180,17 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
 
             }
         });
+    }
+
+    public void validarUltimoProduto(List<Produto> listaProdutos){
+        if(listaProdutos.isEmpty()){
+            abrirTelaNaoExisteProduto();
+        }
+    }
+
+    public void abrirTelaNaoExisteProduto(){
+        Intent i = new Intent(context, NaoExisteProdutoActivity.class);
+        context.startActivity(i);
+        ((Activity)context).finish();
     }
 }

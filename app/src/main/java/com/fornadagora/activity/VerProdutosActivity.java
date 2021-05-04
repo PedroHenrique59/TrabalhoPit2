@@ -1,5 +1,7 @@
 package com.fornadagora.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
@@ -10,14 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
-import com.fornadagora.adapter.AdapterCategorias;
 import com.fornadagora.adapter.AdapterProdutos;
 import com.fornadagora.helper.ConfiguracaoFirebase;
-import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
-import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.ProdutoVO;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,9 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VerProdutosActivity extends AppCompatActivity {
 
@@ -119,7 +116,13 @@ public class VerProdutosActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        configuraRecyclerView();
+                        if(!listaProdutosCarregados.isEmpty()){
+                            configuraRecyclerView();
+                        }else{
+                            abrirTelaNaoExisteProduto();
+                        }
+                    }else{
+                        abrirTelaNaoExisteProduto();
                     }
                 }
 
@@ -128,6 +131,8 @@ public class VerProdutosActivity extends AppCompatActivity {
 
                 }
             });
+        }else{
+            abrirTelaNaoExisteProduto();
         }
     }
 
@@ -138,5 +143,11 @@ public class VerProdutosActivity extends AppCompatActivity {
         recyclerViewProduto.setHasFixedSize(true);
         recyclerViewProduto.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerViewProduto.setAdapter(adapter);
+    }
+
+    public void abrirTelaNaoExisteProduto(){
+        Intent i = new Intent(this, NaoExisteProdutoActivity.class);
+        startActivity(i);
+        finish();
     }
 }

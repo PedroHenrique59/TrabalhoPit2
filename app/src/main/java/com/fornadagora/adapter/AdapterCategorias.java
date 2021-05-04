@@ -74,7 +74,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
-            nomeCategoria = itemView.findViewById(R.id.textViewNomeProduto);
+            nomeCategoria = itemView.findViewById(R.id.textViewNomeCategoria);
             imageViewExcluir = itemView.findViewById(R.id.imageViewExcluirCategoria);
             imageViewEditar = itemView.findViewById(R.id.imageViewEditarCategoria);
 
