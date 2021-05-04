@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.NaoExisteProdutoActivity"></activity>
+        <activity android:name=".activity.NaoExisteCategoriaActivity"></activity>
+        <activity android:name=".activity.NaoExisteProdutoActivity" />
         <activity android:name=".activity.EditarProdutoActivity" />
         <activity android:name=".activity.VerProdutosActivity" />
         <activity android:name=".activity.EditarCategoriaActivity" />

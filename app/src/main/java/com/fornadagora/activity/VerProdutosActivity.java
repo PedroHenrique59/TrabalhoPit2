@@ -32,10 +32,6 @@ public class VerProdutosActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewProduto;
 
-    private DatabaseReference referenciaProduto;
-    private DatabaseReference referenciaFuncionario;
-    private DatabaseReference referenciaPadaria;
-
     private FirebaseAuth autenticacao;
 
     private List<Produto> listaProdutos = new ArrayList<>();
@@ -56,7 +52,6 @@ public class VerProdutosActivity extends AppCompatActivity {
 
     public void inicializarComponentes() {
         recyclerViewProduto = findViewById(R.id.recyclerViewProdutos);
-        referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     }
 
@@ -83,8 +78,8 @@ public class VerProdutosActivity extends AppCompatActivity {
 
     public void buscarPadariaFuncionario() {
         if (funcionarioRecuperado != null) {
-            referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias").child(funcionarioRecuperado.getPadariaVO().getIdentificador());
-            referenciaPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
+            Query queryPadaria = ConfiguracaoFirebase.getFirebase().child("padarias").child(funcionarioRecuperado.getPadariaVO().getIdentificador());
+            queryPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
@@ -103,7 +98,8 @@ public class VerProdutosActivity extends AppCompatActivity {
 
     public void carregarProdutos() {
         if (!padariaRecuperada.getListaProdutosVO().isEmpty()) {
-            referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
+            Query queryProdutos = ConfiguracaoFirebase.getFirebase().child("produtos");
+            queryProdutos.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
@@ -116,12 +112,8 @@ public class VerProdutosActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        if(!listaProdutosCarregados.isEmpty()){
-                            configuraRecyclerView();
-                        }else{
-                            abrirTelaNaoExisteProduto();
-                        }
-                    }else{
+                        configuraRecyclerView();
+                    } else {
                         abrirTelaNaoExisteProduto();
                     }
                 }
@@ -131,7 +123,7 @@ public class VerProdutosActivity extends AppCompatActivity {
 
                 }
             });
-        }else{
+        } else {
             abrirTelaNaoExisteProduto();
         }
     }
@@ -145,7 +137,7 @@ public class VerProdutosActivity extends AppCompatActivity {
         recyclerViewProduto.setAdapter(adapter);
     }
 
-    public void abrirTelaNaoExisteProduto(){
+    public void abrirTelaNaoExisteProduto() {
         Intent i = new Intent(this, NaoExisteProdutoActivity.class);
         startActivity(i);
         finish();

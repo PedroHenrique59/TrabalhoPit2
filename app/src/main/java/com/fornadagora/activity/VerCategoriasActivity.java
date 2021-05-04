@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
@@ -55,6 +56,8 @@ public class VerCategoriasActivity extends AppCompatActivity {
                         listaCategorias.add(categoria);
                     }
                     configuraRecyclerView();
+                }else{
+                    abrirTelaNaoExisteCategoria();
                 }
             }
 
@@ -72,5 +75,11 @@ public class VerCategoriasActivity extends AppCompatActivity {
         recyclerViewCategoria.setHasFixedSize(true);
         recyclerViewCategoria.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         recyclerViewCategoria.setAdapter(adapter);
+    }
+
+    public void abrirTelaNaoExisteCategoria(){
+        Intent i = new Intent(this, NaoExisteCategoriaActivity.class);
+        startActivity(i);
+        finish();
     }
 }

@@ -58,6 +58,7 @@
     <string name="escolhaumacategoria">Escolha uma categoria:</string>
     <string name="nenhumalerta">Nenhum alerta cadastrado :(</string>
     <string name="nenhumproduto">Nenhum produto salvo :(</string>
+    <string name="nenhumacategoria">Nenhuma categoria salva :(</string>
     <string name="naopossuiconta">Não possui uma conta? Cadastre-se</string>
     <string name="todo">A definir</string>
     <string name="gerenciarcategorias">Gerenciar categorias</string>
