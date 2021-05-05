@@ -64,7 +64,7 @@
     <string name="gerenciarcategorias">Gerenciar categorias</string>
     <string name="nomecategoria">Nome da categoria</string>
     <string name="ver_produtos">Ver produtos</string>
-    <string name="gerenciarprodutos">Gerencias produtos</string>
+    <string name="gerenciarprodutos">Gerenciar produtos</string>
 
     <string name="title_activity_menu_lateral">MenuLateralActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

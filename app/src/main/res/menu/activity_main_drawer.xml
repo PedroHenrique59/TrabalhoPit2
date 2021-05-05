@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados" />
         <item
+            android:id="@+id/nav_adicionar_padaria"
+            android:icon="@drawable/ic_padaria_loja_24"
+            android:title="@string/adicionarpadaria" />
+        <item
             android:id="@+id/nav_cadastrar_fun"
             android:icon="@drawable/ic_add_funcionario_24dp"
             android:title="@string/cadastrarfuncionario" />
@@ -24,10 +28,6 @@
             android:id="@+id/nav_edit_adm_dados_fun"
             android:icon="@drawable/ic_editar_dados"
             android:title="@string/editar_dados_funcionario" />
-        <item
-            android:id="@+id/nav_adicionar_padaria"
-            android:icon="@drawable/ic_padaria_loja_24"
-            android:title="@string/adicionarpadaria" />
         <item
             android:id="@+id/nav_cadastrar_categoria"
             android:icon="@drawable/ic_categoria_24"

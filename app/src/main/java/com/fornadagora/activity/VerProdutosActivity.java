@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
 import com.fornadagora.vo.ProdutoVO;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class VerProdutosActivity extends AppCompatActivity {
@@ -106,6 +109,7 @@ public class VerProdutosActivity extends AppCompatActivity {
                         listaProdutosCarregados.clear();
                         for (DataSnapshot snapProduto : snapshot.getChildren()) {
                             Produto produtoBanco = snapProduto.getValue(Produto.class);
+                            padariaRecuperada.getListaProdutosVO().removeAll(Collections.singleton(null));
                             for (ProdutoVO produtoVO : padariaRecuperada.getListaProdutosVO()) {
                                 if (produtoBanco.getId().equalsIgnoreCase(produtoVO.getIdProduto())) {
                                     listaProdutosCarregados.add(produtoBanco);
@@ -129,7 +133,7 @@ public class VerProdutosActivity extends AppCompatActivity {
     }
 
     public void configuraRecyclerView() {
-        adapter = new AdapterProdutos(listaProdutosCarregados);
+        adapter = new AdapterProdutos(listaProdutosCarregados, padariaRecuperada);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewProduto.setLayoutManager(layoutManager);
         recyclerViewProduto.setHasFixedSize(true);
