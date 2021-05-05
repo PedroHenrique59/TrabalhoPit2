@@ -139,7 +139,6 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                 snapCategoria.getRef().removeValue();
                 listaCategorias.remove(posicao);
                 notifyItemRemoved(posicao);
-                notifyDataSetChanged();
                 Toast.makeText(context, "Categoria excluída com sucesso", Toast.LENGTH_SHORT).show();
             }
         });
@@ -156,6 +155,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
     }
 
     public void validarCategoriaVinculaProduto(final Categoria categoria) {
+        podeExcluir = true;
         referenciaProduto = ConfiguracaoFirebase.getFirebase().child("produtos");
         referenciaProduto.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
