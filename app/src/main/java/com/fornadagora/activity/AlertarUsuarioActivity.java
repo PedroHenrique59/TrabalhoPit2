@@ -33,6 +33,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -399,6 +400,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                         if (padariaBanco.getNome().equalsIgnoreCase(nomePadaria)) {
                             listaProdutoVO = new ArrayList<>();
                             listaProdutoVO.addAll(padariaBanco.getListaProdutosVO());
+                            listaProdutoVO.removeAll(Collections.singleton(null));
                             listaIdsCategoria.clear();
                             for (ProdutoVO produtoVO : listaProdutoVO) {
                                 ehMesmoIdCategoria = false;
