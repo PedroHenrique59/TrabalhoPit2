@@ -1,5 +1,6 @@
 package com.fornadagora.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
 import com.fornadagora.activity.MenuLateralActivity;
+import com.fornadagora.activity.NaoExisteProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Funcionario;
@@ -44,9 +46,12 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
     private String emailFun;
 
     private ArrayAdapter arrayAdapterPadaria;
+    private ArrayAdapter arrayAdapterPadariaFuncionario;
 
     private List<String> listaNomePadaria = new ArrayList<>();
     private List<Padaria> listaPadarias = new ArrayList<>();
+
+    private List<String> listaNomePadariaFuncionario = new ArrayList<>();
 
     private AutoCompleteTextView autoComletePadariaFunEdit;
     private Toolbar toolbar;
@@ -152,7 +157,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                     if (emailAlterado) {
                         user = FirebaseAuth.getInstance().getCurrentUser();
                         reautenticarFuncionario(funcionario);
-                    }else{
+                    } else {
                         atualizarDados();
                     }
                 }
@@ -162,11 +167,11 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
 
     public void inicializarComponentes() {
         arrayAdapterPadaria = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
+        arrayAdapterPadariaFuncionario = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, listaNomePadariaFuncionario);
         referenciaAdm = ConfiguracaoFirebase.getFirebase();
     }
 
     public void carregarListaPadarias() {
-
         referenciaPadarias = ConfiguracaoFirebase.getFirebase().child("padarias");
         referenciaPadarias.addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,13 +179,17 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                 if (snapshot.exists()) {
                     for (DataSnapshot snapShotPadaria : snapshot.getChildren()) {
                         Padaria padaria = snapShotPadaria.getValue(Padaria.class);
+                        if(padaria.getIdentificador().equalsIgnoreCase(funcionario.getPadariaVO().getIdentificador())){
+                            listaNomePadariaFuncionario.add(padaria.getNome());
+                        }
                         listaPadarias.add(padaria);
                         listaNomePadaria.add(padaria.getNome());
                     }
                     if (ehAdm) {
                         autoComletePadariaFunEdit.setAdapter(arrayAdapterPadaria);
                     } else {
-                        autoComletePadariaFunEdit.setAdapter(null);
+                        autoComletePadariaFunEdit.setAdapter(arrayAdapterPadariaFuncionario);
+                        autoComletePadariaFunEdit.setText(listaNomePadariaFuncionario.get(0));
                     }
                 }
             }
@@ -259,13 +268,8 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirMenuLateral();
+                ((Activity) context).finish();
             }
         });
-    }
-
-    public void abrirMenuLateral() {
-        Intent intent = new Intent(context, MenuLateralActivity.class);
-        context.startActivity(intent);
     }
 }
