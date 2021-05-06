@@ -152,8 +152,9 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                     if (emailAlterado) {
                         user = FirebaseAuth.getInstance().getCurrentUser();
                         reautenticarFuncionario(funcionario);
+                    }else{
+                        atualizarDados();
                     }
-                    atualizarDados();
                 }
             }
         }
