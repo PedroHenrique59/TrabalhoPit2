@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Categoria;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,7 @@ public class EditarCategoriaActivity extends AppCompatActivity {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Teclado.fecharTeclado(v);
                 validarAntesSalvar();
             }
         });
@@ -100,6 +102,7 @@ public class EditarCategoriaActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     categoria.atualizarDados(categoria, referenciaCategoria);
+                    Toast.makeText(context, "Categoria atualizada com sucesso!",Toast.LENGTH_LONG).show();
                 }
             }
 
