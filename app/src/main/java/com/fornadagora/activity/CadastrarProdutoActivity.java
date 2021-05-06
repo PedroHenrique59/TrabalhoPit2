@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -129,7 +130,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirMenuLateral();
+                ((Activity) context).finish();
             }
         });
     }
@@ -189,12 +190,6 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void abrirMenuLateral() {
-        Intent intent = new Intent(this, MenuLateralActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void carregarCategorias() {
@@ -287,7 +282,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
         return categoriaProduto;
     }
 
-    public static Padaria buscarPadaria(String nome){
+    public static Padaria buscarPadaria(String nome) {
         if (!listaPadariasStatica.isEmpty()) {
             for (Padaria pad : listaPadariasStatica) {
                 if (pad.getNome().equalsIgnoreCase(nome)) {
@@ -410,12 +405,12 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
         editTextNome.requestFocus();
     }
 
-    public void limparListasStaticas(){
+    public void limparListasStaticas() {
         listaPadariasStatica.clear();
         listaCategoriaStatica.clear();
     }
 
-    public static void limparListas(){
+    public static void limparListas() {
         listaProdutosVO.clear();
     }
 }

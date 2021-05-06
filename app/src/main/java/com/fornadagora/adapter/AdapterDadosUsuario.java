@@ -1,5 +1,6 @@
 package com.fornadagora.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -171,14 +172,9 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirMenuLateral();
+                ((Activity) context).finish();
             }
         });
-    }
-
-    public void abrirMenuLateral(){
-        Intent intent = new Intent(context, MenuLateralActivity.class);
-        context.startActivity(intent);
     }
 }
 

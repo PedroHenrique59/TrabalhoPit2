@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -224,15 +225,9 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirMenuLateral();
+                ((Activity) context).finish();
             }
         });
-    }
-
-    public void abrirMenuLateral() {
-        Intent intent = new Intent(this, MenuLateralActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void buscarPadariaEscolhida(String nomePadaria){

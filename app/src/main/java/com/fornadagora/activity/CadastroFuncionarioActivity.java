@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -244,15 +245,12 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirMenuLateral();
+                finish();
             }
         });
     }
 
     public void abrirMenuLateral() {
-        Intent intent = new Intent(this, MenuLateralActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void validarPadaria(String nomePadaria) {
