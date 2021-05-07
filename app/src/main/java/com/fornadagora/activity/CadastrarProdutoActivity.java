@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CadastrarProdutoActivity extends AppCompatActivity {
@@ -346,12 +347,13 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                                 for (Padaria padaria : listaPadariasStatica) {
                                     if (padaria.getListaProdutosVO().isEmpty()) {
                                         padaria.getListaProdutosVO().addAll(listaProdutosVO);
+                                        padaria.getListaProdutosVO().removeAll(Collections.singleton(null));
                                         referenciaPadariaStatica.child(padaria.getIdentificador()).setValue(padaria);
                                         listaPadariasStatica.clear();
                                         listaPadariasStatica.add(padaria);
                                         Toast.makeText(contextStatic, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
-                                        //limparCampos();
                                     } else {
+                                        padaria.getListaProdutosVO().removeAll(Collections.singleton(null));
                                         for (ProdutoVO produtoListaVO : padaria.getListaProdutosVO()) {
                                             if (produtoListaVO.getIdProduto().equalsIgnoreCase(produtoVO.getIdProduto())) {
                                                 Toast.makeText(contextStatic, "Esse produto já foi adicionado a essa padaria!", Toast.LENGTH_LONG).show();
@@ -365,7 +367,6 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                                             listaPadariasStatica.clear();
                                             listaPadariasStatica.add(padaria);
                                             Toast.makeText(contextStatic, "Produto salvo com sucesso!", Toast.LENGTH_LONG).show();
-                                            //limparCampos();
                                         }
                                     }
                                 }
@@ -401,7 +402,6 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
 
     public void limparCampos() {
         editTextNome.setText("");
-        autoCompleteCategoria.setText("");
         editTextNome.requestFocus();
     }
 
