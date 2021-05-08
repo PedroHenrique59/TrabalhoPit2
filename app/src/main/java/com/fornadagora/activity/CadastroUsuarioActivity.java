@@ -108,6 +108,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             usuario.setIdUsuario(idUsuario);
                             usuario.salvar();
 
+                            autenticacao.getCurrentUser().sendEmailVerification();
+
                             startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
                             Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show();
                             finish();

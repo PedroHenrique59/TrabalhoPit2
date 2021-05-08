@@ -144,11 +144,11 @@ public class MenuLateralActivity extends AppCompatActivity {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarCategoriaActivity.class);
                     startActivity(i);
                 }
-                if (item.getItemId() == R.id. nav_gerenciar_categorias) {
+                if (item.getItemId() == R.id.nav_gerenciar_categorias) {
                     Intent i = new Intent(MenuLateralActivity.this, VerCategoriasActivity.class);
                     startActivity(i);
                 }
-                if (item.getItemId() == R.id. nav_gerenciar_produtos) {
+                if (item.getItemId() == R.id.nav_gerenciar_produtos) {
                     Intent i = new Intent(MenuLateralActivity.this, VerProdutosActivity.class);
                     startActivity(i);
                 }
@@ -441,9 +441,9 @@ public class MenuLateralActivity extends AppCompatActivity {
         materialAlertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(usuario != null){
+                if (usuario != null) {
                     excluirAlertasAssociados(dataSnap);
-                }else{
+                } else {
                     excluirFuncionario(dataSnap);
                 }
             }
@@ -483,9 +483,9 @@ public class MenuLateralActivity extends AppCompatActivity {
                             List<AlertaVO> listaAlertaVO = new ArrayList<>();
                             listaAlertaVO.addAll(usuario.getListaAlertaVO());
                             exlcuirAlertasUsuario(listaAlertaVO, snapUsuario);
-                        } else {
-                            excluirUsuario(snapUsuario);
                         }
+                    } else {
+                        excluirUsuario(snapUsuario);
                     }
                 }
             }
