@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         verificarUsuarioLogado();
     }
 
-    public void configurarTelaParaLogin(){
+    public void configurarTelaParaLogin() {
         setContentView(R.layout.activity_main);
         inicializarComponentes();
         progressBar.setVisibility(View.GONE);
@@ -110,43 +110,46 @@ public class MainActivity extends AppCompatActivity {
     public void verificarUsuarioLogado() {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         if (autenticacao.getCurrentUser() != null) {
-            String id = autenticacao.getCurrentUser().getUid();
+            if (autenticacao.getCurrentUser().isEmailVerified()) {
+                String id = autenticacao.getCurrentUser().getUid();
 
-            DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
-            DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
+                DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+                DatabaseReference usuarioRef = firebaseRef.child("usuarios").child(id);
 
-            final DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
-            usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    usuarioRecuperado = snapshot.getValue(Usuario.class);
-                    if (usuarioRecuperado != null) {
-                        validarPerfilUsuario(usuarioRecuperado);
+                final DatabaseReference funcionarioRef = firebaseRef.child("funcionarios").child(id);
+                usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        usuarioRecuperado = snapshot.getValue(Usuario.class);
+                        if (usuarioRecuperado != null) {
+                            validarPerfilUsuario(usuarioRecuperado);
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
-            funcionarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    funcionarioRecuperado = snapshot.getValue(Funcionario.class);
-                    if (funcionarioRecuperado != null) {
-                        validarPerfilFuncionario(funcionarioRecuperado);
                     }
-                }
+                });
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                funcionarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        funcionarioRecuperado = snapshot.getValue(Funcionario.class);
+                        if (funcionarioRecuperado != null) {
+                            validarPerfilFuncionario(funcionarioRecuperado);
+                        }
+                    }
 
-                }
-            });
-        }else{
-            
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            } else {
+                configurarTelaParaLogin();
+            }
+        } else {
             configurarTelaParaLogin();
         }
     }
@@ -155,14 +158,16 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        autenticacao.signInWithEmailAndPassword(
-                usuario.getEmail(), usuario.getSenha()
-        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        autenticacao.signInWithEmailAndPassword(usuario.getEmail(), usuario.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     progressBar.setVisibility(View.GONE);
-                    recuperarTipoDeUsuarioLogado();
+                    if (autenticacao.getCurrentUser().isEmailVerified()) {
+                        recuperarTipoDeUsuarioLogado();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Favor verificar seu endereço de e-mail para efetuar o login.", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "E-mail ou senha incorretos", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
@@ -216,12 +221,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean validarPerfilUsuario(Usuario usuario) {
         if (usuario.getTipoPerfil().equals("Administrador")) {
             ehAdministrador = true;
-            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
-            finish();
+            if (autenticacao.getCurrentUser().isEmailVerified()) {
+                startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
+                finish();
+            } else {
+                setContentView(R.layout.activity_main);
+                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
+            }
         } else {
             ehAdministrador = false;
-            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
-            finish();
+            if (autenticacao.getCurrentUser().isEmailVerified()) {
+                startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
+                finish();
+            } else {
+                setContentView(R.layout.activity_main);
+                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
+            }
         }
         return ehAdministrador;
     }

@@ -1,5 +1,6 @@
 package com.fornadagora.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -44,6 +45,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     private Usuario usuario;
 
+    private Context context;
+
     private FirebaseAuth autenticacao;
     private DatabaseReference usuarios;
 
@@ -84,6 +87,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressCadastro);
         toolbar = findViewById(R.id.toolbarPrincipal);
 
+        context = this;
         campoNome.requestFocus();
     }
 
@@ -108,11 +112,13 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             usuario.setIdUsuario(idUsuario);
                             usuario.salvar();
 
-                            autenticacao.getCurrentUser().sendEmailVerification();
-
-                            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
-                            Toast.makeText(CadastroUsuarioActivity.this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show();
-                            finish();
+                            autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(context, "Cadastro realizado com sucesso. Um e-mail com instruções para verificar o seu endereço de e-mail foi enviado.", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            });
                         } else {
                             progressBar.setVisibility(View.GONE);
 
