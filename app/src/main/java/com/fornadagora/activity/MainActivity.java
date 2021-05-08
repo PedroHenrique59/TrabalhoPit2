@@ -243,7 +243,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void validarPerfilFuncionario(Funcionario funcionario) {
         if (funcionario.getTipoPerfil().equals("Funcionario")) {
-            abriMenuLateralFuncionario(funcionario);
+            if (autenticacao.getCurrentUser().isEmailVerified()) {
+                abriMenuLateralFuncionario(funcionario);
+            } else {
+                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

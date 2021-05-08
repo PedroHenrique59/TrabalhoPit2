@@ -1,6 +1,7 @@
 package com.fornadagora.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -25,6 +26,7 @@ import com.fornadagora.model.Usuario;
 import com.fornadagora.vo.PadariaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,6 +81,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
     private boolean padariaValida = false;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +119,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         autoComplete = findViewById(R.id.autoComletePadariaFun);
         arrayAdapterPadaria = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listaNomePadaria);
+
+        context = this;
     }
 
     public void salvarFuncionario(final Funcionario funcionario) {
@@ -132,12 +138,20 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressBar.setVisibility(View.GONE);
+
                             String idFuncionario = autenticacao.getCurrentUser().getUid();
                             funcionario.setIdFuncionario(idFuncionario);
                             funcionario.salvar();
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-                            limparCampos();
-                            logarAdm();
+
+                            Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+
+                            autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    limparCampos();
+                                    logarAdm();
+                                }
+                            });
                         } else {
                             progressBar.setVisibility(View.GONE);
                             String erroExcecao = "";
@@ -248,9 +262,6 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    public void abrirMenuLateral() {
     }
 
     public void validarPadaria(String nomePadaria) {
