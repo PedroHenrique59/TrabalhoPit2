@@ -23,9 +23,11 @@ import com.fornadagora.activity.EditarProdutoActivity;
 import com.fornadagora.activity.NaoExisteAlertaActivity;
 import com.fornadagora.activity.NaoExisteProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.model.Alerta;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Produto;
+import com.fornadagora.model.Usuario;
 import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.PadariaVO;
 import com.fornadagora.vo.ProdutoVO;
@@ -54,6 +56,12 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
     private Produto produtoSelecionado;
 
     private Padaria padariaFuncionario;
+
+    private ArrayList<Alerta> listaAlertaProdutoSelecionado = new ArrayList<>();
+
+    private ArrayList<AlertaVO> listaAlertaVOUsuarios = new ArrayList<>();
+
+    private ArrayList<String> listaEmailsUsuarios = new ArrayList<>();
 
     public AdapterProdutos(List<Produto> listaProduto, Padaria padaria) {
         this.listaProdutos = listaProduto;
@@ -228,6 +236,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                             ProdutoVO produtoVO = produtoSnapshot.getValue(ProdutoVO.class);
                             if (produtoVO.getIdProduto().equalsIgnoreCase(produtoSelecionado.getId())) {
                                 produtoSnapshot.getRef().removeValue();
+                                buscarAlertasBanco();
                             }
                         }
                     }
@@ -239,5 +248,86 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
 
             }
         });
+    }
+
+    public void buscarAlertasBanco() {
+        DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    listaAlertaProdutoSelecionado.clear();
+                    for (DataSnapshot snapPadaria : snapshot.getChildren()) {
+                        String idPadaria = snapPadaria.child("idPadaria").getValue(String.class);
+                        String idProduto = snapPadaria.child("idProduto").getValue(String.class);
+                        if (idPadaria.equalsIgnoreCase(produtoSelecionado.getPadariaVO().getIdentificador())) {
+                            if (idProduto.equalsIgnoreCase(produtoSelecionado.getId())) {
+                                Alerta alerta = snapPadaria.getValue(Alerta.class);
+                                listaAlertaProdutoSelecionado.add(alerta);
+                            }
+                        }
+                    }
+                    buscarAlertasDosUsuarios();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void buscarAlertasDosUsuarios() {
+        DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
+        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    listaEmailsUsuarios.clear();
+                    for (DataSnapshot snapId : snapshot.getChildren()) {
+                        if (snapId.child("listaAlertasVO").exists()) {
+                            listaAlertaVOUsuarios.clear();
+                            Map<String, AlertaVO> td = new HashMap<String, AlertaVO>();
+                            for (DataSnapshot alertaSnapshot : snapId.child("listaAlertasVO").getChildren()) {
+                                AlertaVO alertaVO = alertaSnapshot.getValue(AlertaVO.class);
+                                td.put(alertaSnapshot.getKey(), alertaVO);
+                            }
+                            listaAlertaVOUsuarios.addAll(td.values());
+                            for (AlertaVO alertaVO : listaAlertaVOUsuarios) {
+                                for (Alerta alerta : listaAlertaProdutoSelecionado) {
+                                    if (alerta.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())) {
+                                        if (snapId.child("email").exists()) {
+                                            String email = snapId.child("email").getValue(String.class);
+                                            listaEmailsUsuarios.add(email);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    abrirIntentEmail();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void abrirIntentEmail() {
+        String[] arrayEmails = listaEmailsUsuarios.toArray(new String[0]);
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, arrayEmails);
+        i.putExtra(Intent.EXTRA_SUBJECT, "Fornadagora - Comunicado de produto");
+        i.putExtra(Intent.EXTRA_TEXT, "Caro usuário(a), o produto: " + produtoSelecionado.getNome() + " não será mais comercializado na padaria: " + padariaFuncionario.getNome());
+        try {
+            context.startActivity(Intent.createChooser(i, "Enviar e-mail"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
