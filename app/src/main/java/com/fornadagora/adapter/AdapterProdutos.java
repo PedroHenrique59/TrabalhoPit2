@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.PointerIcon;
 import android.view.View;
@@ -303,6 +304,59 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                    excluirAlertasUsuarios();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void excluirAlertasUsuarios() {
+        DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
+        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapId : snapshot.getChildren()) {
+                        if (snapId.child("listaAlertasVO").exists()) {
+                            for (DataSnapshot alertaSnapshot : snapId.child("listaAlertasVO").getChildren()) {
+                                AlertaVO alertaVO1 = alertaSnapshot.getValue(AlertaVO.class);
+                                for (Alerta alerta1 : listaAlertaProdutoSelecionado) {
+                                    if (alertaVO1.getIdAlerta().equalsIgnoreCase(alerta1.getIdAlerta())) {
+                                        alertaSnapshot.getRef().removeValue();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    excluirAlertasBanco();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void excluirAlertasBanco(){
+        DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
+        referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
+                        for(Alerta alerta : listaAlertaProdutoSelecionado){
+                            if(snapAlerta.getKey().equalsIgnoreCase(alerta.getIdAlerta())){
+                                snapAlerta.getRef().removeValue();
                             }
                         }
                     }
