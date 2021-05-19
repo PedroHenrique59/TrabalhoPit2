@@ -64,6 +64,11 @@ public class MenuLateralActivity extends AppCompatActivity {
     private ImageView imagemDir1;
     private ImageView imagemDir2;
 
+    private TextView textViewImgEsq1;
+
+
+    private TextView textViewImgDir1;
+
     private FirebaseAuth autenticacao;
     private FirebaseUser user;
 
@@ -174,6 +179,10 @@ public class MenuLateralActivity extends AppCompatActivity {
 
         imagemDir1 = findViewById(R.id.imageViewDir1);
         imagemDir2 = findViewById(R.id.imageViewDir2);
+
+        textViewImgEsq1 = findViewById(R.id.textViewImgEsq1);
+
+        textViewImgDir1 = findViewById(R.id.textViewImgDir1);
     }
 
     @Override
@@ -576,13 +585,17 @@ public class MenuLateralActivity extends AppCompatActivity {
     public void configuraImagens() {
         if (usuario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
+            textViewImgEsq1.setText("Ver Padarias");
             imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_48dp);
+            textViewImgDir1.setText("Cadastrar Alerta");
             ehUsuario = true;
             configurarEventosClick();
         }
         if (funcionario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
+            textViewImgEsq1.setText("Ver Padarias");
             imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_48);
+            textViewImgDir1.setText("Enviar Alerta");
             ehFuncionario = true;
             configurarEventosClick();
         }
