@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,9 +15,12 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -52,9 +56,13 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
 
     private EditText campoPesquisa;
 
+    private ImageView imageViewBuscar;
+
     private FusedLocationProviderClient client;
 
     private SupportMapFragment supportMapFragment;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
         setContentView(R.layout.activity_ver_padarias_mapa);
 
         campoPesquisa = findViewById(R.id.editTextBuscar);
+        imageViewBuscar = findViewById(R.id.imageViewBuscar);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -101,6 +110,7 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
             }
         });
 
+        context = this;
         inicializar();
     }
 
@@ -138,14 +148,14 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
     }
 
     private void inicializar() {
-        campoPesquisa.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        imageViewBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN
-                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
+            public void onClick(View v) {
+                if(!campoPesquisa.getText().toString().isEmpty()){
                     pesquisarEndereco();
+                }else{
+                    Toast.makeText(context, "Nenhum endereço informado!", Toast.LENGTH_LONG).show();
                 }
-                return false;
             }
         });
     }
@@ -163,12 +173,11 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
         if (list.size() > 0) {
             Address address = list.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            markerOptions.position(latLng);
-            markerOptions.title("");
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.bakery_icone));
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomBy(12));
+            MarkerOptions options = new MarkerOptions().position(latLng).title("Local encontrado");
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+            mMap.addMarker(options);
+        }else{
+            Toast.makeText(context, "Endereço não encontrado!", Toast.LENGTH_LONG).show();
         }
     }
 

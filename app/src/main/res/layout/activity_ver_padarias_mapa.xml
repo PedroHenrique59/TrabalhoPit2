@@ -2,11 +2,11 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -23,25 +23,28 @@
         android:background="@drawable/borda_branca"
         android:id="@+id/relLayout1">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/imageViewLupa"
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            app:srcCompat="@drawable/ic_lupa_15"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/imageViewLupa"
-            android:layout_centerVertical="true"
+            android:inputType="text"
+            android:maxLines="1"
             android:textSize="15sp"
             android:textColor="@android:color/black"
             android:id="@+id/editTextBuscar"
             android:background="@null"
-            android:hint="Pesquise no Google Maps"
-            android:imeOptions="actionSearch"/>
+            android:hint="Pesquisar um endereço" />
+
+        <ImageView
+            android:id="@+id/imageViewBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@+id/editTextBuscar"
+            app:srcCompat="@drawable/ic_lupa_15" />
 
     </RelativeLayout>
 
