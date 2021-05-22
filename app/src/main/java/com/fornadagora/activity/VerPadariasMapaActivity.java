@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Padaria;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -151,6 +152,7 @@ public class VerPadariasMapaActivity extends AppCompatActivity implements OnMapR
         imageViewBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Teclado.fecharTeclado(v);
                 if(!campoPesquisa.getText().toString().isEmpty()){
                     pesquisarEndereco();
                 }else{
