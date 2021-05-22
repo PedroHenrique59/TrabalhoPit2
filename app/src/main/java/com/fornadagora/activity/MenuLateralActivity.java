@@ -585,7 +585,7 @@ public class MenuLateralActivity extends AppCompatActivity {
     public void configuraImagens() {
         if (usuario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
-            textViewImgEsq1.setText("Ver Padarias");
+            textViewImgEsq1.setText("Localizar Padarias");
             imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_48dp);
             textViewImgDir1.setText("Cadastrar Alerta");
             ehUsuario = true;
@@ -593,7 +593,7 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
         if (funcionario != null) {
             imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
-            textViewImgEsq1.setText("Ver Padarias");
+            textViewImgEsq1.setText("Localizar Padarias");
             imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_48);
             textViewImgDir1.setText("Enviar Alerta");
             ehFuncionario = true;
