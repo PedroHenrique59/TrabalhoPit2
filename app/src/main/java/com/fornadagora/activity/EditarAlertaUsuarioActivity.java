@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EditarAlertaUsuarioActivity extends AppCompatActivity {
@@ -195,6 +196,7 @@ public class EditarAlertaUsuarioActivity extends AppCompatActivity {
                         if (padariaBanco.getNome().equalsIgnoreCase(nomePadaria)) {
                             listaProdutoVO = new ArrayList<>();
                             listaProdutoVO.addAll(padariaBanco.getListaProdutosVO());
+                            listaProdutoVO.removeAll(Collections.singleton(null));
                             listaIdsCategoria.clear();
                             for (ProdutoVO produtoVO : listaProdutoVO) {
                                 if (listaIdsCategoria.isEmpty()) {

@@ -1,12 +1,14 @@
 package com.fornadagora.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +30,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +106,9 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewAlerta.setLayoutManager(layoutManager);
         recyclerViewAlerta.setHasFixedSize(true);
-        recyclerViewAlerta.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.linha_divisoria_recycler));
+        recyclerViewAlerta.addItemDecoration(dividerItemDecoration);
         recyclerViewAlerta.setAdapter(adapter);
     }
 
@@ -149,6 +154,7 @@ public class VerAlertaUsuarioActivity extends AppCompatActivity {
                     for (DataSnapshot snapPadaria : snapshot.getChildren()) {
                         Padaria padariaBanco = snapPadaria.getValue(Padaria.class);
                         padariaBanco.setIdentificador(snapPadaria.getKey());
+                        padariaBanco.getListaProdutosVO().removeAll(Collections.singleton(null));
                         for (Alerta alerta : listaAlertas) {
                             if (alerta.getIdPadaria().equalsIgnoreCase(padariaBanco.getIdentificador())) {
                                 for (ProdutoVO produtoVO : padariaBanco.getListaProdutosVO()) {
