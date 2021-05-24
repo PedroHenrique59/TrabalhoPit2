@@ -8,4 +8,5 @@
     <color name="cor_recycler">#361800</color>
     <color name="cor_toolbar_principal">#361800</color>
     <color name="cor_navigation">#8C4912</color>
+    <color name="cor_divider">#EF6C00</color>
 </resources>

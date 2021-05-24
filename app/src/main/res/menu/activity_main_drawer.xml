@@ -46,7 +46,7 @@
             android:title="@string/gerenciarprodutos" />
         <item
             android:id="@+id/nav_excluir_conta"
-            android:icon="@drawable/ic_excluir"
+            android:icon="@drawable/ic_deletar_24"
             android:title="@string/excluir" />
     </group>
 </menu>

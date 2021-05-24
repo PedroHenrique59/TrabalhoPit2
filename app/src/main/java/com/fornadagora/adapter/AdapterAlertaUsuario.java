@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,8 +81,8 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageViewExcluir;
-        ImageView imageViewEditar;
+        Button botaoExcluir;
+        Button botaoEditar;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -89,10 +90,10 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             nomeAlerta = itemView.findViewById(R.id.textViewNomeAlerta);
             nomePadaria = itemView.findViewById(R.id.textViewNomePadaria);
             nomeProduto = itemView.findViewById(R.id.textViewNomeProduto);
-            imageViewExcluir = itemView.findViewById(R.id.imageViewExcluir);
-            imageViewEditar = itemView.findViewById(R.id.imageViewEditar);
+            botaoExcluir = itemView.findViewById(R.id.buttonExcluirAlerta);
+            botaoEditar = itemView.findViewById(R.id.buttonEditarAlerta);
 
-            imageViewExcluir.setOnClickListener(new View.OnClickListener() {
+            botaoExcluir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     posicao = getAdapterPosition();
@@ -105,7 +106,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                 }
             });
 
-            imageViewEditar.setOnClickListener(new View.OnClickListener() {
+            botaoEditar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int posicao = getAdapterPosition();
