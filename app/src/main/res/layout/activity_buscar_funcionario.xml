@@ -56,10 +56,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:hint="@string/nome"
         app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +84,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/escolhapadaria"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,10 +94,10 @@
 
         <AutoCompleteTextView
             android:id="@+id/autoComletePadariaFunEditAdm"
+            style="@style/TemaAutoCompleteSingleLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            style="@style/TemaAutoCompleteSingleLine" />
+            android:textColor="@color/colorPrimary" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="64dp"
         android:background="@drawable/bg_button_logar"
         android:text="@string/salvar"
