@@ -24,7 +24,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/email"
         app:hintTextColor="@color/colorPrimary"
@@ -52,10 +51,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:hint="@string/senha"
         app:hintTextColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,11 +65,11 @@
             android:id="@+id/edit_text_login_senha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="173dp"
-            android:inputType="textPassword"/>
+            tools:layout_editor_absoluteY="173dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,7 +78,7 @@
         android:layout_width="0dp"
         android:layout_height="57dp"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="64dp"
         android:background="@drawable/bg_button_logar"
         android:text="@string/logar"
@@ -97,7 +94,7 @@
         android:id="@+id/txt_esqueceu_senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="6dp"
         android:onClick="abrirRecuperarSenha"
         android:text="@string/esqueceu_senha"
         android:textColor="@android:color/white"
@@ -112,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:onClick="abrirCadastro"
         android:text="@string/naopossuiconta"
@@ -142,19 +139,18 @@
         android:id="@+id/imageView5"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/tituloapp"
         android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_bakery_225593"
-        android:contentDescription="@string/tituloapp"/>
+        app:srcCompat="@drawable/ic_bakery_225593" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:fontFamily="@font/arbutus_slab"
         android:text="@string/tituloapp"
         android:textColor="@android:color/white"
