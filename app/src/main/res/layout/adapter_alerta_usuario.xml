@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10sp"
-            app:srcCompat="@drawable/ic_adicionar_alerta_48dp" />
+            app:srcCompat="@drawable/ic_adicionar_alerta_24dp" />
 
         <TextView
             android:id="@+id/textViewNomeAlerta"
