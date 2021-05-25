@@ -27,7 +27,7 @@
             android:layout_marginLeft="5dp"
             android:text="@string/nomealerta"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/nomepadaria"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="@string/nomeproduto"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
