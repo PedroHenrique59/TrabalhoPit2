@@ -47,6 +47,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
     private TextView nomeAlerta;
     private TextView nomePadaria;
     private TextView nomeProduto;
+    private TextView numeroAlerta;
 
     private Context context;
 
@@ -72,6 +73,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
         nomeAlerta.setText(alerta.getNome());
         nomePadaria.setText(alerta.getPadaria().getNome());
         nomeProduto.setText(alerta.getProduto().getNome());
+        numeroAlerta.setText("# " + position);
     }
 
     @Override
@@ -90,6 +92,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             nomeAlerta = itemView.findViewById(R.id.textViewNomeAlerta);
             nomePadaria = itemView.findViewById(R.id.textViewNomePadaria);
             nomeProduto = itemView.findViewById(R.id.textViewNomeProduto);
+            numeroAlerta = itemView.findViewById(R.id.textViewNumero);
             botaoExcluir = itemView.findViewById(R.id.buttonExcluirAlerta);
             botaoEditar = itemView.findViewById(R.id.buttonEditarAlerta);
 

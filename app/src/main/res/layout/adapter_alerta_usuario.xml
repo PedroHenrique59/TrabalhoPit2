@@ -7,6 +7,23 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewNumero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8sp"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -23,8 +40,8 @@
             android:id="@+id/textViewNomeAlerta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8sp"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="8sp"
             android:text="@string/nomealerta"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
@@ -37,21 +54,21 @@
 
         <ImageView
             android:id="@+id/imageViewPadaria"
-            android:layout_marginTop="5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="5sp"
             app:srcCompat="@drawable/ic_padaria_loja_24" />
 
         <TextView
             android:id="@+id/textViewNomePadaria"
-            android:layout_marginTop="7sp"
-            android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="7sp"
             android:text="@string/nomepadaria"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,21 +78,21 @@
 
         <ImageView
             android:id="@+id/imageViewProduto"
-            android:layout_marginTop="5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="5sp"
             app:srcCompat="@drawable/ic_produto_alerta_24" />
 
         <TextView
             android:id="@+id/textViewNomeProduto"
-            android:layout_marginTop="7sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="7sp"
             android:text="@string/nomeproduto"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,23 +103,23 @@
             android:id="@+id/buttonExcluirAlerta"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:text="Excluir"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
+            android:layout_marginLeft="25dp"
             android:drawableRight="@drawable/ic_deletar_24"
             android:drawableTint="@android:color/black"
-            android:layout_marginLeft="25dp" />
+            android:text="Excluir"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/buttonEditarAlerta"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:text="Editar"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
+            android:layout_marginLeft="5dp"
             android:drawableRight="@drawable/ic_editar_alertas"
             android:drawableTint="@android:color/black"
-            android:layout_marginLeft="5dp" />
+            android:text="Editar"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
 
     </LinearLayout>
 
