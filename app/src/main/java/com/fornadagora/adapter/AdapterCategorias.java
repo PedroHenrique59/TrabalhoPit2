@@ -35,6 +35,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
     private Context context;
 
     private TextView nomeCategoria;
+    private TextView numeroCategoria;
 
     private Categoria categoriaSelecionada;
 
@@ -61,6 +62,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Categoria categoria = listaCategorias.get(position);
         nomeCategoria.setText(categoria.getNome());
+        numeroCategoria.setText("#" + position);
     }
 
     @Override
@@ -76,6 +78,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             nomeCategoria = itemView.findViewById(R.id.textViewNomeCategoria);
+            numeroCategoria = itemView.findViewById(R.id.textViewNumeroCat);
             botaoExcluir = itemView.findViewById(R.id.buttonExcluirCategoria);
             botaoEditar = itemView.findViewById(R.id.buttonEditarCategoria);
 

@@ -52,15 +52,14 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
     private Context context;
 
     private TextView nomeProduto;
+    private TextView numeroProduto;
 
     private int posicao;
 
     private Produto produtoSelecionado;
-
     private Padaria padariaFuncionario;
 
     private ArrayList<Alerta> listaAlertaProdutoSelecionado = new ArrayList<>();
-
     private ArrayList<AlertaVO> listaAlertaVOUsuarios = new ArrayList<>();
 
     private ArrayList<String> listaEmailsUsuarios = new ArrayList<>();
@@ -82,6 +81,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Produto produto = listaProdutos.get(position);
         nomeProduto.setText(produto.getNome());
+        numeroProduto.setText("#" + position);
     }
 
     @Override
@@ -97,6 +97,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             nomeProduto = itemView.findViewById(R.id.textViewNomeProdutoAdp);
+            numeroProduto = itemView.findViewById(R.id.textViewNumeroProd);
             botaoExcluir = itemView.findViewById(R.id.buttonExcluirProduto);
             botaoEditar = itemView.findViewById(R.id.buttonEditarProduto);
 
