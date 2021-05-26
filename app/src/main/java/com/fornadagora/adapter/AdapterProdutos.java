@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,16 +91,16 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageViewExcluir;
-        ImageView imageViewEditar;
+        Button botaoExcluir;
+        Button botaoEditar;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             nomeProduto = itemView.findViewById(R.id.textViewNomeProdutoAdp);
-            imageViewExcluir = itemView.findViewById(R.id.imageViewExcluirProduto);
-            imageViewEditar = itemView.findViewById(R.id.imageViewEditarProduto);
+            botaoExcluir = itemView.findViewById(R.id.buttonExcluirProduto);
+            botaoEditar = itemView.findViewById(R.id.buttonEditarProduto);
 
-            imageViewExcluir.setOnClickListener(new View.OnClickListener() {
+            botaoExcluir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     posicao = getAdapterPosition();
@@ -112,7 +113,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                 }
             });
 
-            imageViewEditar.setOnClickListener(new View.OnClickListener() {
+            botaoEditar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int posicao = getAdapterPosition();

@@ -137,7 +137,9 @@ public class VerProdutosActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewProduto.setLayoutManager(layoutManager);
         recyclerViewProduto.setHasFixedSize(true);
-        recyclerViewProduto.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.linha_divisoria_recycler));
+        recyclerViewProduto.addItemDecoration(dividerItemDecoration);
         recyclerViewProduto.setAdapter(adapter);
     }
 
