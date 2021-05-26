@@ -73,7 +73,9 @@ public class VerCategoriasActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewCategoria.setLayoutManager(layoutManager);
         recyclerViewCategoria.setHasFixedSize(true);
-        recyclerViewCategoria.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.linha_divisoria_recycler));
+        recyclerViewCategoria.addItemDecoration(dividerItemDecoration);
         recyclerViewCategoria.setAdapter(adapter);
     }
 
