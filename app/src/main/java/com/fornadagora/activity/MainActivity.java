@@ -17,6 +17,7 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText campoEmail;
@@ -36,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
-    private Usuario usuario;
+    private Usuario usuarioLogin;
+
     private Usuario usuarioRecuperado;
-    private Funcionario funcionario;
     private Funcionario funcionarioRecuperado;
 
     private boolean ehAdministrador;
@@ -67,15 +70,11 @@ public class MainActivity extends AppCompatActivity {
                 if (!textoEmail.isEmpty()) {
                     if (!textoSenha.isEmpty()) {
 
-                        usuario = new Usuario();
-                        usuario.setEmail(textoEmail);
-                        usuario.setSenha(textoSenha);
+                        usuarioLogin = new Usuario();
+                        usuarioLogin.setEmail(textoEmail);
+                        usuarioLogin.setSenha(textoSenha);
 
-                        funcionario = new Funcionario();
-                        funcionario.setEmail(textoEmail);
-                        funcionario.setSenha(textoSenha);
-
-                        validarLogin(usuario, funcionario);
+                        obterUsuarioBd();
 
                     } else {
                         Toast.makeText(MainActivity.this, "Preencha o campo senha", Toast.LENGTH_SHORT).show();
@@ -87,6 +86,58 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configurarIconeVisualizarSenha();
+    }
+
+    public void obterUsuarioBd() {
+        DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
+        DatabaseReference referenciaFuncionario = ConfiguracaoFirebase.getFirebase().child("funcionarios");
+
+        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapUsuario : snapshot.getChildren()) {
+                        if (snapUsuario.child("email").getValue().equals(usuarioLogin.getEmail())) {
+                            String senha = snapUsuario.child("senha").getValue().toString();
+                            validarSenha(usuarioLogin.getSenha(), senha);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        referenciaFuncionario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapFuncionario : snapshot.getChildren()) {
+                        if (snapFuncionario.child("email").getValue().equals(usuarioLogin.getEmail())) {
+                            String senha = snapFuncionario.child("senha").getValue().toString();
+                            validarSenha(usuarioLogin.getSenha(), senha);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void validarSenha(String senhaInformada, String senhaBanco) {
+        if (BCrypt.checkpw(senhaInformada, senhaBanco)) {
+            usuarioLogin.setSenha(senhaBanco);
+            validarLogin(usuarioLogin);
+        } else {
+            Toast.makeText(this, "Senha incorreta", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void abrirCadastro(View view) {
@@ -154,11 +205,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void validarLogin(Usuario usuario, Funcionario funcionario) {
+    public void validarLogin(Usuario usuarioLogin) {
         progressBar.setVisibility(View.VISIBLE);
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        autenticacao.signInWithEmailAndPassword(usuario.getEmail(), usuario.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        autenticacao.signInWithEmailAndPassword(usuarioLogin.getEmail(), usuarioLogin.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -246,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             if (autenticacao.getCurrentUser().isEmailVerified()) {
                 abriMenuLateralFuncionario(funcionario);
             } else {
-                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes de efetuar o login.", Toast.LENGTH_LONG).show();
             }
         }
     }

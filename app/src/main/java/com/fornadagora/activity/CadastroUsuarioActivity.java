@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
     private TextInputEditText campoNome;
@@ -96,8 +98,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
-
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
+        usuario.setSenha(hashPassword(usuario.getSenha()));
 
         autenticacao.createUserWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
@@ -140,6 +143,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private String hashPassword(String plainTextPassword){
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
     public void recuperarToken() {

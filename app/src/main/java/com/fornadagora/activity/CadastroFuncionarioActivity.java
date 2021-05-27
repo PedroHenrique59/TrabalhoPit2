@@ -39,6 +39,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,6 +132,9 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         referenciaFuncionarios = ConfiguracaoFirebase.getFirebase().child("funcionarios");
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
+        funcionario.setSenha(hashPassword(funcionario.getSenha()));
+
         autenticacao.createUserWithEmailAndPassword(
                 funcionario.getEmail(), funcionario.getSenha()
         ).addOnCompleteListener(
@@ -172,6 +177,10 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private String hashPassword(String plainTextPassword){
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
     public void carregarListaPadarias() {
