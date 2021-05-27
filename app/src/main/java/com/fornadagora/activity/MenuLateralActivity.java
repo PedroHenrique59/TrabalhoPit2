@@ -1,11 +1,8 @@
 package com.fornadagora.activity;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +26,6 @@ import com.fornadagora.model.Funcionario;
 import com.fornadagora.model.Usuario;
 import com.fornadagora.vo.AlertaVO;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
@@ -59,14 +55,9 @@ public class MenuLateralActivity extends AppCompatActivity {
     private TextView txtemail;
 
     private ImageView imagemEsq1;
-    private ImageView imagemEsq2;
-
     private ImageView imagemDir1;
-    private ImageView imagemDir2;
 
     private TextView textViewImgEsq1;
-
-
     private TextView textViewImgDir1;
 
     private FirebaseAuth autenticacao;
@@ -133,18 +124,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.nav_excluir_conta) {
                     excluirConta();
                 }
-                if (item.getItemId() == R.id.nav_cadastrar_fun) {
-                    Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
-                    startActivity(i);
-                }
-                if (item.getItemId() == R.id.nav_adicionar_padaria) {
-                    Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
-                    startActivity(i);
-                }
-                if (item.getItemId() == R.id.nav_cadastrar_produto) {
-                    Intent i = new Intent(MenuLateralActivity.this, CadastrarProdutoActivity.class);
-                    startActivity(i);
-                }
                 if (item.getItemId() == R.id.nav_cadastrar_categoria) {
                     Intent i = new Intent(MenuLateralActivity.this, CadastrarCategoriaActivity.class);
                     startActivity(i);
@@ -175,13 +154,9 @@ public class MenuLateralActivity extends AppCompatActivity {
         txtemail = headerView.findViewById(R.id.txtemailHeader);
 
         imagemEsq1 = findViewById(R.id.imageViewEsq1);
-        imagemEsq2 = findViewById(R.id.imageViewEsq2);
-
         imagemDir1 = findViewById(R.id.imageViewDir1);
-        imagemDir2 = findViewById(R.id.imageViewDir2);
 
         textViewImgEsq1 = findViewById(R.id.textViewImgEsq1);
-
         textViewImgDir1 = findViewById(R.id.textViewImgDir1);
     }
 
@@ -271,14 +246,6 @@ public class MenuLateralActivity extends AppCompatActivity {
         }
     }
 
-    public void abrirTelaVerPadaria(View view) {
-        startActivity(new Intent(getApplicationContext(), VerPadariasMapaActivity.class));
-    }
-
-    public void abrirTelaCadastrarAlerta(View view) {
-        startActivity(new Intent(getApplicationContext(), CadastrarAlertaActivity.class));
-    }
-
     public void recuperarParametro() {
         Bundle b = getIntent().getExtras();
         if (b != null) {
@@ -293,9 +260,6 @@ public class MenuLateralActivity extends AppCompatActivity {
             MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_fun);
             menuItem.setVisible(true);
 
-            menuItem = menu.findItem(R.id.nav_cadastrar_fun);
-            menuItem.setVisible(false);
-
             menuItem = menu.findItem(R.id.nav_edit_dados_usu);
             menuItem.setVisible(false);
 
@@ -304,12 +268,6 @@ public class MenuLateralActivity extends AppCompatActivity {
 
             menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
             menuItem.setVisible(false);
-
-            menuItem = menu.findItem(R.id.nav_adicionar_padaria);
-            menuItem.setVisible(false);
-
-            menuItem = menu.findItem(R.id.nav_cadastrar_produto);
-            menuItem.setVisible(true);
 
             menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
             menuItem.setVisible(false);
@@ -330,9 +288,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
                 menuItem.setVisible(true);
 
-                menuItem = menu.findItem(R.id.nav_cadastrar_fun);
-                menuItem.setVisible(true);
-
                 menuItem = menu.findItem(R.id.nav_alertas_salvos_usu);
                 menuItem.setVisible(false);
 
@@ -340,12 +295,6 @@ public class MenuLateralActivity extends AppCompatActivity {
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
-                menuItem.setVisible(false);
-
-                menuItem = menu.findItem(R.id.nav_adicionar_padaria);
-                menuItem.setVisible(true);
-
-                menuItem = menu.findItem(R.id.nav_cadastrar_produto);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
@@ -365,19 +314,10 @@ public class MenuLateralActivity extends AppCompatActivity {
                 MenuItem menuItem = menu.findItem(R.id.nav_edit_dados_usu);
                 menuItem.setVisible(true);
 
-                menuItem = menu.findItem(R.id.nav_cadastrar_fun);
-                menuItem.setVisible(false);
-
                 menuItem = menu.findItem(R.id.nav_edit_dados_fun);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_edit_adm_dados_fun);
-                menuItem.setVisible(false);
-
-                menuItem = menu.findItem(R.id.nav_adicionar_padaria);
-                menuItem.setVisible(false);
-
-                menuItem = menu.findItem(R.id.nav_cadastrar_produto);
                 menuItem.setVisible(false);
 
                 menuItem = menu.findItem(R.id.nav_cadastrar_categoria);
@@ -584,18 +524,26 @@ public class MenuLateralActivity extends AppCompatActivity {
 
     public void configuraImagens() {
         if (usuario != null) {
-            imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
-            textViewImgEsq1.setText("Localizar Padarias");
-            imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_48dp);
-            textViewImgDir1.setText("Cadastrar Alerta");
-            ehUsuario = true;
-            configurarEventosClick();
+            if (usuario.getTipoPerfil().equalsIgnoreCase("Administrador")) {
+                imagemEsq1.setImageResource(R.drawable.ic_padaria_loja_64);
+                textViewImgEsq1.setText("Adicionar padaria");
+                imagemDir1.setImageResource(R.drawable.ic_add_funcionario_64dp);
+                textViewImgDir1.setText("Cadastrar funcionário");
+                configurarEventosClick();
+            } else {
+                imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_64dp);
+                textViewImgEsq1.setText("Localizar padarias");
+                imagemDir1.setImageResource(R.drawable.ic_adicionar_alerta_64dp);
+                textViewImgDir1.setText("Cadastrar alerta");
+                ehUsuario = true;
+                configurarEventosClick();
+            }
         }
         if (funcionario != null) {
-            imagemEsq1.setImageResource(R.drawable.ic_mapa_padaria_48dp);
-            textViewImgEsq1.setText("Localizar Padarias");
-            imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_48);
-            textViewImgDir1.setText("Enviar Alerta");
+            imagemEsq1.setImageResource(R.drawable.ic_produto_add_64);
+            textViewImgEsq1.setText("Adicionar produto");
+            imagemDir1.setImageResource(R.drawable.ic_alertar_usuario_64);
+            textViewImgDir1.setText("Enviar alerta");
             ehFuncionario = true;
             configurarEventosClick();
         }
@@ -605,31 +553,62 @@ public class MenuLateralActivity extends AppCompatActivity {
         imagemEsq1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirTelaVerPadaria(v);
+                if (usuario != null) {
+                    if (usuario.getTipoPerfil().equalsIgnoreCase("Administrador")) {
+                        abrirTelaAdicionarPadaria();
+                    } else {
+                        abrirTelaVerPadarias();
+                    }
+                }
+                if (funcionario != null) {
+                    abrirTelaAdicionarProduto();
+                }
             }
         });
         imagemDir1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ehUsuario) {
-                    abrirTelaSalvarAlerta();
+                if (usuario != null) {
+                    if (usuario.getTipoPerfil().equalsIgnoreCase("Administrador")) {
+                        abrirTelaCadastrarFuncionario();
+                    } else {
+                        abrirTelaCadastrarAlerta();
+                    }
                 }
-                if (ehFuncionario) {
+                if (funcionario != null) {
                     abrirTelaEnviarAlerta();
                 }
             }
         });
     }
 
-    public void abrirTelaSalvarAlerta() {
+    public void abrirTelaAdicionarPadaria() {
+        Intent i = new Intent(MenuLateralActivity.this, BuscarPadariaActivity.class);
+        startActivity(i);
+    }
+
+    public void abrirTelaVerPadarias() {
+        Intent i = new Intent(MenuLateralActivity.this, VerPadariasMapaActivity.class);
+        startActivity(i);
+    }
+
+    public void abrirTelaAdicionarProduto() {
+        Intent i = new Intent(MenuLateralActivity.this, CadastrarProdutoActivity.class);
+        startActivity(i);
+    }
+
+    public void abrirTelaCadastrarFuncionario() {
+        Intent i = new Intent(MenuLateralActivity.this, CadastroFuncionarioActivity.class);
+        startActivity(i);
+    }
+
+    public void abrirTelaCadastrarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, CadastrarAlertaActivity.class);
         startActivity(i);
-        finish();
     }
 
     public void abrirTelaEnviarAlerta() {
         Intent i = new Intent(MenuLateralActivity.this, AlertarUsuarioActivity.class);
         startActivity(i);
-        finish();
     }
 }

@@ -43,7 +43,7 @@
         app:layout_constraintHorizontal_bias="0.24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appCompatImageView2"
-        app:srcCompat="@drawable/ic_mapa_padaria_48dp" />
+        app:srcCompat="@drawable/ic_mapa_padaria_64dp" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_adicionar_alerta_48dp" />
+        app:srcCompat="@drawable/ic_adicionar_alerta_64dp" />
 
     <Button
         android:id="@+id/button"
