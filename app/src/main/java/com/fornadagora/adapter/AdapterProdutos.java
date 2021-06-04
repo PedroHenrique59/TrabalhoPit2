@@ -158,6 +158,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
         bd.putParcelable("produtoObj", produtoSelecionado);
         intent.putExtras(bd);
         context.startActivity(intent);
+        ((Activity) context).finish();
     }
 
     public void abrirDialogExcluir() {
