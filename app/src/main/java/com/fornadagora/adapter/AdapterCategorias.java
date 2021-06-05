@@ -1,5 +1,6 @@
 package com.fornadagora.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -219,5 +220,6 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
         bd.putParcelable("categoriaObj", categoria);
         intent.putExtras(bd);
         context.startActivity(intent);
+        ((Activity) context).finish();
     }
 }

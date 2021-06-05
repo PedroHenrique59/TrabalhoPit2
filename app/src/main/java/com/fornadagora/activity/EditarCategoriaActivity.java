@@ -103,6 +103,8 @@ public class EditarCategoriaActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     categoria.atualizarDados(categoria, referenciaCategoria);
                     Toast.makeText(context, "Categoria atualizada com sucesso!",Toast.LENGTH_LONG).show();
+                    finish();
+                    abrirTelaListarCategorias();
                 }
             }
 
@@ -111,5 +113,11 @@ public class EditarCategoriaActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void abrirTelaListarCategorias(){
+        Intent i = new Intent(EditarCategoriaActivity.this, VerCategoriasActivity.class);
+        startActivity(i);
+        finish();
     }
 }
