@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Funcionario funcionarioRecuperado;
 
     private boolean ehAdministrador;
+    private boolean existeUsuario = false;
+    private boolean existeFuncionario = false;
 
     private FirebaseAuth autenticacao;
 
@@ -92,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios");
         DatabaseReference referenciaFuncionario = ConfiguracaoFirebase.getFirebase().child("funcionarios");
 
+        existeUsuario = false;
+        existeFuncionario = false;
+
         referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         if (snapUsuario.child("email").getValue().equals(usuarioLogin.getEmail())) {
                             String senha = snapUsuario.child("senha").getValue().toString();
                             validarSenha(usuarioLogin.getSenha(), senha);
+                            existeUsuario = true;
                         }
                     }
                 }
@@ -119,7 +125,11 @@ public class MainActivity extends AppCompatActivity {
                         if (snapFuncionario.child("email").getValue().equals(usuarioLogin.getEmail())) {
                             String senha = snapFuncionario.child("senha").getValue().toString();
                             validarSenha(usuarioLogin.getSenha(), senha);
+                            existeFuncionario = true;
                         }
+                    }
+                    if (!existeUsuario && !existeFuncionario) {
+                        Toast.makeText(MainActivity.this, "Nenhuma conta cadastrada para o endereço de e-mail informado!", Toast.LENGTH_LONG).show();
                     }
                 }
             }
