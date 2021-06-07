@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void validarSenha(String senhaInformada, String senhaBanco) {
         if (BCrypt.checkpw(senhaInformada, senhaBanco)) {
-            //usuarioLogin.setSenha(senhaBanco);
             usuarioLogin.setSenha(senhaInformada);
             validarLogin(usuarioLogin);
         } else {
@@ -162,6 +161,22 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     referenciaUsuario.child("senha").setValue(hashPassword(usuarioLogin.getSenha()));
+                    recuperarTipoDeUsuarioLogado();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        final DatabaseReference referenciaFuncionario = ConfiguracaoFirebase.getFirebase().child("funcionarios").child(autenticacao.getCurrentUser().getUid());
+        referenciaFuncionario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    referenciaFuncionario.child("senha").setValue(hashPassword(usuarioLogin.getSenha()));
                     recuperarTipoDeUsuarioLogado();
                 }
             }
