@@ -133,11 +133,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void validarSenha(String senhaInformada, String senhaBanco) {
         if (BCrypt.checkpw(senhaInformada, senhaBanco)) {
-            usuarioLogin.setSenha(senhaBanco);
+            //usuarioLogin.setSenha(senhaBanco);
+            usuarioLogin.setSenha(senhaInformada);
             validarLogin(usuarioLogin);
         } else {
-            Toast.makeText(this, "Senha incorreta", Toast.LENGTH_LONG).show();
+            autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+            autenticacao.signInWithEmailAndPassword(usuarioLogin.getEmail(), usuarioLogin.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        if (autenticacao.getCurrentUser().isEmailVerified()) {
+                            atualizarSenhaBD();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Favor verificar seu endereço de e-mail para efetuar o login.", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "E-mail ou senha incorreto(s)!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
+    }
+
+    public void atualizarSenhaBD() {
+        final DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(autenticacao.getCurrentUser().getUid());
+        referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    referenciaUsuario.child("senha").setValue(hashPassword(usuarioLogin.getSenha()));
+                    recuperarTipoDeUsuarioLogado();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private String hashPassword(String plainTextPassword) {
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
     public void abrirCadastro(View view) {
@@ -207,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void validarLogin(Usuario usuarioLogin) {
         progressBar.setVisibility(View.VISIBLE);
-
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         autenticacao.signInWithEmailAndPassword(usuarioLogin.getEmail(), usuarioLogin.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -272,22 +308,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean validarPerfilUsuario(Usuario usuario) {
         if (usuario.getTipoPerfil().equals("Administrador")) {
             ehAdministrador = true;
-            if (autenticacao.getCurrentUser().isEmailVerified()) {
-                startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
-                finish();
-            } else {
-                setContentView(R.layout.activity_main);
-                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
-            }
         } else {
             ehAdministrador = false;
-            if (autenticacao.getCurrentUser().isEmailVerified()) {
-                startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
-                finish();
-            } else {
-                setContentView(R.layout.activity_main);
-                Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
-            }
+        }
+        if (autenticacao.getCurrentUser().isEmailVerified()) {
+            startActivity(new Intent(getApplicationContext(), MenuLateralActivity.class));
+            finish();
+        } else {
+            setContentView(R.layout.activity_main);
+            Toast.makeText(MainActivity.this, "Favor verificar o endereço de e-mail antes efetuar o login.", Toast.LENGTH_LONG).show();
         }
         return ehAdministrador;
     }
