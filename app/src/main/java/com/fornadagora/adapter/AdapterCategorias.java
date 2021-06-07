@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
 import com.fornadagora.activity.EditarCategoriaActivity;
+import com.fornadagora.activity.NaoExisteCategoriaActivity;
+import com.fornadagora.activity.NaoExisteProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
@@ -145,6 +147,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                 listaCategorias.remove(posicao);
                 notifyItemRemoved(posicao);
                 Toast.makeText(context, "Categoria excluída com sucesso", Toast.LENGTH_SHORT).show();
+                validarUltimaCategoria(listaCategorias);
             }
         });
 
@@ -180,6 +183,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                     Toast.makeText(context, "Essa categoria está associada a algum produto. Não é possível exclui-la.", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -187,11 +191,11 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
         });
     }
 
-    public void editarCategoria(Categoria categoria){
+    public void editarCategoria(Categoria categoria) {
         abrirDialogEditar(categoria);
     }
 
-    public void abrirDialogEditar(final Categoria categoria){
+    public void abrirDialogEditar(final Categoria categoria) {
         MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context, R.style.TemaDialog);
         materialAlertDialogBuilder.setTitle("Confirmar");
         materialAlertDialogBuilder.setMessage("Deseja realmente editar esta categoria?");
@@ -214,12 +218,24 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
         materialAlertDialogBuilder.show();
     }
 
-    public void abrirEditarCategoria(Categoria categoria){
+    public void abrirEditarCategoria(Categoria categoria) {
         Intent intent = new Intent(context, EditarCategoriaActivity.class);
         Bundle bd = new Bundle();
         bd.putParcelable("categoriaObj", categoria);
         intent.putExtras(bd);
         context.startActivity(intent);
+        ((Activity) context).finish();
+    }
+
+    public void validarUltimaCategoria(List<Categoria> listaCategorias) {
+        if (listaCategorias.isEmpty()) {
+            abrirTelaNaoExisteCategoria();
+        }
+    }
+
+    public void abrirTelaNaoExisteCategoria() {
+        Intent i = new Intent(context, NaoExisteCategoriaActivity.class);
+        context.startActivity(i);
         ((Activity) context).finish();
     }
 }
