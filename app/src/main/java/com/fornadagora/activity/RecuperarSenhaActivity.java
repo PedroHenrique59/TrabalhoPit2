@@ -35,6 +35,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
     private FirebaseAuth autenticacao;
 
     private Query queryUsuario;
+    private Query queryFuncionario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
         finish();
     }
 
-    public void validarExisteConta(String email) {
+    public void validarExisteConta(final String email) {
         queryUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").orderByChild("email").equalTo(email);
         queryUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,7 +96,33 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    Toast.makeText(RecuperarSenhaActivity.this, "Não existe nenhuma conta cadastrada para o endereço de e-mail informado.", Toast.LENGTH_LONG).show();
+                    queryFuncionario = ConfiguracaoFirebase.getFirebase().child("funcionarios").orderByChild("email").equalTo(email);
+                    queryFuncionario.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                autenticacao.sendPasswordResetEmail(campoEmail.getText().toString())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    campoEmail.setText("");
+                                                    Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(RecuperarSenhaActivity.this, "Não existe nenhuma conta cadastrada para o endereço de e-mail inforamdo", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
