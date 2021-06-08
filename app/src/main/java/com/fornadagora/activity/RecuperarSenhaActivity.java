@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.fornadagora.R;
 import com.fornadagora.helper.ConfiguracaoFirebase;
+import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Padaria;
 import com.fornadagora.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,6 +54,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
     public void enviarEmailRecuperarSenha(View view) {
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         if (!campoEmail.getText().toString().isEmpty()) {
+            Teclado.fecharTeclado(view);
             validarExisteConta(campoEmail.getText().toString());
         } else {
             Toast.makeText(RecuperarSenhaActivity.this, "Preencha o campo de e-mail", Toast.LENGTH_SHORT).show();
@@ -114,7 +116,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                             }
                                         });
                             } else {
-                                Toast.makeText(RecuperarSenhaActivity.this, "Não existe nenhuma conta cadastrada para o endereço de e-mail inforamdo", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RecuperarSenhaActivity.this, "Não existe nenhuma conta cadastrada para o endereço de e-mail informado.", Toast.LENGTH_LONG).show();
                             }
                         }
 
