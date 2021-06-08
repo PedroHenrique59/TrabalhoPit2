@@ -3,6 +3,7 @@ package com.fornadagora.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void validarSenha(String senhaInformada, String senhaBanco) {
         if (BCrypt.checkpw(senhaInformada, senhaBanco)) {
-            usuarioLogin.setSenha(senhaInformada);
+            usuarioLogin.setSenha(senhaBanco);
             validarLogin(usuarioLogin);
         } else {
             autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         if (autenticacao.getCurrentUser().isEmailVerified()) {
-                            atualizarSenhaBD();
+                            atualizarSenhaAuth();
                         } else {
                             Toast.makeText(MainActivity.this, "Favor verificar seu endereço de e-mail para efetuar o login.", Toast.LENGTH_LONG).show();
                         }
@@ -164,13 +165,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void atualizarSenhaBD() {
+    private void atualizarSenhaAuth(){
+        final String senhaAuth = hashPassword(usuarioLogin.getSenha());
+        autenticacao.getCurrentUser().updatePassword(senhaAuth).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                atualizarSenhaBD(senhaAuth);
+                Log.i("senhaauth",senhaAuth);
+            }
+        });
+    }
+
+    private void atualizarSenhaBD(final String senhaAuth) {
         final DatabaseReference referenciaUsuario = ConfiguracaoFirebase.getFirebase().child("usuarios").child(autenticacao.getCurrentUser().getUid());
         referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    referenciaUsuario.child("senha").setValue(hashPassword(usuarioLogin.getSenha()));
+                    referenciaUsuario.child("senha").setValue(senhaAuth);
+                    Log.i("senhabanco", senhaAuth);
                     recuperarTipoDeUsuarioLogado();
                 }
             }
@@ -186,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    referenciaFuncionario.child("senha").setValue(hashPassword(usuarioLogin.getSenha()));
+                    referenciaFuncionario.child("senha").setValue(senhaAuth);
+                    Log.i("senhabanco", senhaAuth);
                     recuperarTipoDeUsuarioLogado();
                 }
             }

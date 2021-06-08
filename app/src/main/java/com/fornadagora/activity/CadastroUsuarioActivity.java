@@ -100,6 +100,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
+        usuario.setSenha(hashPassword(usuario.getSenha()));
+
         autenticacao.createUserWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(
@@ -111,7 +113,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
                             String idUsuario = autenticacao.getCurrentUser().getUid();
                             usuario.setIdUsuario(idUsuario);
-                            usuario.setSenha(hashPassword(usuario.getSenha()));
                             usuario.salvar();
 
                             autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {

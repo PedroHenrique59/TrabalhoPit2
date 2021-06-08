@@ -133,6 +133,8 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
+        funcionario.setSenha(hashPassword(funcionario.getSenha()));
+
         autenticacao.createUserWithEmailAndPassword(
                 funcionario.getEmail(), funcionario.getSenha()
         ).addOnCompleteListener(
@@ -144,7 +146,6 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
                             String idFuncionario = autenticacao.getCurrentUser().getUid();
                             funcionario.setIdFuncionario(idFuncionario);
-                            funcionario.setSenha(hashPassword(funcionario.getSenha()));
                             funcionario.salvar();
 
                             Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
