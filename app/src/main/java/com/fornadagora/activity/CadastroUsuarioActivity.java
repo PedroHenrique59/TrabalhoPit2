@@ -124,7 +124,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             });
                         } else {
                             progressBar.setVisibility(View.GONE);
-
                             String erroExcecao = "";
                             try {
                                 throw task.getException();
@@ -133,12 +132,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             } catch (FirebaseAuthInvalidCredentialsException e) {
                                 erroExcecao = "Favor digitar um e-mail válido";
                             } catch (FirebaseAuthUserCollisionException e) {
-                                erroExcecao = "Esta conta já foi cadastrada";
+                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
                             } catch (Exception e) {
                                 erroExcecao = "ao cadastrar usuário: " + e.getMessage();
                                 e.printStackTrace();
                             }
-                            Toast.makeText(CadastroUsuarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CadastroUsuarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_LONG).show();
                         }
                     }
                 }

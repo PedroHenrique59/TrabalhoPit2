@@ -136,8 +136,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
         funcionario.setSenha(hashPassword(funcionario.getSenha()));
 
         autenticacao.createUserWithEmailAndPassword(
-                funcionario.getEmail(), funcionario.getSenha()
-        ).addOnCompleteListener(
+                funcionario.getEmail(), funcionario.getSenha()).addOnCompleteListener(
                 this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -167,7 +166,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
                             } catch (FirebaseAuthInvalidCredentialsException e) {
                                 erroExcecao = "Favor digitar um e-mail válido";
                             } catch (FirebaseAuthUserCollisionException e) {
-                                erroExcecao = "Esta conta já foi cadastrada";
+                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
                             } catch (Exception e) {
                                 erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
                                 e.printStackTrace();

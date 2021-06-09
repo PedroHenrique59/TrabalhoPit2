@@ -27,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -109,7 +110,7 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
                     if (nomeInformado.getText().toString().equals(nomeUser) && emailInformado.getText().toString().equals(emailUser)) {
                         emitirMensagem("Nome e email informados");
                     } else {
-                        if(!usuario.getEmail().equals(emailInformado.getText().toString())){
+                        if (!usuario.getEmail().equals(emailInformado.getText().toString())) {
                             emailAlterado = true;
                         }
                         salvarDados(usuario);
@@ -122,17 +123,17 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
             Toast.makeText(context, nome + " são os mesmos", Toast.LENGTH_SHORT).show();
         }
 
-        public void salvarDados(Usuario usuario){
-            if(usuario != null){
-                if(autenticacao.getCurrentUser() != null){
-                    if(emailAlterado){
-                        if(validarEmail(emailInformado.getText().toString())){
+        public void salvarDados(Usuario usuario) {
+            if (usuario != null) {
+                if (autenticacao.getCurrentUser() != null) {
+                    if (emailAlterado) {
+                        if (validarEmail(emailInformado.getText().toString())) {
                             user = FirebaseAuth.getInstance().getCurrentUser();
                             reautenticarUsuario(usuario);
-                        }else{
+                        } else {
                             Toast.makeText(context, "Favor informar um e-mail válido!", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
+                    } else {
                         atualizarDados();
                     }
                 }
@@ -140,19 +141,35 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
         }
     }
 
-    public void reautenticarUsuario(final Usuario usuario){
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(usuario.getEmail(), usuario.getSenha());
+    public void reautenticarUsuario(final Usuario usuario) {
+        AuthCredential credential = EmailAuthProvider.getCredential(usuario.getEmail(), usuario.getSenha());
         user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                user.updateEmail(emailInformado.getText().toString());
-                atualizarDados();
+                user.updateEmail(emailInformado.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            user.sendEmailVerification();
+                            atualizarDados();
+                        } else {
+                            String erroExcecao = "";
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(context, "Erro: " + erroExcecao, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
 
-    public void atualizarDados(){
+    public void atualizarDados() {
         String id = autenticacao.getCurrentUser().getUid();
         usuario.setIdUsuario(id);
         usuario.setNome(nomeInformado.getText().toString());
@@ -161,11 +178,11 @@ public class AdapterDadosUsuario extends RecyclerView.Adapter<AdapterDadosUsuari
         Toast.makeText(context, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
     }
 
-    public boolean validarEmail(String email){
+    public boolean validarEmail(String email) {
         return ValidaEmail.validarEmail(email);
     }
 
-    public void configurarToolbar(){
+    public void configurarToolbar() {
         toolbar.setTitle("Alterar dados");
         toolbar.setTitleTextColor(context.getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);

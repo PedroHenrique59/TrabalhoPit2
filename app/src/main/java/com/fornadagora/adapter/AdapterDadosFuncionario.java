@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fornadagora.R;
+import com.fornadagora.activity.CadastroFuncionarioActivity;
 import com.fornadagora.activity.MenuLateralActivity;
 import com.fornadagora.activity.NaoExisteProdutoActivity;
 import com.fornadagora.helper.ConfiguracaoFirebase;
@@ -29,6 +30,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -179,7 +181,7 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
                 if (snapshot.exists()) {
                     for (DataSnapshot snapShotPadaria : snapshot.getChildren()) {
                         Padaria padaria = snapShotPadaria.getValue(Padaria.class);
-                        if(padaria.getIdentificador().equalsIgnoreCase(funcionario.getPadariaVO().getIdentificador())){
+                        if (padaria.getIdentificador().equalsIgnoreCase(funcionario.getPadariaVO().getIdentificador())) {
                             listaNomePadariaFuncionario.add(padaria.getNome());
                         }
                         listaPadarias.add(padaria);
@@ -202,13 +204,29 @@ public class AdapterDadosFuncionario extends RecyclerView.Adapter<AdapterDadosFu
     }
 
     public void reautenticarFuncionario(final Funcionario funcionario) {
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(funcionario.getEmail(), funcionario.getSenha());
+        AuthCredential credential = EmailAuthProvider.getCredential(funcionario.getEmail(), funcionario.getSenha());
         user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                user.updateEmail(emailInformado.getText().toString());
-                atualizarDados();
+                user.updateEmail(emailInformado.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            user.sendEmailVerification();
+                            atualizarDados();
+                        } else {
+                            String erroExcecao = "";
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(context, "Erro: " + erroExcecao, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }

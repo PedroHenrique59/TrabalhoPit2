@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VerDadosUsuarioActivity extends AppCompatActivity {
+public class  VerDadosUsuarioActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewUsuario;
 
