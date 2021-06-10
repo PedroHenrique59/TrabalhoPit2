@@ -193,7 +193,8 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                     queryProduto.getRef().removeValue();
                     listaProdutos.remove(posicao);
                     notifyItemRemoved(posicao);
-                    Toast.makeText(context, "Produto excluído com sucesso", Toast.LENGTH_SHORT).show();
+                    recalcularPosicao();
+                    Toast.makeText(context, "Produto excluído com sucesso!", Toast.LENGTH_SHORT).show();
                     validarUltimoProduto(listaProdutos);
                     excluirProdutoPadaria();
                 }
@@ -204,6 +205,13 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
 
             }
         });
+    }
+
+    public void recalcularPosicao(){
+        int i;
+        for (i = 0; i < listaProdutos.size(); i++) {
+            numeroProduto.setText("#" + i);
+        }
     }
 
     public void validarUltimoProduto(List<Produto> listaProdutos) {

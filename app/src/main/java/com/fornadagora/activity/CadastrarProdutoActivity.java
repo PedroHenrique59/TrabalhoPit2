@@ -233,19 +233,19 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                             Produto produto = new Produto(nomeProduto, categVO, padariaVO);
                             validarProduto(produto);
                         } else {
-                            Toast.makeText(this, "A categoria informada é inválida. Favor informar uma válida", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "A categoria informada é inválida. Favor informar uma válida!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(this, "A padaria informada é inválida. Favor informar uma válida", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "A padaria informada é inválida. Favor informar uma válida!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Favor escolher uma categoria para o produto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor escolher uma categoria para o produt!o", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Favor informar no nome do produto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor informar no nome do produto!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Favor informar a padaria", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor informar a padaria!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -304,12 +304,11 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                         Produto produto = snapProduto.getValue(Produto.class);
                         if (produto.getNome().equalsIgnoreCase(prod.getNome()) && produto.getPadariaVO().getIdentificador().equalsIgnoreCase(prod.getPadariaVO().getIdentificador())) {
                             produtoExiste = true;
-                            Toast.makeText(context, "Esse produto já foi salvo", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Esse produto já foi salvo!", Toast.LENGTH_SHORT).show();
                         }
                     }
                     if (!produtoExiste) {
                         prod.salvar();
-                        Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
                         limparCampos();
                     }
                 } else {
