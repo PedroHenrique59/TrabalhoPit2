@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginLeft="5dp"
-            android:drawableRight="@drawable/ic_editar_alertas"
+            android:drawableRight="@drawable/ic_editar"
             android:drawableTint="@android:color/black"
             android:text="Editar"
             android:textColor="@android:color/black"
