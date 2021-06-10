@@ -80,7 +80,7 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
             categoria = new Categoria(nomeCategoria);
             validarCategoriaJaSalva(categoria);
         }else{
-            Toast.makeText(this, "Favor preencher o nome da categoria", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor preencher o nome da categoria!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -93,19 +93,19 @@ public class CadastrarCategoriaActivity extends AppCompatActivity {
                     for(DataSnapshot snapCategoria : snapshot.getChildren()){
                         Categoria cat = snapCategoria.getValue(Categoria.class);
                         if(cat.getNome().equalsIgnoreCase(categoria.getNome())){
-                            Toast.makeText(context, "Esta categoria já foi salva", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Esta categoria já foi salva!", Toast.LENGTH_SHORT).show();
                             categoriaJaSalva = true;
                             break;
                         }
                     }
                     if(!categoriaJaSalva){
                         categoria.salvar();
-                        Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Categoria salva com sucesso!", Toast.LENGTH_SHORT).show();
                         limparCampos();
                     }
                 }else{
                     categoria.salvar();
-                    Toast.makeText(context, "Categoria salva com sucesso", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Categoria salva com sucesso!", Toast.LENGTH_SHORT).show();
                     limparCampos();
                 }
             }

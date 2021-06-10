@@ -146,6 +146,7 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
                 snapCategoria.getRef().removeValue();
                 listaCategorias.remove(posicao);
                 notifyItemRemoved(posicao);
+                recalcularPosicao();
                 Toast.makeText(context, "Categoria excluída com sucesso", Toast.LENGTH_SHORT).show();
                 validarUltimaCategoria(listaCategorias);
             }
@@ -160,6 +161,13 @@ public class AdapterCategorias extends RecyclerView.Adapter<AdapterCategorias.My
 
         materialAlertDialogBuilder.create();
         materialAlertDialogBuilder.show();
+    }
+
+    public void recalcularPosicao(){
+        int i;
+        for(i = 0; i < listaCategorias.size(); i++){
+            numeroCategoria.setText("#" + i);
+        }
     }
 
     public void validarCategoriaVinculaProduto(final Categoria categoria) {
