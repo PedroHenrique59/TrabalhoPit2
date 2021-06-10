@@ -56,6 +56,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
     private Funcionario funcionario;
 
     private boolean padariaEncontrada = false;
+    private boolean existeFun = false;
 
     private Context context;
 
@@ -173,18 +174,34 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
 
     public void salvarDados() {
         if (!autoCompleteFun.getText().toString().isEmpty()) {
-            if (!editNomeFun.getText().toString().isEmpty()) {
-                if (!autoCompletePadariaFun.getText().toString().isEmpty()) {
-                    atualizarDadosFuncionario(funcionario);
+            if (existeFuncionario()) {
+                if (!editNomeFun.getText().toString().isEmpty()) {
+                    if (!autoCompletePadariaFun.getText().toString().isEmpty()) {
+                        atualizarDadosFuncionario(funcionario);
+                    } else {
+                        Toast.makeText(this, "Favor escolher uma padaria!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(this, "Favor escolher uma padaria!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor preencher o nome do funcionário!", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(this, "Favor preencher o nome do funcionário!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "Funcionário escolhido inexistente. Favor escolher um válido!", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this, "Favor escolher um funcionário!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Favor escolher um funcionário!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public boolean existeFuncionario() {
+        existeFun = false;
+        if (!listaNomesFuncionarios.isEmpty()) {
+            for (String nomeFun : listaNomesFuncionarios) {
+                if (nomeFun.equalsIgnoreCase(autoCompleteFun.getText().toString())) {
+                    existeFun = true;
+                }
+            }
+        }
+        return existeFun;
     }
 
     public void buscarPadariaFuncionario(String idPadaria) {
@@ -212,7 +229,7 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         }
     }
 
-    public void limparCampos(){
+    public void limparCampos() {
         editNomeFun.setText("");
         autoCompleteFun.requestFocus();
         autoCompletePadariaFun.setText("");
@@ -230,11 +247,11 @@ public class BuscarFuncionarioActivity extends AppCompatActivity {
         });
     }
 
-    public void buscarPadariaEscolhida(String nomePadaria){
+    public void buscarPadariaEscolhida(String nomePadaria) {
         padariaEncontrada = false;
-        if(!listaDePadaria.isEmpty()){
-            for(Padaria padaria : listaDePadaria){
-                if(padaria.getNome().equalsIgnoreCase(nomePadaria)){
+        if (!listaDePadaria.isEmpty()) {
+            for (Padaria padaria : listaDePadaria) {
+                if (padaria.getNome().equalsIgnoreCase(nomePadaria)) {
                     PadariaVO padariaVO = new PadariaVO(padaria.getIdentificador());
                     funcionario.setPadariaVO(padariaVO);
                     padariaEncontrada = true;
