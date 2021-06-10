@@ -165,7 +165,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dataSnap.getRef().removeValue();
-                Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Alerta excluído com sucesso!", Toast.LENGTH_SHORT).show();
                 excluirAlertaBanco(dataSnap);
             }
         });
@@ -193,7 +193,7 @@ public class AdapterAlertaUsuario extends RecyclerView.Adapter<AdapterAlertaUsua
                         alertaBanco.setIdAlerta(snapAlerta.getKey());
                         if(alertaBanco.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())){
                             snapAlerta.getRef().removeValue();
-                            Toast.makeText(context, "Alerta excluído com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Alerta excluído com sucesso!", Toast.LENGTH_SHORT).show();
                             listaAlertas.remove(posicao);
                             notifyItemRemoved(posicao);
                             notifyDataSetChanged();
