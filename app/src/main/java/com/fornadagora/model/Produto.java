@@ -50,6 +50,7 @@ public class Produto implements Parcelable {
         nome = in.readString();
         categoria = in.readParcelable(Categoria.class.getClassLoader());
         categoriaVO = in.readParcelable(CategoriaVO.class.getClassLoader());
+        padariaVO = in.readParcelable(PadariaVO.class.getClassLoader());
     }
 
     public static final Creator<Produto> CREATOR = new Creator<Produto>() {
@@ -116,6 +117,7 @@ public class Produto implements Parcelable {
         dest.writeString(nome);
         dest.writeParcelable(categoria, flags);
         dest.writeParcelable(categoriaVO, flags);
+        dest.writeParcelable(padariaVO, flags);
     }
 
     public void salvar(){
