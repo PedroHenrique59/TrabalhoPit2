@@ -18,7 +18,9 @@ import com.fornadagora.helper.ConfiguracaoFirebase;
 import com.fornadagora.helper.Teclado;
 import com.fornadagora.model.Categoria;
 import com.fornadagora.model.Produto;
+import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.CategoriaVO;
+import com.fornadagora.vo.ProdutoVO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +29,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditarProdutoActivity extends AppCompatActivity {
 
@@ -165,13 +169,39 @@ public class EditarProdutoActivity extends AppCompatActivity {
             if (categoria.getNome().equalsIgnoreCase(autoCompleteCategoria.getText().toString())) {
                 CategoriaVO categoriaVO = new CategoriaVO(categoria.getIdentificador(), categoria.getNome());
                 produto.setCategoriaVO(categoriaVO);
-                atualizarDados();
+                atualizarCategoriaListaProdutosPadaria();
                 categoriaValida = true;
             }
         }
-        if(!categoriaValida){
+        if (!categoriaValida) {
             Toast.makeText(this, "Favor escolher uma categoria válida!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void atualizarCategoriaListaProdutosPadaria() {
+        final DatabaseReference referenciaPadaria = ConfiguracaoFirebase.getFirebase().child("padarias").child(produto.getPadariaVO().getIdentificador());
+        referenciaPadaria.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    if (snapshot.child("listaProdutosVO").exists()) {
+                        for (DataSnapshot snapProdutoVO : snapshot.child("listaProdutosVO").getChildren()) {
+                            ProdutoVO produtoVO = snapProdutoVO.getValue(ProdutoVO.class);
+                            if (produtoVO.getIdProduto().equalsIgnoreCase(produto.getId())) {
+                                produtoVO.setIdCategoria(produto.getCategoriaVO().getIdentificador());
+                                referenciaPadaria.child("listaProdutosVO").child(snapProdutoVO.getKey()).setValue(produtoVO);
+                                atualizarDados();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void atualizarDados() {
@@ -194,7 +224,7 @@ public class EditarProdutoActivity extends AppCompatActivity {
         });
     }
 
-    public void abrirTelaListarProdutos(){
+    public void abrirTelaListarProdutos() {
         Intent i = new Intent(EditarProdutoActivity.this, VerProdutosActivity.class);
         startActivity(i);
         finish();
