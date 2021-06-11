@@ -51,6 +51,8 @@ public class EditarProdutoActivity extends AppCompatActivity {
 
     private List<Categoria> listaCategorias = new ArrayList<>();
 
+    private boolean categoriaValida = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,7 @@ public class EditarProdutoActivity extends AppCompatActivity {
     }
 
     public void configurarToolbar() {
-        toolbar.setTitle("Editar Dados Produto");
+        toolbar.setTitle("Editar Dados");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -125,7 +127,6 @@ public class EditarProdutoActivity extends AppCompatActivity {
             if (!autoCompleteCategoria.getText().toString().isEmpty()) {
                 produto.setNome(editTextnomeProduto.getText().toString());
                 atualizarCategoriaEscolhida();
-                atualizarDados();
             } else {
                 Toast.makeText(this, "Favor informar a categoria!", Toast.LENGTH_LONG).show();
             }
@@ -159,11 +160,17 @@ public class EditarProdutoActivity extends AppCompatActivity {
     }
 
     public void atualizarCategoriaEscolhida() {
+        categoriaValida = false;
         for (Categoria categoria : listaCategorias) {
             if (categoria.getNome().equalsIgnoreCase(autoCompleteCategoria.getText().toString())) {
                 CategoriaVO categoriaVO = new CategoriaVO(categoria.getIdentificador(), categoria.getNome());
                 produto.setCategoriaVO(categoriaVO);
+                atualizarDados();
+                categoriaValida = true;
             }
+        }
+        if(!categoriaValida){
+            Toast.makeText(this, "Favor escolher uma categoria válida!", Toast.LENGTH_SHORT).show();
         }
     }
 

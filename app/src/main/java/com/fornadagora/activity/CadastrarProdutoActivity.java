@@ -313,7 +313,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                     }
                 } else {
                     prod.salvar();
-                    Toast.makeText(context, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Produto salvo com sucesso!", Toast.LENGTH_SHORT).show();
                     limparCampos();
                 }
             }
