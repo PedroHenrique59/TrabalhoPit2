@@ -207,7 +207,7 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
         });
     }
 
-    public void recalcularPosicao(){
+    public void recalcularPosicao() {
         int i;
         for (i = 0; i < listaProdutos.size(); i++) {
             numeroProduto.setText("#" + i);
@@ -243,7 +243,6 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     if (snapshot.child("listaProdutosVO").exists()) {
-                        Map<String, ProdutoVO> td = new HashMap<String, ProdutoVO>();
                         for (DataSnapshot produtoSnapshot : snapshot.child("listaProdutosVO").getChildren()) {
                             ProdutoVO produtoVO = produtoSnapshot.getValue(ProdutoVO.class);
                             if (produtoVO.getIdProduto().equalsIgnoreCase(produtoSelecionado.getId())) {
@@ -279,7 +278,9 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
                             }
                         }
                     }
-                    buscarAlertasDosUsuarios();
+                    if(!listaAlertaProdutoSelecionado.isEmpty()){
+                        buscarAlertasDosUsuarios();
+                    }
                 }
             }
 
@@ -358,15 +359,15 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
         });
     }
 
-    public void excluirAlertasBanco(){
+    public void excluirAlertasBanco() {
         DatabaseReference referenciaAlerta = ConfiguracaoFirebase.getFirebase().child("alertas");
         referenciaAlerta.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot snapAlerta : snapshot.getChildren()){
-                        for(Alerta alerta : listaAlertaProdutoSelecionado){
-                            if(snapAlerta.getKey().equalsIgnoreCase(alerta.getIdAlerta())){
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapAlerta : snapshot.getChildren()) {
+                        for (Alerta alerta : listaAlertaProdutoSelecionado) {
+                            if (snapAlerta.getKey().equalsIgnoreCase(alerta.getIdAlerta())) {
                                 snapAlerta.getRef().removeValue();
                             }
                         }
