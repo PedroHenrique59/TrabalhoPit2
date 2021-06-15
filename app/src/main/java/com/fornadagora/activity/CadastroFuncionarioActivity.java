@@ -82,6 +82,7 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
     private String nomePadaria;
 
     private boolean padariaValida = false;
+    private boolean ehSenhaValida = false;
 
     private Context context;
 
@@ -133,52 +134,68 @@ public class CadastroFuncionarioActivity extends AppCompatActivity {
 
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
-        funcionario.setSenha(hashPassword(funcionario.getSenha()));
+        if (senhaValida()) {
+            funcionario.setSenha(hashPassword(funcionario.getSenha()));
+            autenticacao.createUserWithEmailAndPassword(
+                    funcionario.getEmail(), funcionario.getSenha()).addOnCompleteListener(
+                    this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                progressBar.setVisibility(View.GONE);
 
-        autenticacao.createUserWithEmailAndPassword(
-                funcionario.getEmail(), funcionario.getSenha()).addOnCompleteListener(
-                this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
+                                String idFuncionario = autenticacao.getCurrentUser().getUid();
+                                funcionario.setIdFuncionario(idFuncionario);
+                                funcionario.salvar();
 
-                            String idFuncionario = autenticacao.getCurrentUser().getUid();
-                            funcionario.setIdFuncionario(idFuncionario);
-                            funcionario.salvar();
+                                Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-
-                            autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    limparCampos();
-                                    logarAdm();
+                                autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        limparCampos();
+                                        logarAdm();
+                                    }
+                                });
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                String erroExcecao = "";
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthWeakPasswordException e) {
+                                    erroExcecao = "Digite uma senha mais forte!";
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    erroExcecao = "Favor digitar um e-mail válido";
+                                } catch (FirebaseAuthUserCollisionException e) {
+                                    erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
+                                } catch (Exception e) {
+                                    erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
+                                    e.printStackTrace();
                                 }
-                            });
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            String erroExcecao = "";
-                            try {
-                                throw task.getException();
-                            } catch (FirebaseAuthWeakPasswordException e) {
-                                erroExcecao = "Digite uma senha mais forte!";
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
-                                erroExcecao = "Favor digitar um e-mail válido";
-                            } catch (FirebaseAuthUserCollisionException e) {
-                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
-                            } catch (Exception e) {
-                                erroExcecao = "ao cadastrar funcionário: " + e.getMessage();
-                                e.printStackTrace();
+                                Toast.makeText(CadastroFuncionarioActivity.this, "Erro: " + erroExcecao, Toast.LENGTH_SHORT).show();
                             }
-                            Toast.makeText(CadastroFuncionarioActivity.this, "Erro: " + erroExcecao, Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-        );
+            );
+        }else{
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
-    private String hashPassword(String plainTextPassword){
+    private boolean senhaValida() {
+        ehSenhaValida = false;
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        if (campoSenha.getText().toString().matches(pattern)) {
+            ehSenhaValida = true;
+        } else if (campoSenha.length() < 8) {
+            Toast.makeText(this, "A senha deve ter no mínimo 8 caracteres.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "A senha deve possuir letra(s) maiúscula(s)/minúscula(s), número(s) e caractere(s) especiai(s).", Toast.LENGTH_LONG).show();
+        }
+        return ehSenhaValida;
+    }
+
+    private String hashPassword(String plainTextPassword) {
         return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 

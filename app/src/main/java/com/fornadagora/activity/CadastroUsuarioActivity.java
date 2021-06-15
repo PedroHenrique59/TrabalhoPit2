@@ -56,6 +56,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     private String tokenUsuario;
 
+    private boolean ehSenhaValida = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,51 +102,67 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         usuarios = ConfiguracaoFirebase.getFirebase().child("usuarios");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
-        usuario.setSenha(hashPassword(usuario.getSenha()));
+        if (senhaValida()) {
+            usuario.setSenha(hashPassword(usuario.getSenha()));
+            autenticacao.createUserWithEmailAndPassword(
+                    usuario.getEmail(), usuario.getSenha()
+            ).addOnCompleteListener(
+                    this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                progressBar.setVisibility(View.GONE);
 
-        autenticacao.createUserWithEmailAndPassword(
-                usuario.getEmail(), usuario.getSenha()
-        ).addOnCompleteListener(
-                this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
+                                String idUsuario = autenticacao.getCurrentUser().getUid();
+                                usuario.setIdUsuario(idUsuario);
+                                usuario.salvar();
 
-                            String idUsuario = autenticacao.getCurrentUser().getUid();
-                            usuario.setIdUsuario(idUsuario);
-                            usuario.salvar();
-
-                            autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(context, "Cadastro realizado com sucesso. Um e-mail com instruções para verificar o seu endereço de e-mail foi enviado.", Toast.LENGTH_LONG).show();
-                                    finish();
+                                autenticacao.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(context, "Cadastro realizado com sucesso. Um e-mail com instruções para verificar o seu endereço de e-mail foi enviado.", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
+                                });
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                String erroExcecao = "";
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthWeakPasswordException e) {
+                                    erroExcecao = "Digite uma senha mais forte!";
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    erroExcecao = "Favor digitar um e-mail válido";
+                                } catch (FirebaseAuthUserCollisionException e) {
+                                    erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
+                                } catch (Exception e) {
+                                    erroExcecao = "ao cadastrar usuário: " + e.getMessage();
+                                    e.printStackTrace();
                                 }
-                            });
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            String erroExcecao = "";
-                            try {
-                                throw task.getException();
-                            } catch (FirebaseAuthWeakPasswordException e) {
-                                erroExcecao = "Digite uma senha mais forte!";
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
-                                erroExcecao = "Favor digitar um e-mail válido";
-                            } catch (FirebaseAuthUserCollisionException e) {
-                                erroExcecao = "Já existe uma conta cadastrada para esse endereço de e-mail!";
-                            } catch (Exception e) {
-                                erroExcecao = "ao cadastrar usuário: " + e.getMessage();
-                                e.printStackTrace();
+                                Toast.makeText(CadastroUsuarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(CadastroUsuarioActivity.this, "Erro:" + erroExcecao, Toast.LENGTH_LONG).show();
                         }
                     }
-                }
-        );
+            );
+        }else{
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
-    private String hashPassword(String plainTextPassword){
+    private boolean senhaValida() {
+        ehSenhaValida = false;
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        if (campoSenha.getText().toString().matches(pattern)) {
+            ehSenhaValida = true;
+        }else if(campoSenha.length() <8){
+            Toast.makeText(this, "A senha deve ter no mínimo 8 caracteres.", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "A senha deve possuir letra(s) maiúscula(s)/minúscula(s), número(s) e caractere(s) especiai(s).", Toast.LENGTH_LONG).show();
+        }
+        return ehSenhaValida;
+    }
+
+    private String hashPassword(String plainTextPassword) {
         return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
@@ -157,7 +175,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void configurarIconeVisualizarSenha(){
+    public void configurarIconeVisualizarSenha() {
         layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
         layout_confirmar_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
 
@@ -167,10 +185,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         layout_senha_usu.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                if (campoSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     campoSenha.setTransformationMethod(null);
                     layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_24);
-                }else if(campoSenha.getTransformationMethod() == null){
+                } else if (campoSenha.getTransformationMethod() == null) {
                     campoSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     layout_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
                 }
@@ -180,10 +198,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         layout_confirmar_senha_usu.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(campoConfirmarSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                if (campoConfirmarSenha.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     campoConfirmarSenha.setTransformationMethod(null);
                     layout_confirmar_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_24);
-                }else if(campoConfirmarSenha.getTransformationMethod() == null){
+                } else if (campoConfirmarSenha.getTransformationMethod() == null) {
                     campoConfirmarSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     layout_confirmar_senha_usu.setEndIconDrawable(R.drawable.ic_visibility_off_24);
                 }
@@ -191,11 +209,11 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public boolean validarEmail(String email){
-       return ValidaEmail.validarEmail(email);
+    public boolean validarEmail(String email) {
+        return ValidaEmail.validarEmail(email);
     }
 
-    public void validarCamposAntesCadastrar(){
+    public void validarCamposAntesCadastrar() {
 
         String textoNome = campoNome.getText().toString();
         String textoEmail = campoEmail.getText().toString();
@@ -207,10 +225,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 if (!textoSenha.isEmpty()) {
                     if (!textoConfirmarSenha.isEmpty()) {
                         if (textoConfirmarSenha.equals(textoSenha)) {
-                            if(validarEmail(textoEmail)){
+                            if (validarEmail(textoEmail)) {
                                 usuario = new Usuario(textoNome, textoEmail, textoSenha, tipoPerfil, tokenUsuario);
                                 cadastrar(usuario);
-                            }else{
+                            } else {
                                 Toast.makeText(CadastroUsuarioActivity.this, "Informe um e-mail válido", Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -231,7 +249,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    public void configurarToolbar(){
+    public void configurarToolbar() {
         toolbar.setTitle("Cadastre-se");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setNavigationIcon(R.drawable.ic_voltar_24);
@@ -243,7 +261,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         });
     }
 
-    public void abrirTelaLogin(){
+    public void abrirTelaLogin() {
         Intent i = new Intent(CadastroUsuarioActivity.this, MainActivity.class);
         startActivity(i);
         finish();
