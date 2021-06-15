@@ -13,7 +13,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.fornadagora.R
+import com.fornadagora.activity.MainActivity
 import com.fornadagora.activity.MenuInicialActivity
+import com.fornadagora.activity.VerAlertaUsuarioActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -42,7 +44,7 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent = Intent(this, MenuInicialActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
@@ -55,7 +57,7 @@ class FirebaseService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(message.data["title"])
             .setContentText(message.data["message"])
-            .setSmallIcon(R.drawable.ic_padaria_loja_48)
+            .setSmallIcon(R.drawable.ic_bakery_225593_notify)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
