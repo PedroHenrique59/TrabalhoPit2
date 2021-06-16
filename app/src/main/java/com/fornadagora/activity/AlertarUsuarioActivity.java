@@ -25,6 +25,7 @@ import com.fornadagora.model.Usuario;
 import com.fornadagora.notification.NotificacaoUsuario;
 import com.fornadagora.vo.AlertaVO;
 import com.fornadagora.vo.ProdutoVO;
+import com.google.android.gms.common.internal.Objects;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,6 +79,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     private boolean ehMesmoIdCategoria = false;
 
     private Context context;
+
+    private int total = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +312,7 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
     }
 
     public void buscarAlertasUsuarioBanco(final List<Alerta> listaAlerta) {
+        total = 0;
         referenciaUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -326,6 +330,8 @@ public class AlertarUsuarioActivity extends AppCompatActivity {
                                 for (Alerta alerta : listaAlerta) {
                                     if (alerta.getIdAlerta().equalsIgnoreCase(alertaVO.getIdAlerta())) {
                                         alertarUsuario(padariaEscolhida.getNome(), "Acabou de sair do forno: " + produtoEscolhido.getNome(), usuario.getToken());
+                                        total+=1;
+                                        Toast.makeText(AlertarUsuarioActivity.this, "Alerta(s) enviado(s) com sucesso: " + total, Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
