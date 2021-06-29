@@ -211,6 +211,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     List<HashMap> lista;
                     lista = (List<HashMap>) snapshot.getValue();
+                    lista.removeAll(Collections.singleton(null));
                     listaComIdsAlertaVO.clear();
                     for (HashMap h : lista) {
                         String result = h.get("idAlerta").toString();
