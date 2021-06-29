@@ -91,9 +91,9 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         campoEmail.setText("");
-                                        Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_LONG).show();
                                     } else {
-                                        Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -109,9 +109,9 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     campoEmail.setText("");
-                                                    Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RecuperarSenhaActivity.this, "E-mail enviado com sucesso", Toast.LENGTH_LONG).show();
                                                 } else {
-                                                    Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RecuperarSenhaActivity.this, "Falha ao enviar o e-mail", Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         });
