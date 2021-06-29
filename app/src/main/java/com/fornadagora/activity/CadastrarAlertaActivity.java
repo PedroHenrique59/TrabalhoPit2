@@ -309,7 +309,7 @@ public class CadastrarAlertaActivity extends AppCompatActivity {
                     if (!ehMesmoAlerta) {
                         montarAlertaESalvar(nomeAlerta);
                     } else {
-                        Toast.makeText(context, "Já existe um alerta para o produto escolhido nesta padaria.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Já existe um alerta salvo para este produto nesta padaria!", Toast.LENGTH_LONG).show();
                     }
                 }
             }
