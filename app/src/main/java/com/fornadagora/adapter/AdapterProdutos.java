@@ -388,12 +388,12 @@ public class AdapterProdutos extends RecyclerView.Adapter<AdapterProdutos.MyView
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL, arrayEmails);
-        i.putExtra(Intent.EXTRA_SUBJECT, "Fornadagora - Comunicado de produto");
-        i.putExtra(Intent.EXTRA_TEXT, "Caro usuário(a), o produto: " + produtoSelecionado.getNome() + " não será mais comercializado na padaria: " + padariaFuncionario.getNome());
+        i.putExtra(Intent.EXTRA_SUBJECT, "ATENÇÃO - Um produto da sua lista de alertas não será mais comercializado!");
+        i.putExtra(Intent.EXTRA_TEXT, "Caro usuário(a), o produto: " + produtoSelecionado.getNome() + " não será mais comercializado na padaria: " + padariaFuncionario.getNome() + ".");
         try {
             context.startActivity(Intent.createChooser(i, "Enviar e-mail"));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Nenhum app de e-mail instalado nesse dispositivo!", Toast.LENGTH_SHORT).show();
         }
     }
 }

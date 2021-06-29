@@ -239,7 +239,7 @@ public class CadastrarProdutoActivity extends AppCompatActivity {
                         Toast.makeText(this, "A padaria informada é inválida. Favor informar uma válida!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Favor escolher uma categoria para o produt!o", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Favor escolher uma categoria para o produto!", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(this, "Favor informar no nome do produto!", Toast.LENGTH_SHORT).show();
